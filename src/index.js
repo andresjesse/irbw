@@ -1,12 +1,25 @@
-import _ from "lodash";
+// import _ from "lodash";
 
-function component() {
-  const element = document.createElement("div");
+import * as BABYLON from "@babylonjs/core";
 
-  // Lodash, now imported by this script
-  element.innerHTML = _.join(["Hello", "webpack"], " ");
+import SceneManager from "./gamecore/SceneManager";
 
-  return element;
-}
+// Get the canvas DOM element
+var canvas = document.getElementById("renderCanvas");
+// Load the 3D engine
+const engine = new BABYLON.Engine(canvas, true, {
+  preserveDrawingBuffer: true,
+  stencil: true,
+});
+const scene = new BABYLON.Scene(engine);
 
-document.body.appendChild(component());
+const smgr = new SceneManager(scene);
+smgr.onStart();
+
+engine.runRenderLoop(function () {
+  scene.render();
+});
+// the canvas/window resize event handler
+window.addEventListener("resize", function () {
+  engine.resize();
+});
