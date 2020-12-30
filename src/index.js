@@ -17,6 +17,7 @@ const smgr = new SceneManager(scene);
 smgr.onStart();
 
 engine.runRenderLoop(function () {
+  smgr.onUpdate();
   scene.render();
 });
 // the canvas/window resize event handler

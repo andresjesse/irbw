@@ -1,6 +1,9 @@
 import * as BABYLON from "@babylonjs/core";
 import { Vector3 } from "@babylonjs/core";
 
+const MAX_HEIGHT = 2;
+const MIN_HEIGHT = -1;
+
 export default class TerrainSegment {
   constructor(scene, id) {
     this.scene = scene;
@@ -8,7 +11,7 @@ export default class TerrainSegment {
     //mesh
     this.ground = BABYLON.MeshBuilder.CreateGround(
       "ground_" + id,
-      { width: 64, height: 64, updatable: true, subdivisions: 32 },
+      { width: 100, height: 100, updatable: true, subdivisions: 128 },
       this.scene
     );
 
@@ -28,8 +31,6 @@ export default class TerrainSegment {
   }
 
   transform(options) {
-    console.log(options);
-
     var positions = this.ground.getVerticesData(
       BABYLON.VertexBuffer.PositionKind
     );
@@ -45,8 +46,33 @@ export default class TerrainSegment {
       let dist = BABYLON.Vector3.Distance(o, options.pickedPoint);
 
       if (dist <= options.brushRadius) {
-        positions[i * 3 + 1] +=
+        let ratio =
           Math.sin(1 - dist / options.brushRadius) * options.brushRadius;
+
+        if (options.factor == 0) {
+          //transform to zero
+
+          if (positions[i * 3 + 1] > 0) {
+            positions[i * 3 + 1] -= options.brushStrength * ratio;
+            //guarantee zero if too near
+            if (positions[i * 3 + 1] <= options.brushStrength)
+              positions[i * 3 + 1] = 0;
+          } else if (positions[i * 3 + 1] < 0) {
+            positions[i * 3 + 1] += options.brushStrength * ratio;
+            //guarantee zero if too near
+            if (positions[i * 3 + 1] >= options.brushStrength)
+              positions[i * 3 + 1] = 0;
+          }
+        } else {
+          //transform up and down
+          positions[i * 3 + 1] +=
+            options.brushStrength * options.factor * ratio;
+
+          if (positions[i * 3 + 1] > MAX_HEIGHT)
+            positions[i * 3 + 1] = MAX_HEIGHT;
+          if (positions[i * 3 + 1] < MIN_HEIGHT)
+            positions[i * 3 + 1] = MIN_HEIGHT;
+        }
       }
     }
 

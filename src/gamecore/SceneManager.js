@@ -1,6 +1,9 @@
 import { FreeCamera, Vector3, HemisphericLight } from "@babylonjs/core";
 
 import * as BABYLON from "@babylonjs/core";
+
+import UniversalInputManager, { LogicalInputs } from "./UniversalInputManager";
+
 import Terrain from "./Terrain";
 
 /**
@@ -13,6 +16,8 @@ export const SmgrTypes = {
 export default class SceneManager {
   constructor(scene) {
     this.scene = scene;
+
+    this.imgr = new UniversalInputManager(scene);
   }
 
   onStart() {
@@ -21,6 +26,11 @@ export default class SceneManager {
     this.createTerrain();
 
     //----------------------------- temp stuff -----------------------
+    this.ground = BABYLON.MeshBuilder.CreateBox(
+      "playerRef",
+      { height: 2, width: 1, depth: 1 },
+      this.scene
+    );
 
     //pick
     //ground.actionManager = new BABYLON.ActionManager(this.scene);
@@ -32,39 +42,39 @@ export default class SceneManager {
     //     }
     //   )
     // );
-    this.scene.onPointerObservable.add((pointerInfo) => {
-      if (pointerInfo.type == BABYLON.PointerEventTypes.POINTERDOWN) {
-        console.log(pointerInfo);
 
-        this.terrain.transform();
-      }
-      // switch (pointerInfo.type) {
-      //   case BABYLON.PointerEventTypes.POINTERDOWN:
-      //     console.log("POINTER DOWN");
-      //     break;
-      //   case BABYLON.PointerEventTypes.POINTERUP:
-      //     console.log("POINTER UP");
-      //     break;
-      //   case BABYLON.PointerEventTypes.POINTERMOVE:
-      //     console.log("POINTER MOVE");
-      //     break;
-      //   case BABYLON.PointerEventTypes.POINTERWHEEL:
-      //     console.log("POINTER WHEEL");
-      //     break;
-      //   case BABYLON.PointerEventTypes.POINTERPICK:
-      //     console.log("POINTER PICK");
-      //     break;
-      //   case BABYLON.PointerEventTypes.POINTERTAP:
-      //     console.log("POINTER TAP");
-      //     break;
-      //   case BABYLON.PointerEventTypes.POINTERDOUBLETAP:
-      //     console.log("POINTER DOUBLE-TAP");
-      //     break;
-      // }
-    });
+    //OLDDD
+    // this.scene.onPointerObservable.add((pointerInfo) => {
+    //   if (pointerInfo.type == BABYLON.PointerEventTypes.POINTERDOWN) {
+    //     console.log(pointerInfo);
+
+    //     this.terrain.transform();
+    //   }
+
+    // });
   }
 
   onUpdate() {
+    if (this.imgr.getInput(LogicalInputs.Action1)) {
+      this.terrain.transform({
+        x: this.imgr.getInput(LogicalInputs.PointerX),
+        y: this.imgr.getInput(LogicalInputs.PointerY),
+        factor: 1,
+      });
+    } else if (this.imgr.getInput(LogicalInputs.Action2)) {
+      this.terrain.transform({
+        x: this.imgr.getInput(LogicalInputs.PointerX),
+        y: this.imgr.getInput(LogicalInputs.PointerY),
+        factor: -1,
+      });
+    } else if (this.imgr.getInput(LogicalInputs.Action3)) {
+      this.terrain.transform({
+        x: this.imgr.getInput(LogicalInputs.PointerX),
+        y: this.imgr.getInput(LogicalInputs.PointerY),
+        factor: 0,
+      });
+    }
+
     //TODO: update all entities (onUpdate -- or "Step" from original IRB)
     // if (box !== undefined) {
     //   var deltaTimeInMillis = scene.getEngine().getDeltaTime();
