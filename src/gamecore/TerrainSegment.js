@@ -1,7 +1,9 @@
 import * as BABYLON from "@babylonjs/core";
 import { Vector3 } from "@babylonjs/core";
 
-const MAX_HEIGHT = 2;
+import { TriPlanarMaterial } from "@babylonjs/materials/triPlanar";
+
+const MAX_HEIGHT = 20;
 const MIN_HEIGHT = -1;
 
 export default class TerrainSegment {
@@ -15,25 +17,58 @@ export default class TerrainSegment {
       this.scene
     );
 
-    //temp material
-    var myMaterial = new BABYLON.StandardMaterial("myMaterial", this.scene);
-    myMaterial.diffuseColor = new BABYLON.Color3(1, 1, 1);
-    myMaterial.specularColor = new BABYLON.Color3(0.5, 0.6, 0.87);
-    myMaterial.ambientColor = new BABYLON.Color3(0.23, 0.98, 0.53);
-    //myMaterial.wireframe = true;
-    myMaterial.diffuseTexture = new BABYLON.Texture(
-      "http://i.imgur.com/JbvoYlB.png",
-      this.scene
+    // //temp material
+    // var myMaterial = new BABYLON.StandardMaterial("myMaterial", this.scene);
+    // myMaterial.diffuseColor = new BABYLON.Color3(1, 1, 1);
+    // myMaterial.specularColor = new BABYLON.Color3(0.5, 0.6, 0.87);
+    // myMaterial.ambientColor = new BABYLON.Color3(0.23, 0.98, 0.53);
+    // //myMaterial.wireframe = true;
+    // myMaterial.diffuseTexture = new BABYLON.Texture(
+    //   "http://i.imgur.com/JbvoYlB.png",
+    //   this.scene
+    // );
+    // myMaterial.diffuseTexture.uScale = 32;
+    // myMaterial.diffuseTexture.vScale = 32;
+    // this.ground.material = myMaterial;
+
+    // Light
+
+    var triPlanarMaterial = new TriPlanarMaterial("triplanar", scene);
+    triPlanarMaterial.diffuseTextureX = new BABYLON.Texture(
+      "textures/rock.jpg",
+      scene
     );
-    myMaterial.diffuseTexture.uScale = 32;
-    myMaterial.diffuseTexture.vScale = 32;
-    this.ground.material = myMaterial;
+    triPlanarMaterial.diffuseTextureY = new BABYLON.Texture(
+      "textures/grass.jpg",
+      scene
+    );
+    triPlanarMaterial.diffuseTextureZ = new BABYLON.Texture(
+      "textures/rock.jpg",
+      scene
+    );
+    triPlanarMaterial.normalTextureX = new BABYLON.Texture(
+      "textures/rockn.png",
+      scene
+    );
+    triPlanarMaterial.normalTextureY = new BABYLON.Texture(
+      "textures/grassn.png",
+      scene
+    );
+    triPlanarMaterial.normalTextureZ = new BABYLON.Texture(
+      "textures/rockn.png",
+      scene
+    );
+    triPlanarMaterial.specularPower = 32;
+    triPlanarMaterial.tileSize = 7;
+
+    this.ground.material = triPlanarMaterial;
   }
 
   transform(options) {
     var positions = this.ground.getVerticesData(
       BABYLON.VertexBuffer.PositionKind
     );
+    var normals = this.ground.getVerticesData(BABYLON.VertexBuffer.NormalKind);
 
     var numberOfVertices = positions.length / 3;
     for (let i = 0; i < numberOfVertices; i++) {
@@ -80,5 +115,12 @@ export default class TerrainSegment {
       BABYLON.VertexBuffer.PositionKind,
       positions
     );
+
+    BABYLON.VertexData.ComputeNormals(
+      positions,
+      this.ground.getIndices(),
+      normals
+    );
+    this.ground.updateVerticesData(BABYLON.VertexBuffer.NormalKind, normals);
   }
 }

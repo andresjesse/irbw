@@ -106,7 +106,7 @@ export default class SceneManager {
   createLights() {
     //TODO: armazenar varias lampadas em um objeto this.lights (global, points, etc...). configuraveis via editor
     let light = new HemisphericLight("light", new Vector3(0, 1, 0), this.scene);
-    light.intensity = 0.7;
+    light.intensity = 1;
   }
 
   createTerrain() {
