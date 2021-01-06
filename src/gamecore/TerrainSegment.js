@@ -1,7 +1,7 @@
 import * as BABYLON from "@babylonjs/core";
 import { Vector3 } from "@babylonjs/core";
 
-import { TriPlanarMaterial } from "@babylonjs/materials/triPlanar";
+import { TriPlanarMaterial } from "../materials/customTriPlanar";
 
 const MAX_HEIGHT = 20;
 const MIN_HEIGHT = -1;
@@ -39,8 +39,9 @@ export default class TerrainSegment {
       scene
     );
     triPlanarMaterial.diffuseTextureY = new BABYLON.Texture(
-      "textures/grass.jpg",
-      scene
+      "textures/terrainLayers.jpg",
+      scene,
+      true //true to disable mipmaps
     );
     triPlanarMaterial.diffuseTextureZ = new BABYLON.Texture(
       "textures/rock.jpg",
