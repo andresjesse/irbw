@@ -33,20 +33,26 @@ export default class TerrainSegment {
 
     // Light
 
+    let disableMipMaps = true;
+
     var triPlanarMaterial = new TriPlanarMaterial("triplanar", scene);
     triPlanarMaterial.diffuseTextureX = new BABYLON.Texture(
-      "textures/rock.jpg",
-      scene
+      "textures/terrain/atlas1.jpg", //"textures/rock.jpg",
+      scene,
+      disableMipMaps
     );
     triPlanarMaterial.diffuseTextureY = new BABYLON.Texture(
-      "textures/terrainLayers.jpg",
+      "textures/terrain/atlas2.jpg",
       scene,
-      true //true to disable mipmaps
+      disableMipMaps
     );
     triPlanarMaterial.diffuseTextureZ = new BABYLON.Texture(
-      "textures/rock.jpg",
-      scene
+      "textures/terrain/noise.jpg", //"textures/rock.jpg",
+      scene,
+      disableMipMaps
     );
+
+    //normalmaps TODO!
     triPlanarMaterial.normalTextureX = new BABYLON.Texture(
       "textures/rockn.png",
       scene

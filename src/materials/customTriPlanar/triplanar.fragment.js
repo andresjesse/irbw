@@ -60,6 +60,10 @@ varying mat3 tangentSpace;
 #include<clipPlaneFragmentDeclaration>
 #include<fogFragmentDeclaration>
 
+//X = Atlas1
+//Y = Atlas2
+//Z = Noise
+
 void main(void) {
 
   vec2 atlasUV1 = fract(vTextureUVY)*0.48 + vec2(0.01,0.51);
@@ -83,32 +87,58 @@ void main(void) {
   vec4 baseNormal=vec4(0.0,0.0,0.0,1.0);
   normalW*=normalW;
   #ifdef DIFFUSEX
-  baseColor+=texture2D(diffuseSamplerX,vTextureUVX)*normalW.x;
+  //baseColor+=texture2D(diffuseSamplerX,vTextureUVX)*normalW.x;
+  baseColor+=texture2D(diffuseSamplerX,atlasUV4)*normalW.x;
   #ifdef BUMPX
   baseNormal+=texture2D(normalSamplerX,vTextureUVX)*normalW.x;
   #endif
   #endif
   #ifdef DIFFUSEY
   //baseColor+=texture2D(diffuseSamplerY, atlasUV4 )*normalW.y;
-  vec4 atlasTX1 = texture2D(diffuseSamplerY, atlasUV1 )*normalW.y;
-  vec4 atlasTX2 = texture2D(diffuseSamplerY, atlasUV2 )*normalW.y;
-  vec4 atlasTX3 = texture2D(diffuseSamplerY, atlasUV3 )*normalW.y;
-  vec4 atlasTX4 = texture2D(diffuseSamplerY, atlasUV4 )*normalW.y;
-  if(vPositionW.y > 0.0)
+  //vec4 atlasTX1 = texture2D(diffuseSamplerY, atlasUV1 )*normalW.y;
+  //vec4 atlasTX2 = texture2D(diffuseSamplerY, atlasUV2 )*normalW.y;
+  //vec4 atlasTX3 = texture2D(diffuseSamplerY, atlasUV3 )*normalW.y;
+  //vec4 atlasTX4 = texture2D(diffuseSamplerY, atlasUV4 )*normalW.y;
+
+  vec4 grassMix = mix(
+    texture2D(diffuseSamplerX, fract(vTextureUVY)*0.48 + vec2(0.01,0.51) )*normalW.y, //atlas1 grass
+    texture2D(diffuseSamplerY, fract(vTextureUVY)*0.48 + vec2(0.01,0.51) )*normalW.y, //atlas2 grass
+    (texture2D(diffuseSamplerZ, fract(vTextureUVY * 0.05)*0.48 + vec2(0.51,0.01) )*normalW.y).r); //grass noise
+
+  vec4 sandMix = mix(
+    texture2D(diffuseSamplerX, fract(vTextureUVY)*0.48 + vec2(0.51,0.51) )*normalW.y, //atlas1 sand
+    texture2D(diffuseSamplerY, fract(vTextureUVY)*0.48 + vec2(0.51,0.51) )*normalW.y, //atlas2 sand
+    (texture2D(diffuseSamplerZ, fract(vTextureUVY * 0.05)*0.48 + vec2(0.51,0.51) )*normalW.y).r); //sand noise
+
+  vec4 rockMix = mix(
+    texture2D(diffuseSamplerX, fract(vTextureUVY)*0.48 + vec2(0.01,0.01) )*normalW.y, //atlas1 rock
+    texture2D(diffuseSamplerY, fract(vTextureUVY)*0.48 + vec2(0.01,0.01) )*normalW.y, //atlas2 rock
+    (texture2D(diffuseSamplerZ, fract(vTextureUVY * 0.05)*0.48 + vec2(0.01,0.01) )*normalW.y).r); //rock noise
+
+  if(vPositionW.y >= 0.0)
   {
     //baseColor+= atlasTX1;
-    baseColor += mix( atlasTX1, atlasTX3, min(1.0, sin(vPositionW.y*0.1) ) );
+    
+    //baseColor += mix( atlasTX1, atlasTX3, min(1.0, sin(vPositionW.y*0.1) ) );//OK!
+    baseColor += mix( grassMix, rockMix, min(1.0, sin(vPositionW.y*0.1) ) );//OK!
   }
   else
   {
-    baseColor+= mix( atlasTX1, atlasTX2, min(1.0,-vPositionW.y) );
+    baseColor+= mix( grassMix, sandMix, min(1.0,-vPositionW.y) );
   }
   #ifdef BUMPY
   baseNormal+=texture2D(normalSamplerY,vTextureUVY)*normalW.y;
   #endif
   #endif
   #ifdef DIFFUSEZ
-  baseColor+=texture2D(diffuseSamplerZ,vTextureUVZ)*normalW.z;
+  
+  vec4 cliffMixZ = mix(
+    texture2D(diffuseSamplerX, fract(vTextureUVZ)*0.48 + vec2(0.51,0.01) )*normalW.z, //atlas1 cliff
+    texture2D(diffuseSamplerY, fract(vTextureUVZ)*0.48 + vec2(0.51,0.01) )*normalW.z, //atlas2 cliff
+    (texture2D(diffuseSamplerZ, fract(vTextureUVZ * 0.05)*0.48 + vec2(0.51,0.01) )*normalW.z).r); //cliff noise
+
+  baseColor += cliffMixZ;//TODO: verificar noise seamless!
+
   #ifdef BUMPZ
   baseNormal+=texture2D(normalSamplerZ,vTextureUVZ)*normalW.z;
   #endif
