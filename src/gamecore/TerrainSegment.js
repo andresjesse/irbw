@@ -54,21 +54,23 @@ export default class TerrainSegment {
 
     //normalmaps TODO!
     triPlanarMaterial.normalTextureX = new BABYLON.Texture(
-      "textures/rockn.png",
+      "textures/terrain/atlas1nm.png",
       scene
     );
     triPlanarMaterial.normalTextureY = new BABYLON.Texture(
-      "textures/grassn.png",
+      "textures/terrain/atlas1nm.png",
       scene
     );
-    triPlanarMaterial.normalTextureZ = new BABYLON.Texture(
-      "textures/rockn.png",
-      scene
-    );
+    // triPlanarMaterial.normalTextureZ = new BABYLON.Texture(
+    //   "textures/rockn.png",
+    //   scene
+    // );
     triPlanarMaterial.specularPower = 32;
     triPlanarMaterial.tileSize = 7;
 
     this.ground.material = triPlanarMaterial;
+
+    this.ground.receiveShadows = true;
   }
 
   transform(options) {

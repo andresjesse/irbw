@@ -26,32 +26,18 @@ export default class SceneManager {
     this.createTerrain();
 
     //----------------------------- temp stuff -----------------------
-    this.ground = BABYLON.MeshBuilder.CreateBox(
+    this.box = BABYLON.MeshBuilder.CreateBox(
       "playerRef",
       { height: 2, width: 1, depth: 1 },
       this.scene
     );
-
-    //pick
-    //ground.actionManager = new BABYLON.ActionManager(this.scene);
-    // ground.actionManager.registerAction(
-    //   new BABYLON.ExecuteCodeAction(
-    //     BABYLON.ActionManager.OnPickTrigger,
-    //     function () {
-    //       console.log("r button was pressed");
-    //     }
-    //   )
-    // );
-
-    //OLDDD
-    // this.scene.onPointerObservable.add((pointerInfo) => {
-    //   if (pointerInfo.type == BABYLON.PointerEventTypes.POINTERDOWN) {
-    //     console.log(pointerInfo);
-
-    //     this.terrain.transform();
-    //   }
-
-    // });
+    this.box.position = new BABYLON.Vector3(0, 1, 0);
+    this.box.receiveShadows = true;
+    this.shadowGenerator.getShadowMap().renderList.push(this.box);
+    // Torus
+    var torus = BABYLON.Mesh.CreateTorus("torus", 4, 2, 30, this.scene, false);
+    torus.position = new BABYLON.Vector3(4, 3, 0);
+    this.shadowGenerator.getShadowMap().renderList.push(torus);
   }
 
   onUpdate() {
@@ -99,14 +85,54 @@ export default class SceneManager {
 
       this.camera.inputs.clear();
 
+      this.camera.maxZ = 500;
+
       //TODO: get inputs from "UniversalInputManager" (subclasses for PC/Mobile/etc..)
     }
   }
 
   createLights() {
     //TODO: armazenar varias lampadas em um objeto this.lights (global, points, etc...). configuraveis via editor
-    let light = new HemisphericLight("light", new Vector3(0, 1, 0), this.scene);
-    light.intensity = 1;
+    // let light = new HemisphericLight("light", new Vector3(0, 1, 0), this.scene);
+    // light.intensity = 1;
+
+    var light = new BABYLON.DirectionalLight(
+      "dir01",
+      new BABYLON.Vector3(-1, -2, -1),
+      this.scene
+    );
+    light.position = new BABYLON.Vector3(20, 40, 20);
+    light.intensity = 0.7;
+
+    var light2 = new BABYLON.HemisphericLight(
+      "HemiLight",
+      new BABYLON.Vector3(0, 1, 0),
+      this.scene
+    );
+    light2.intensity = 0.7;
+
+    // Shadows (WebGL 2.0)
+    // this.shadowGenerator = new BABYLON.CascadedShadowGenerator(1024, light);
+    // this.shadowGenerator.splitFrustum(); //usar junto com this.camera.maxZ = 500
+
+    // Shadows (WebGL 1.0+)
+    //this.shadowGenerator = new BABYLON.ShadowGenerator(1024, light);
+    //this.shadowGenerator.usePoissonSampling = true; //slower (how much?)
+    //this.shadowGenerator.useExponentialShadowMap = true; //faster (mais feio, antigo, false desabilita todos os efeitos blur)
+    /*
+    //METODO NOVO (Self Shadows OK)
+    //this.shadowGenerator.useCloseExponentialShadowMap = true; //metodo novo, sem antialias
+    this.shadowGenerator = new BABYLON.ShadowGenerator(1024, light);
+    this.shadowGenerator.useBlurCloseExponentialShadowMap = true; //metodo novo, com antialias
+    this.shadowGenerator.blurKernel = 4;
+    this.shadowGenerator.useKernelBlur = true;
+    light.shadowMinZ = 0;
+    light.shadowMaxZ = this.camera.maxZ;
+*/
+    //WebGL 2.0 (automatic fallback to 1.0 when not compatible) (fast, better!)
+    this.shadowGenerator = new BABYLON.ShadowGenerator(512, light);
+    this.shadowGenerator.usePercentageCloserFiltering = true;
+    this.shadowGenerator.filteringQuality = BABYLON.ShadowGenerator.QUALITY_LOW;
   }
 
   createTerrain() {
