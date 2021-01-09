@@ -37,7 +37,7 @@ export default class TerrainSegment {
 
     var triPlanarMaterial = new TriPlanarMaterial("triplanar", scene);
     triPlanarMaterial.diffuseTextureX = new BABYLON.Texture(
-      "textures/terrain/atlas1.jpg", //"textures/rock.jpg",
+      "textures/terrain/atlas1.jpg",
       scene,
       disableMipMaps
     );
@@ -47,24 +47,11 @@ export default class TerrainSegment {
       disableMipMaps
     );
     triPlanarMaterial.diffuseTextureZ = new BABYLON.Texture(
-      "textures/terrain/noise.jpg", //"textures/rock.jpg",
+      "textures/terrain/noise.jpg",
       scene,
       disableMipMaps
     );
 
-    //normalmaps TODO!
-    triPlanarMaterial.normalTextureX = new BABYLON.Texture(
-      "textures/terrain/atlas1nm.png",
-      scene
-    );
-    triPlanarMaterial.normalTextureY = new BABYLON.Texture(
-      "textures/terrain/atlas1nm.png",
-      scene
-    );
-    // triPlanarMaterial.normalTextureZ = new BABYLON.Texture(
-    //   "textures/rockn.png",
-    //   scene
-    // );
     triPlanarMaterial.specularPower = 32;
     triPlanarMaterial.tileSize = 7;
 
