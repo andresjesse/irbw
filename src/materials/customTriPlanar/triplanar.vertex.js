@@ -72,30 +72,32 @@ var shader = `
     #ifdef DIFFUSEX
       vTextureUVX=worldPos.zy/tileSize;
     #endif
+
     #ifdef DIFFUSEY
       vTextureUVY=worldPos.xz/tileSize;
     #endif
+
     #ifdef DIFFUSEZ
       vTextureUVZ=worldPos.xy/tileSize;
     #endif
-    #ifdef NORMAL
 
-    vec3 xtan=vec3(0,0,1);
-    vec3 xbin=vec3(0,1,0);
-    vec3 ytan=vec3(1,0,0);
-    vec3 ybin=vec3(0,0,1);
-    vec3 ztan=vec3(1,0,0);
-    vec3 zbin=vec3(0,1,0);
-    vec3 normalizedNormal=normalize(normal);
-    normalizedNormal*=normalizedNormal;
-    vec3 worldBinormal=normalize(xbin*normalizedNormal.x+ybin*normalizedNormal.y+zbin*normalizedNormal.z);
-    vec3 worldTangent=normalize(xtan*normalizedNormal.x+ytan*normalizedNormal.y+ztan*normalizedNormal.z);
-    worldTangent=(world*vec4(worldTangent,1.0)).xyz;
-    worldBinormal=(world*vec4(worldBinormal,1.0)).xyz;
-    vec3 worldNormal=(world*vec4(normalize(normal),1.0)).xyz;
-    tangentSpace[0]=worldTangent;
-    tangentSpace[1]=worldBinormal;
-    tangentSpace[2]=worldNormal;
+    #ifdef NORMAL
+      vec3 xtan=vec3(0,0,1);
+      vec3 xbin=vec3(0,1,0);
+      vec3 ytan=vec3(1,0,0);
+      vec3 ybin=vec3(0,0,1);
+      vec3 ztan=vec3(1,0,0);
+      vec3 zbin=vec3(0,1,0);
+      vec3 normalizedNormal=normalize(normal);
+      normalizedNormal*=normalizedNormal;
+      vec3 worldBinormal=normalize(xbin*normalizedNormal.x+ybin*normalizedNormal.y+zbin*normalizedNormal.z);
+      vec3 worldTangent=normalize(xtan*normalizedNormal.x+ytan*normalizedNormal.y+ztan*normalizedNormal.z);
+      worldTangent=(world*vec4(worldTangent,1.0)).xyz;
+      worldBinormal=(world*vec4(worldBinormal,1.0)).xyz;
+      vec3 worldNormal=(world*vec4(normalize(normal),1.0)).xyz;
+      tangentSpace[0]=worldTangent;
+      tangentSpace[1]=worldBinormal;
+      tangentSpace[2]=worldNormal;
     #endif
 
     #include<clipPlaneVertex>

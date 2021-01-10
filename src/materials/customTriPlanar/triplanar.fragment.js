@@ -34,6 +34,11 @@ Custom Triplanar Shader:
 var shader = `
   precision highp float;
 
+  // -- HARDCODED ADJUSTABLE PARAMS --
+  const float NOISE_SCALE = 0.05;
+  const float TILE_PADDING = 0.02;
+  // --
+
   uniform vec3 vEyePosition;
   uniform vec4 vDiffuseColor;
 
@@ -92,8 +97,20 @@ var shader = `
   const vec2 TILE4 = vec2(1.0, 0.0);
 
   // Atlas UV calculator
+  vec2 atlasTileUV(vec2 originalUV, vec2 tile, float noiseScale) {
+    return fract(originalUV * noiseScale)*(0.5-TILE_PADDING) + vec2(tile.x*0.5+TILE_PADDING*0.5, tile.y*0.5+TILE_PADDING*0.5);
+  }
+
   vec2 atlasTileUV(vec2 originalUV, vec2 tile) {
-    return fract(originalUV)*0.48 + vec2(tile.x*0.5+0.01, tile.y*0.5+0.01);
+    return atlasTileUV(originalUV, tile, 1.0);
+  }
+
+  // Tile Mixer: atlas1 + atlas2 according to noise
+  vec4 tileMix(vec2 originalUV, vec2 tileUV, float axisNormal) {
+    return mix(
+      texture2D(diffuseSamplerX, atlasTileUV(originalUV,tileUV))*axisNormal, //tile from atlas1
+      texture2D(diffuseSamplerY, atlasTileUV(originalUV,tileUV))*axisNormal, //tile from atlas2
+      (texture2D(diffuseSamplerZ, atlasTileUV(originalUV,tileUV, NOISE_SCALE))*axisNormal).r); //tile mix noise
   }
 
   void main(void) {
@@ -105,17 +122,17 @@ var shader = `
     vec3 diffuseColor=vDiffuseColor.rgb;
     float alpha=vDiffuseColor.a;
 
-    // #ifdef NORMAL
-    //   vec3 normalW=tangentSpace[2];
-    // #else
-    //   vec3 normalW=vec3(1.0,1.0,1.0);
-    // #endif
-
-    vec4 baseNormal=vec4(0.0,0.0,0.0,1.0);
+    //Unlike the original triplanar shader, here we need Mesh Normals
+    vec3 normalW=tangentSpace[2];
     normalW*=normalW;
 
+    // NOTE: TEXTURE BASED BUMP/NORMAL MAPS WHERE DISABLED (FOR NOW)
+    // It is possible to create another atlas for normalmaps if you want,
+    // Load it as a sampler2D, then replace "baseNormal" texture2D's with tileMix.
+    // vec4 baseNormal=vec4(0.0,0.0,0.0,1.0); 
+
     #ifdef DIFFUSEX
-      baseColor+=texture2D(diffuseSamplerX, atlasTileUV(vTextureUVX,TILE4) )*normalW.x;
+      baseColor += tileMix( vTextureUVX, TILE4, normalW.x );
     
       // #ifdef BUMPX
       //   baseNormal+=texture2D(normalSamplerX,vTextureUVX)*normalW.x;
@@ -123,96 +140,81 @@ var shader = `
     #endif
 
     #ifdef DIFFUSEY
-    //baseColor+=texture2D(diffuseSamplerY, atlasUV4 )*normalW.y;
-    //vec4 atlasTX1 = texture2D(diffuseSamplerY, atlasUV1 )*normalW.y;
-    //vec4 atlasTX2 = texture2D(diffuseSamplerY, atlasUV2 )*normalW.y;
-    //vec4 atlasTX3 = texture2D(diffuseSamplerY, atlasUV3 )*normalW.y;
-    //vec4 atlasTX4 = texture2D(diffuseSamplerY, atlasUV4 )*normalW.y;
 
-continuar aqui, converter esses MIX para atlasTileUV(...)
-documentar o que for necessario
-comentar tudo relacionado aos normals, manter no final apenas normalW=tangentSpace[2];
+      vec4 grassMix = tileMix( vTextureUVY, TILE1, normalW.y );
+      vec4 sandMix = tileMix( vTextureUVY, TILE2, normalW.y );
+      vec4 plateauMix = tileMix( vTextureUVY, TILE3, normalW.y );
 
-    vec4 grassMix = mix(
-      texture2D(diffuseSamplerX, atlasTileUV(vTextureUVY,TILE1) )*normalW.y, //atlas1 grass
-      texture2D(diffuseSamplerY, fract(vTextureUVY)*0.48 + vec2(0.01,0.51) )*normalW.y, //atlas2 grass
-      (texture2D(diffuseSamplerZ, fract(vTextureUVY * 0.05)*0.48 + vec2(0.51,0.01) )*normalW.y).r); //grass noise
+      if(vPositionW.y >= 0.0)
+      {
+        baseColor += mix( grassMix, plateauMix, min(1.0, sin(vPositionW.y*0.1) ) );
+      }
+      else
+      {
+        baseColor += mix( grassMix, sandMix, min(1.0,-vPositionW.y) );
+      }
 
-    vec4 sandMix = mix(
-      texture2D(diffuseSamplerX, fract(vTextureUVY)*0.48 + vec2(0.51,0.51) )*normalW.y, //atlas1 sand
-      texture2D(diffuseSamplerY, fract(vTextureUVY)*0.48 + vec2(0.51,0.51) )*normalW.y, //atlas2 sand
-      (texture2D(diffuseSamplerZ, fract(vTextureUVY * 0.05)*0.48 + vec2(0.51,0.51) )*normalW.y).r); //sand noise
-
-    vec4 rockMix = mix(
-      texture2D(diffuseSamplerX, fract(vTextureUVY)*0.48 + vec2(0.01,0.01) )*normalW.y, //atlas1 rock
-      texture2D(diffuseSamplerY, fract(vTextureUVY)*0.48 + vec2(0.01,0.01) )*normalW.y, //atlas2 rock
-      (texture2D(diffuseSamplerZ, fract(vTextureUVY * 0.05)*0.48 + vec2(0.01,0.01) )*normalW.y).r); //rock noise
-
-    if(vPositionW.y >= 0.0)
-    {
-      //baseColor+= atlasTX1;
-      
-      //baseColor += mix( atlasTX1, atlasTX3, min(1.0, sin(vPositionW.y*0.1) ) );//OK!
-      baseColor += mix( grassMix, rockMix, min(1.0, sin(vPositionW.y*0.1) ) );//OK!
-    }
-    else
-    {
-      baseColor+= mix( grassMix, sandMix, min(1.0,-vPositionW.y) );
-    }
-    #ifdef BUMPY
-    baseNormal+=texture2D(normalSamplerY,vTextureUVY)*normalW.y;
+      // #ifdef BUMPY
+      //   baseNormal+=texture2D(normalSamplerY,vTextureUVY)*normalW.y;
+      // #endif
     #endif
-    #endif
+
     #ifdef DIFFUSEZ
-    
-    vec4 cliffMixZ = mix(
-      texture2D(diffuseSamplerX, fract(vTextureUVZ)*0.48 + vec2(0.51,0.01) )*normalW.z, //atlas1 cliff
-      texture2D(diffuseSamplerY, fract(vTextureUVZ)*0.48 + vec2(0.51,0.01) )*normalW.z, //atlas2 cliff
-      (texture2D(diffuseSamplerZ, fract(vTextureUVZ * 0.05)*0.48 + vec2(0.51,0.01) )*normalW.z).r); //cliff noise
+      baseColor += tileMix( vTextureUVZ, TILE4, normalW.z );
 
-    baseColor += cliffMixZ;//TODO: verificar noise seamless!
+      // #ifdef BUMPZ
+      // baseNormal+=texture2D(normalSamplerZ,vTextureUVZ)*normalW.z;
+      // #endif
+    #endif
 
-    #ifdef BUMPZ
-    baseNormal+=texture2D(normalSamplerZ,vTextureUVZ)*normalW.z;
-    #endif
-    #endif
-    #ifdef NORMAL
-    //normalW=normalize((2.0*baseNormal.xyz-1.0)*tangentSpace);
-    normalW=tangentSpace[2]; //IGNORE ALL NORMAL CHANGES
-    #endif
+    // NOTE: RESTORE THIS IF YOU GENERATE "baseNormal"
+    // #ifdef NORMAL
+    //   normalW=normalize((2.0*baseNormal.xyz-1.0)*tangentSpace);
+    // #endif
+
     #ifdef ALPHATEST
-    if (baseColor.a<0.4)
-    discard;
+      if (baseColor.a<0.4)
+        discard;
     #endif
+
     #include<depthPrePass>
+
     #ifdef VERTEXCOLOR
-    baseColor.rgb*=vColor.rgb;
+      baseColor.rgb*=vColor.rgb;
     #endif
 
     vec3 diffuseBase=vec3(0.,0.,0.);
     lightingInfo info;
     float shadow=1.;
+
     #ifdef SPECULARTERM
-    float glossiness=vSpecularColor.a;
-    vec3 specularBase=vec3(0.,0.,0.);
-    vec3 specularColor=vSpecularColor.rgb;
+      float glossiness=vSpecularColor.a;
+      vec3 specularBase=vec3(0.,0.,0.);
+      vec3 specularColor=vSpecularColor.rgb;
     #else
-    float glossiness=0.;
+      float glossiness=0.;
     #endif
+
     #include<lightFragment>[0..maxSimultaneousLights]
+
     #ifdef VERTEXALPHA
-    alpha*=vColor.a;
+      alpha*=vColor.a;
     #endif
+
     #ifdef SPECULARTERM
-    vec3 finalSpecular=specularBase*specularColor;
+      vec3 finalSpecular=specularBase*specularColor;
     #else
-    vec3 finalSpecular=vec3(0.0);
+      vec3 finalSpecular=vec3(0.0);
     #endif
+
     vec3 finalDiffuse=clamp(diffuseBase*diffuseColor,0.0,1.0)*baseColor.rgb;
 
     vec4 color=vec4(finalDiffuse+finalSpecular,alpha);
+
     #include<fogFragment>
+
     gl_FragColor=color;
+
     #include<imageProcessingCompatibility>
   }
 `;
