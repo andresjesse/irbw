@@ -4,7 +4,31 @@ export default class WaterSegment {
   constructor(scene) {
     this.scene = scene;
 
-    var ground = BABYLON.Mesh.CreateGround("ground2", 100, 100, 32, scene);
+    //----- create children -----
+
+    //----- preload self assets -----
+
+    this.scene.assetsManager.addTextureTask(
+      "textureWaternm",
+      "textures/waternm.jpg"
+    ).onSuccess = (task) => {
+      this.textureWaternm = task.texture;
+    };
+
+    this.scene.assetsManager.addTextureTask(
+      "textureClouds",
+      "textures/clouds.jpg"
+    ).onSuccess = (task) => {
+      this.textureClouds = task.texture;
+    };
+  }
+
+  onStart() {
+    //----- start children -----
+
+    //----- start self -----
+
+    var ground = BABYLON.Mesh.CreateGround("ground2", 100, 100, 32, this.scene);
 
     BABYLON.Effect.ShadersStore["customWaterVertexShader"] = `
         precision highp float;
@@ -44,7 +68,7 @@ export default class WaterSegment {
 
     var shaderMaterial = new BABYLON.ShaderMaterial(
       "shader",
-      scene,
+      this.scene,
       {
         vertex: "customWater",
         fragment: "customWater",
@@ -64,16 +88,16 @@ export default class WaterSegment {
 
     shaderMaterial.setTexture(
       "normalMap",
-      new BABYLON.Texture("textures/waternm.jpeg", scene)
+      this.textureWaternm //new BABYLON.Texture("textures/waternm.jpeg", this.scene)
     );
 
     shaderMaterial.setTexture(
       "reflectionMap",
-      new BABYLON.Texture("textures/clouds.jpg", scene)
+      this.textureClouds //new BABYLON.Texture("textures/clouds.jpg", this.scene)
     );
 
     let time = 0;
-    scene.registerBeforeRender(function () {
+    this.scene.registerBeforeRender(function () {
       shaderMaterial.setFloat("time", time);
       time += 0.1;
     });

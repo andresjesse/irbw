@@ -6,14 +6,17 @@ export default class Terrain {
   constructor(scene) {
     this.scene = scene;
 
+    //----- create children -----
     this.segments = {
       "0_0": new TerrainSegment(this.scene, "0_0"),
     };
   }
 
   onStart() {
-    //TODO: iterate ALL!!!
-    this.segments["0_0"].onStart();
+    //----- start children -----
+    Object.keys(this.segments).forEach((k) => this.segments[k].onStart());
+
+    //----- start self -----
   }
 
   transform(options) {

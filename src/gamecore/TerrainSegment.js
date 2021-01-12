@@ -12,6 +12,12 @@ export default class TerrainSegment {
   constructor(scene, id) {
     this.scene = scene;
 
+    //----- create children -----
+
+    this.waterSegment = new WaterSegment(this.scene);
+
+    //----- preload self assets -----
+
     this.scene.assetsManager.addTextureTask(
       "textureAtlas1",
       "textures/terrain/atlas1.jpg"
@@ -35,6 +41,12 @@ export default class TerrainSegment {
   }
 
   onStart() {
+    //----- start children -----
+
+    this.waterSegment.onStart();
+
+    //----- start self -----
+
     //mesh OK!!!
     // this.ground = BABYLON.MeshBuilder.CreateGround(
     //   "ground_" + id,
@@ -52,9 +64,6 @@ export default class TerrainSegment {
       this.scene,
       false
     );
-
-    //WATER
-    let waterSegment = new WaterSegment(this.scene);
 
     // //temp material
     // var myMaterial = new BABYLON.StandardMaterial("myMaterial", this.scene);

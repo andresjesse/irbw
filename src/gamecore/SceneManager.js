@@ -19,7 +19,7 @@ export default class SceneManager {
 
     this.imgr = new UniversalInputManager(scene);
 
-    //create scene elements
+    //----- create children -----
     this.terrain = new Terrain(this.scene);
   }
 
@@ -27,8 +27,10 @@ export default class SceneManager {
     this.createCamera(SmgrTypes.CAMERA_EDITOR);
     this.createLights();
 
-    //start scene elements
+    //----- start children -----
     this.terrain.onStart();
+
+    //----- start self -----
 
     //----------------------------- temp stuff -----------------------
     this.box = BABYLON.MeshBuilder.CreateBox(
