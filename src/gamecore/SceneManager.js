@@ -4,7 +4,7 @@ import * as BABYLON from "@babylonjs/core";
 
 import UniversalInputManager, { LogicalInputs } from "./UniversalInputManager";
 
-import Terrain from "./Terrain";
+import Terrain from "./environment/Terrain";
 
 /**
  * Scene Enumerable Types
