@@ -3,6 +3,8 @@ import { Vector3 } from "@babylonjs/core";
 
 import { TriPlanarMaterial } from "../materials/customTriPlanar";
 
+import WaterSegment from "./WaterSegment";
+
 const MAX_HEIGHT = 20;
 const MIN_HEIGHT = -1;
 
@@ -10,12 +12,26 @@ export default class TerrainSegment {
   constructor(scene, id) {
     this.scene = scene;
 
-    //mesh
-    this.ground = BABYLON.MeshBuilder.CreateGround(
-      "ground_" + id,
-      { width: 100, height: 100, updatable: true, subdivisions: 128 },
-      this.scene
+    //mesh OK!!!
+    // this.ground = BABYLON.MeshBuilder.CreateGround(
+    //   "ground_" + id,
+    //   { width: 100, height: 100, updatable: true, subdivisions: 128 },
+    //   this.scene
+    // );
+    this.ground = BABYLON.Mesh.CreateGroundFromHeightMap(
+      "ground",
+      "textures/TEMPHeightmap.png",
+      100,
+      100,
+      250,
+      -4,
+      10,
+      scene,
+      false
     );
+
+    //WATER
+    let waterSegment = new WaterSegment(scene);
 
     // //temp material
     // var myMaterial = new BABYLON.StandardMaterial("myMaterial", this.scene);
