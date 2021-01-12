@@ -12,6 +12,29 @@ export default class TerrainSegment {
   constructor(scene, id) {
     this.scene = scene;
 
+    this.scene.assetsManager.addTextureTask(
+      "textureAtlas1",
+      "textures/terrain/atlas1.jpg"
+    ).onSuccess = (task) => {
+      this.textureAtlas1 = task.texture;
+    };
+
+    this.scene.assetsManager.addTextureTask(
+      "textureAtlas2",
+      "textures/terrain/atlas2.jpg"
+    ).onSuccess = (task) => {
+      this.textureAtlas2 = task.texture;
+    };
+
+    this.scene.assetsManager.addTextureTask(
+      "textureNoise",
+      "textures/terrain/noise.jpg"
+    ).onSuccess = (task) => {
+      this.textureNoise = task.texture;
+    };
+  }
+
+  onStart() {
     //mesh OK!!!
     // this.ground = BABYLON.MeshBuilder.CreateGround(
     //   "ground_" + id,
@@ -26,12 +49,12 @@ export default class TerrainSegment {
       250,
       -4,
       10,
-      scene,
+      this.scene,
       false
     );
 
     //WATER
-    let waterSegment = new WaterSegment(scene);
+    let waterSegment = new WaterSegment(this.scene);
 
     // //temp material
     // var myMaterial = new BABYLON.StandardMaterial("myMaterial", this.scene);
@@ -51,22 +74,28 @@ export default class TerrainSegment {
 
     let disableMipMaps = true;
 
-    var triPlanarMaterial = new TriPlanarMaterial("triplanar", scene);
-    triPlanarMaterial.diffuseTextureX = new BABYLON.Texture(
-      "textures/terrain/atlas1.jpg",
-      scene,
-      disableMipMaps
-    );
-    triPlanarMaterial.diffuseTextureY = new BABYLON.Texture(
-      "textures/terrain/atlas2.jpg",
-      scene,
-      disableMipMaps
-    );
-    triPlanarMaterial.diffuseTextureZ = new BABYLON.Texture(
-      "textures/terrain/noise.jpg",
-      scene,
-      disableMipMaps
-    );
+    var triPlanarMaterial = new TriPlanarMaterial("triplanar", this.scene);
+    triPlanarMaterial.diffuseTextureX = this.textureAtlas1;
+    triPlanarMaterial.diffuseTextureY = this.textureAtlas2;
+    triPlanarMaterial.diffuseTextureZ = this.textureNoise;
+
+    // triPlanarMaterial.diffuseTextureX = new BABYLON.Texture(
+    //   "textures/terrain/atlas1.jpg",
+    //   this.scene,
+    //   disableMipMaps
+    // );
+
+    // triPlanarMaterial.diffuseTextureY = new BABYLON.Texture(
+    //   "textures/terrain/atlas2.jpg",
+    //   this.scene,
+    //   disableMipMaps
+    // );
+
+    // triPlanarMaterial.diffuseTextureZ = new BABYLON.Texture(
+    //   "textures/terrain/noise.jpg",
+    //   this.scene,
+    //   disableMipMaps
+    // );
 
     triPlanarMaterial.specularPower = 32;
     triPlanarMaterial.tileSize = 7;

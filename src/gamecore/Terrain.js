@@ -11,6 +11,11 @@ export default class Terrain {
     };
   }
 
+  onStart() {
+    //TODO: iterate ALL!!!
+    this.segments["0_0"].onStart();
+  }
+
   transform(options) {
     var pickinfo = this.scene.pick(
       options.x, //this.scene.pointerX

@@ -18,12 +18,17 @@ export default class SceneManager {
     this.scene = scene;
 
     this.imgr = new UniversalInputManager(scene);
+
+    //create scene elements
+    this.terrain = new Terrain(this.scene);
   }
 
   onStart() {
     this.createCamera(SmgrTypes.CAMERA_EDITOR);
     this.createLights();
-    this.createTerrain();
+
+    //start scene elements
+    this.terrain.onStart();
 
     //----------------------------- temp stuff -----------------------
     this.box = BABYLON.MeshBuilder.CreateBox(
@@ -133,9 +138,5 @@ export default class SceneManager {
     this.shadowGenerator = new BABYLON.ShadowGenerator(512, light);
     this.shadowGenerator.usePercentageCloserFiltering = true;
     this.shadowGenerator.filteringQuality = BABYLON.ShadowGenerator.QUALITY_LOW;
-  }
-
-  createTerrain() {
-    this.terrain = new Terrain(this.scene);
   }
 }
