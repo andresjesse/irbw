@@ -2,6 +2,8 @@ import * as BABYLON from "@babylonjs/core";
 
 import createCustomWaterMaterial from "../../materials/customWater/customWaterMaterial";
 
+import Texture2DArrayHelper from "../../materials/helpers/Texture2DArrayHelper";
+
 export default class WaterSegment {
   constructor(scene, id) {
     this.scene = scene;
@@ -46,27 +48,11 @@ export default class WaterSegment {
 
     ground.material = customWaterMaterial;
 
-    //temp
-
-    let data1 = this.textureWaternm.readPixels();
-    let data2 = this.textureClouds.readPixels();
-
-    let data = new Uint8Array([...data1, ...data2]);
-
-    let t2D = new BABYLON.RawTexture2DArray(
-      data,
-      1024, //width
-      1024, //height
-      2, //layers
-      BABYLON.Engine.TEXTUREFORMAT_RGBA,
-      this.scene,
-      true, //mipmaps
-      false, //inverty
-      BABYLON.Texture.NEAREST_SAMPLINGMODE
-    );
-
+    //TODO: remove this after reverting water shader to sampler2D
+    let t2D = Texture2DArrayHelper.createFromTextures(this.scene, [
+      this.textureWaternm,
+      this.textureClouds,
+    ]);
     customWaterMaterial.setTexture("arrayTex", t2D);
-
-    // console.log(generateArray(this.textureWaternm, this.textureClouds));
   }
 }
