@@ -15,7 +15,7 @@ export default class TerrainSegment {
 
     //----- create children -----
 
-    this.waterSegment = new WaterSegment(this.scene);
+    this.waterSegment = new WaterSegment(this.scene, this.id);
 
     //----- preload self assets -----
 
