@@ -47,12 +47,5 @@ export default class WaterSegment {
     customWaterMaterial.setTexture("reflectionMap", this.textureClouds);
 
     ground.material = customWaterMaterial;
-
-    //TODO: remove this after reverting water shader to sampler2D
-    let t2D = Texture2DArrayHelper.createFromTextures(this.scene, [
-      this.textureWaternm,
-      this.textureClouds,
-    ]);
-    customWaterMaterial.setTexture("arrayTex", t2D);
   }
 }

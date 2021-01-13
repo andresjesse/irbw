@@ -22,25 +22,20 @@ BABYLON.Effect.ShadersStore["customWaterVertexShader"] = `
 
 BABYLON.Effect.ShadersStore["customWaterFragmentShader"] = `
     precision highp float;
-    precision highp sampler2DArray;
 
     varying vec2 vUV;
 
     uniform float time;
 
-    //uniform sampler2D normalMap;
-    //uniform sampler2D reflectionMap;
-
-    uniform sampler2DArray arrayTex;
+    uniform sampler2D normalMap;
+    uniform sampler2D reflectionMap;
 
     void main(void) {
-      vec4 txNormal = texture(arrayTex, vec3(vUV*10.0 + vec2(time, time/2.0)*0.005, 0));
-      vec4 diffuse = texture(arrayTex, vec3(vUV + vec2(txNormal.r, txNormal.g)*0.5 -vec2(time, time)*0.005, 1) );
+      
+      vec4 txNormal = texture2D(normalMap, vUV*10.0 + vec2(time, time/2.0)*0.005 );
+      vec4 diffuse = texture2D(reflectionMap, vUV + vec2(txNormal.r, txNormal.g)*0.5 -vec2(time, time)*0.005 );
 
-      //vec4 txNormal = texture2D(normalMap, vUV*10.0 + vec2(time, time/2.0)*0.005 );
-      //vec4 diffuse = texture2D(reflectionMap, vUV + vec2(txNormal.r, txNormal.g)*0.5 -vec2(time, time)*0.005 );
-
-      //diffuse.a = 0.4;
+      diffuse.a = 0.4;
 
       gl_FragColor = diffuse;
     }
