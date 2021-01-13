@@ -80,7 +80,8 @@ export default class SceneManager {
     if (type === SmgrTypes.CAMERA_EDITOR) {
       this.camera = new FreeCamera(
         "EDITOR_CAMERA",
-        new Vector3(0, 32, -32),
+        //new Vector3(0, 32, -32),
+        new Vector3(0, 50, -50),
         this.scene
       );
 

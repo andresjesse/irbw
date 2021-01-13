@@ -2,7 +2,7 @@ import * as BABYLON from "@babylonjs/core";
 
 import createCustomWaterMaterial from "../../materials/customWater/customWaterMaterial";
 
-import Texture2DArrayHelper from "../../materials/helpers/Texture2DArrayHelper";
+import { TerrainSegmentConfig } from "./TerrainSegment";
 
 export default class WaterSegment {
   constructor(scene, id) {
@@ -33,11 +33,14 @@ export default class WaterSegment {
 
     //----- start self -----
 
-    var ground = BABYLON.Mesh.CreateGround(
+    this.ground = BABYLON.MeshBuilder.CreateGround(
       "water_" + this.id,
-      100,
-      100,
-      32,
+      {
+        width: TerrainSegmentConfig.MESH_SIZE,
+        height: TerrainSegmentConfig.MESH_SIZE,
+        updatable: true,
+        subdivisions: TerrainSegmentConfig.MESH_RESOLUTION - 1,
+      },
       this.scene
     );
 
@@ -46,6 +49,10 @@ export default class WaterSegment {
     customWaterMaterial.setTexture("normalMap", this.textureWaternm);
     customWaterMaterial.setTexture("reflectionMap", this.textureClouds);
 
-    ground.material = customWaterMaterial;
+    this.ground.material = customWaterMaterial;
+  }
+
+  updateVerticesData(kind, data) {
+    this.ground.updateVerticesData(kind, data);
   }
 }

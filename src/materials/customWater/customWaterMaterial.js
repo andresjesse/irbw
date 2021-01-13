@@ -1,6 +1,11 @@
 import * as BABYLON from "@babylonjs/core";
 
-BABYLON.Effect.ShadersStore["customWaterVertexShader"] = `
+import { TerrainSegmentConfig } from "../../gamecore/environment/TerrainSegment";
+
+const WATER_ALPHA = 0.6;
+
+const createCustomWaterMaterial = (scene) => {
+  BABYLON.Effect.ShadersStore["customWaterVertexShader"] = `
     precision highp float;
 
     // Attributes
@@ -12,18 +17,25 @@ BABYLON.Effect.ShadersStore["customWaterVertexShader"] = `
 
     // Varying
     varying vec2 vUV;
+    varying float yPos;
 
     void main(void) {
-        gl_Position = worldViewProjection * vec4(position, 1.0);
 
-        vUV = uv;
+      yPos = position.y;
+
+      gl_Position = worldViewProjection * vec4(position.x, ${
+        TerrainSegmentConfig.MIN_HEIGHT * 0.5
+      }, position.z, 1.0);
+
+      vUV = uv;
     }
   `;
 
-BABYLON.Effect.ShadersStore["customWaterFragmentShader"] = `
+  BABYLON.Effect.ShadersStore["customWaterFragmentShader"] = `
     precision highp float;
 
     varying vec2 vUV;
+    varying float yPos;
 
     uniform float time;
 
@@ -35,13 +47,14 @@ BABYLON.Effect.ShadersStore["customWaterFragmentShader"] = `
       vec4 txNormal = texture2D(normalMap, vUV*10.0 + vec2(time, time/2.0)*0.005 );
       vec4 diffuse = texture2D(reflectionMap, vUV + vec2(txNormal.r, txNormal.g)*0.5 -vec2(time, time)*0.005 );
 
-      diffuse.a = 0.4;
+      float normalizedYPos = yPos/${TerrainSegmentConfig.MIN_HEIGHT.toFixed(2)};
+
+      diffuse.a = clamp( pow(normalizedYPos, 4.0), 0.0, ${WATER_ALPHA});
 
       gl_FragColor = diffuse;
     }
   `;
 
-const createCustomWaterMaterial = (scene) => {
   let customWaterMaterial = new BABYLON.ShaderMaterial(
     "customWaterMaterial",
     scene,

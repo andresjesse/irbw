@@ -6,8 +6,13 @@ import Texture2DArrayHelper from "../../materials/helpers/Texture2DArrayHelper";
 
 import WaterSegment from "./WaterSegment";
 
-const MAX_HEIGHT = 20;
-const MIN_HEIGHT = -1;
+export const TerrainSegmentConfig = {
+  MAX_HEIGHT: 20,
+  MIN_HEIGHT: -4,
+
+  MESH_SIZE: 100,
+  MESH_RESOLUTION: 64,
+};
 
 export default class TerrainSegment {
   constructor(scene, id) {
@@ -52,24 +57,29 @@ export default class TerrainSegment {
     //----- start self -----
 
     //mesh OK!!!
-    // this.ground = BABYLON.MeshBuilder.CreateGround(
-    //   "ground_" + this.id,
-    //   { width: 100, height: 100, updatable: true, subdivisions: 128 },
-    //   this.scene
-    // );
+    this.ground = BABYLON.MeshBuilder.CreateGround(
+      "ground_" + this.id,
+      {
+        width: TerrainSegmentConfig.MESH_SIZE,
+        height: TerrainSegmentConfig.MESH_SIZE,
+        updatable: true,
+        subdivisions: TerrainSegmentConfig.MESH_RESOLUTION - 1,
+      },
+      this.scene
+    );
 
     //TEMP GROUND!!!
-    this.ground = BABYLON.Mesh.CreateGroundFromHeightMap(
-      "ground",
-      "textures/TEMPHeightmap.png",
-      100,
-      100,
-      250,
-      -4,
-      10,
-      this.scene,
-      false
-    );
+    // this.ground = BABYLON.Mesh.CreateGroundFromHeightMap(
+    //   "ground",
+    //   "textures/TEMPHeightmap.png",
+    //   100,
+    //   100,
+    //   250,
+    //   -4,
+    //   10,
+    //   this.scene,
+    //   false
+    // );
 
     var triPlanarMaterial = new TriPlanarMaterial("triplanar", this.scene);
 
@@ -142,24 +152,35 @@ export default class TerrainSegment {
           positions[i * 3 + 1] +=
             options.brushStrength * options.factor * ratio;
 
-          if (positions[i * 3 + 1] > MAX_HEIGHT)
-            positions[i * 3 + 1] = MAX_HEIGHT;
-          if (positions[i * 3 + 1] < MIN_HEIGHT)
-            positions[i * 3 + 1] = MIN_HEIGHT;
+          if (positions[i * 3 + 1] > TerrainSegmentConfig.MAX_HEIGHT)
+            positions[i * 3 + 1] = TerrainSegmentConfig.MAX_HEIGHT;
+          if (positions[i * 3 + 1] < TerrainSegmentConfig.MIN_HEIGHT)
+            positions[i * 3 + 1] = TerrainSegmentConfig.MIN_HEIGHT;
         }
       }
     }
+
+    //update mesh
 
     this.ground.updateVerticesData(
       BABYLON.VertexBuffer.PositionKind,
       positions
     );
 
+    //update water mesh
+    this.waterSegment.updateVerticesData(
+      BABYLON.VertexBuffer.PositionKind,
+      positions
+    );
+
+    //recalculate normals
+
     BABYLON.VertexData.ComputeNormals(
       positions,
       this.ground.getIndices(),
       normals
     );
+
     this.ground.updateVerticesData(BABYLON.VertexBuffer.NormalKind, normals);
   }
 }
