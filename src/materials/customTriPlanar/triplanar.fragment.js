@@ -16,16 +16,10 @@ var name = "triplanarPixelShader";
 /**
 Custom Triplanar Shader:
 
-  Textures (Sampler2D):
-    Diffuse X = AtlasMap1
-    Diffuse Y = AtlasMap2
+  Textures (changed to sampler2DArray):
+    Diffuse X = Textures from layer 1
+    Diffuse Y = Textures from layer 2
     Diffuse Z = NoiseMap (for mix)
-
-  AtlasMaps Content:
-    UV TILE1 (up, left): Grass
-    UV TILE2 (up, right): Sand
-    UV TILE3 (down, left): Rocky Plateau
-    UV TILE4 (down, right): Rocky Cliff
 
   Original Triplanar Shader NormalMaps Samplers:
     Ignored (for now), using just normalW=tangentSpace[2]
@@ -33,6 +27,7 @@ Custom Triplanar Shader:
 
 var shader = `
   precision highp float;
+  precision highp sampler2DArray;
 
   // -- HARDCODED ADJUSTABLE PARAMS --
   const float NOISE_SCALE = 0.05;
@@ -57,28 +52,28 @@ var shader = `
 
   #ifdef DIFFUSEX
     varying vec2 vTextureUVX;
-    uniform sampler2D diffuseSamplerX;
+    uniform sampler2DArray diffuseSamplerX;
     
-    #ifdef BUMPX
-      uniform sampler2D normalSamplerX;
-    #endif
+    // #ifdef BUMPX
+    //   uniform sampler2D normalSamplerX;
+    // #endif
   #endif
 
   #ifdef DIFFUSEY
     varying vec2 vTextureUVY;
-    uniform sampler2D diffuseSamplerY;
+    uniform sampler2DArray diffuseSamplerY;
     
-    #ifdef BUMPY
-      uniform sampler2D normalSamplerY;
-    #endif
+    // #ifdef BUMPY
+    //   uniform sampler2D normalSamplerY;
+    // #endif
   #endif
 
   #ifdef DIFFUSEZ
     varying vec2 vTextureUVZ;
     uniform sampler2D diffuseSamplerZ;
-    #ifdef BUMPZ
-      uniform sampler2D normalSamplerZ;
-    #endif
+    // #ifdef BUMPZ
+    //   uniform sampler2D normalSamplerZ;
+    // #endif
   #endif
 
   #ifdef NORMAL
@@ -90,27 +85,18 @@ var shader = `
   #include<clipPlaneFragmentDeclaration>
   #include<fogFragmentDeclaration>
 
-  // Atlas UV Tiles
-  const vec2 TILE1 = vec2(0.0, 1.0);
-  const vec2 TILE2 = vec2(1.0, 1.0);
-  const vec2 TILE3 = vec2(0.0, 0.0);
-  const vec2 TILE4 = vec2(1.0, 0.0);
+  // Layer/Array Tiles
+  const int TILE1_GRASS = 0;
+  const int TILE2_SAND = 1;
+  const int TILE3_ROCK = 2;
+  const int TILE4_CLIFF = 3;
 
-  // Atlas UV calculator
-  vec2 atlasTileUV(vec2 originalUV, vec2 tile, float noiseScale) {
-    return fract(originalUV * noiseScale)*(0.5-TILE_PADDING) + vec2(tile.x*0.5+TILE_PADDING*0.5, tile.y*0.5+TILE_PADDING*0.5);
-  }
-
-  vec2 atlasTileUV(vec2 originalUV, vec2 tile) {
-    return atlasTileUV(originalUV, tile, 1.0);
-  }
-
-  // Tile Mixer: atlas1 + atlas2 according to noise
-  vec4 tileMix(vec2 originalUV, vec2 tileUV, float axisNormal) {
+  // Tile Mixer: layer1 + layer2 according to noise map
+  vec4 tileMix(vec2 originalUV, int tileIndex, float axisNormal) {
     return mix(
-      texture2D(diffuseSamplerX, atlasTileUV(originalUV,tileUV))*axisNormal, //tile from atlas1
-      texture2D(diffuseSamplerY, atlasTileUV(originalUV,tileUV))*axisNormal, //tile from atlas2
-      (texture2D(diffuseSamplerZ, atlasTileUV(originalUV,tileUV, NOISE_SCALE))*axisNormal).r); //tile mix noise
+      texture(diffuseSamplerX, vec3(originalUV, tileIndex) )*axisNormal, //tile from layer1
+      texture(diffuseSamplerY, vec3(originalUV, tileIndex) )*axisNormal, //tile from layer2
+      (texture2D(diffuseSamplerZ, originalUV * NOISE_SCALE )*axisNormal).r); //tile mix noise
   }
 
   void main(void) {
@@ -127,12 +113,13 @@ var shader = `
     normalW*=normalW;
 
     // NOTE: TEXTURE BASED BUMP/NORMAL MAPS WHERE DISABLED (FOR NOW)
-    // It is possible to create another atlas for normalmaps if you want,
-    // Load it as a sampler2D, then replace "baseNormal" texture2D's with tileMix.
+    // It is possible to create another texture array for normalmaps if you want,
+    // Load it as a sampler2DArray, then replace "baseNormal" texture's with tileMix.
+
     // vec4 baseNormal=vec4(0.0,0.0,0.0,1.0); 
 
     #ifdef DIFFUSEX
-      baseColor += tileMix( vTextureUVX, TILE4, normalW.x );
+      baseColor += tileMix( vTextureUVX, TILE4_CLIFF, normalW.x );
     
       // #ifdef BUMPX
       //   baseNormal+=texture2D(normalSamplerX,vTextureUVX)*normalW.x;
@@ -141,9 +128,9 @@ var shader = `
 
     #ifdef DIFFUSEY
 
-      vec4 grassMix = tileMix( vTextureUVY, TILE1, normalW.y );
-      vec4 sandMix = tileMix( vTextureUVY, TILE2, normalW.y );
-      vec4 plateauMix = tileMix( vTextureUVY, TILE3, normalW.y );
+      vec4 grassMix = tileMix( vTextureUVY, TILE1_GRASS, normalW.y );
+      vec4 sandMix = tileMix( vTextureUVY, TILE2_SAND, normalW.y );
+      vec4 plateauMix = tileMix( vTextureUVY, TILE3_ROCK, normalW.y );
 
       if(vPositionW.y >= 0.0)
       {
@@ -160,7 +147,7 @@ var shader = `
     #endif
 
     #ifdef DIFFUSEZ
-      baseColor += tileMix( vTextureUVZ, TILE4, normalW.z );
+      baseColor += tileMix( vTextureUVZ, TILE4_CLIFF, normalW.z );
 
       // #ifdef BUMPZ
       // baseNormal+=texture2D(normalSamplerZ,vTextureUVZ)*normalW.z;

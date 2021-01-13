@@ -2,6 +2,7 @@ import * as BABYLON from "@babylonjs/core";
 import { Vector3 } from "@babylonjs/core";
 
 import { TriPlanarMaterial } from "../../materials/customTriPlanar";
+import Texture2DArrayHelper from "../../materials/helpers/Texture2DArrayHelper";
 
 import WaterSegment from "./WaterSegment";
 
@@ -19,26 +20,28 @@ export default class TerrainSegment {
 
     //----- preload self assets -----
 
-    this.scene.assetsManager.addTextureTask(
-      "textureAtlas1",
-      "textures/terrain/atlas1.jpg"
-    ).onSuccess = (task) => {
-      this.textureAtlas1 = task.texture;
+    this.textures = {};
+
+    const preloadTexture = (txFile) => {
+      this.scene.assetsManager.addTextureTask(
+        txFile,
+        "textures/terrain/" + txFile
+      ).onSuccess = (task) => {
+        this.textures[txFile] = task.texture;
+      };
     };
 
-    this.scene.assetsManager.addTextureTask(
-      "textureAtlas2",
-      "textures/terrain/atlas2.jpg"
-    ).onSuccess = (task) => {
-      this.textureAtlas2 = task.texture;
-    };
+    preloadTexture("layer1_grass.jpg");
+    preloadTexture("layer1_sand.jpg");
+    preloadTexture("layer1_rock.jpg");
+    preloadTexture("layer1_cliff.jpg");
 
-    this.scene.assetsManager.addTextureTask(
-      "textureNoise",
-      "textures/terrain/noise.jpg"
-    ).onSuccess = (task) => {
-      this.textureNoise = task.texture;
-    };
+    preloadTexture("layer2_grass.jpg");
+    preloadTexture("layer2_sand.jpg");
+    preloadTexture("layer2_rock.jpg");
+    preloadTexture("layer2_cliff.jpg");
+
+    preloadTexture("noise.jpg");
   }
 
   onStart() {
@@ -69,9 +72,28 @@ export default class TerrainSegment {
     );
 
     var triPlanarMaterial = new TriPlanarMaterial("triplanar", this.scene);
-    triPlanarMaterial.diffuseTextureX = this.textureAtlas1;
-    triPlanarMaterial.diffuseTextureY = this.textureAtlas2;
-    triPlanarMaterial.diffuseTextureZ = this.textureNoise;
+
+    triPlanarMaterial.diffuseTextureX = Texture2DArrayHelper.createFromTextures(
+      this.scene,
+      [
+        this.textures["layer1_grass.jpg"],
+        this.textures["layer1_sand.jpg"],
+        this.textures["layer1_rock.jpg"],
+        this.textures["layer1_cliff.jpg"],
+      ]
+    );
+
+    triPlanarMaterial.diffuseTextureY = Texture2DArrayHelper.createFromTextures(
+      this.scene,
+      [
+        this.textures["layer2_grass.jpg"],
+        this.textures["layer2_sand.jpg"],
+        this.textures["layer2_rock.jpg"],
+        this.textures["layer2_cliff.jpg"],
+      ]
+    );
+
+    triPlanarMaterial.diffuseTextureZ = this.textures["noise.jpg"];
 
     triPlanarMaterial.specularPower = 32;
     triPlanarMaterial.tileSize = 7;
