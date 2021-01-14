@@ -2,7 +2,9 @@ import * as BABYLON from "@babylonjs/core";
 
 import { TerrainSegmentConfig } from "../../gamecore/environment/TerrainSegment";
 
-const WATER_ALPHA = 0.6;
+const WATER_ALPHA = 0.45;
+const WAVE_DISTORTION = 0.3;
+const WAVE_SCALE = 8.0;
 
 const createCustomWaterMaterial = (scene) => {
   BABYLON.Effect.ShadersStore["customWaterVertexShader"] = `
@@ -42,14 +44,23 @@ const createCustomWaterMaterial = (scene) => {
     uniform sampler2D normalMap;
     uniform sampler2D reflectionMap;
 
+    uniform vec2 wind;
+    uniform vec3 diffuseLightColor;
+
     void main(void) {
       
-      vec4 txNormal = texture2D(normalMap, vUV*10.0 + vec2(time, time/2.0)*0.005 );
-      vec4 diffuse = texture2D(reflectionMap, vUV + vec2(txNormal.r, txNormal.g)*0.5 -vec2(time, time)*0.005 );
+      vec4 txNormal = texture2D(normalMap, vUV*${WAVE_SCALE.toFixed(
+        2
+      )} + vec2(time*wind.x, time*wind.y) );
+      vec4 diffuse = texture2D(reflectionMap, vUV + vec2(txNormal.r, txNormal.g)*${WAVE_DISTORTION.toFixed(
+        2
+      )} -vec2(time*wind.x, time*wind.y) );
 
       float normalizedYPos = yPos/${TerrainSegmentConfig.MIN_HEIGHT.toFixed(2)};
 
-      diffuse.a = clamp( pow(normalizedYPos, 4.0), 0.0, ${WATER_ALPHA});
+      float alpha = clamp( pow(normalizedYPos, 4.0), 0.0, ${WATER_ALPHA});
+
+      diffuse = diffuse * vec4(diffuseLightColor, alpha);
 
       gl_FragColor = diffuse;
     }
@@ -77,10 +88,17 @@ const createCustomWaterMaterial = (scene) => {
     }
   );
 
+  customWaterMaterial.setArray2("wind", [0.002, 0.002]);
+
   let time = 0;
-  scene.registerBeforeRender(function () {
+  scene.registerBeforeRender(() => {
     customWaterMaterial.setFloat("time", time);
     time += 0.1;
+
+    customWaterMaterial.setArray3(
+      "diffuseLightColor",
+      scene.lights[0].diffuse.asArray()
+    );
   });
 
   return customWaterMaterial;

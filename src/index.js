@@ -2,7 +2,7 @@
 
 import * as BABYLON from "@babylonjs/core";
 
-import SceneManager from "./gamecore/SceneManager";
+import EditorSceneManager from "./gamecore/EditorSceneManager";
 
 // Get the canvas DOM element
 var canvas = document.getElementById("renderCanvas");
@@ -18,7 +18,7 @@ const scene = new BABYLON.Scene(engine);
 scene.assetsManager = new BABYLON.AssetsManager(scene);
 
 //initialize SceneManager
-const smgr = new SceneManager(scene);
+const smgr = new EditorSceneManager(scene);
 
 //trigger Assets preloaded callback
 scene.assetsManager.onFinish = function (tasks) {
