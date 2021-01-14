@@ -20,7 +20,7 @@ export default class LightManager {
     setInterval(() => {
       this.setTimeOfDay(h);
 
-      h += 0.01;
+      h += 0.1;
       if (h >= 24) h = 0;
     }, 50);
   }
@@ -59,6 +59,7 @@ export default class LightManager {
     //this.shadowGenerator = new BABYLON.ShadowGenerator(1024, light);
     //this.shadowGenerator.usePoissonSampling = true; //slower (how much?)
     //this.shadowGenerator.useExponentialShadowMap = true; //faster (mais feio, antigo, false desabilita todos os efeitos blur)
+
     /*
     //METODO NOVO (Self Shadows OK)
     //this.shadowGenerator.useCloseExponentialShadowMap = true; //metodo novo, sem antialias
@@ -68,7 +69,8 @@ export default class LightManager {
     this.shadowGenerator.useKernelBlur = true;
     light.shadowMinZ = 0;
     light.shadowMaxZ = this.camera.maxZ;
-*/
+    */
+
     //WebGL 2.0 (automatic fallback to 1.0 when not compatible) (fast, better!)
     this.shadowGenerator = new BABYLON.ShadowGenerator(
       512,
@@ -76,6 +78,10 @@ export default class LightManager {
     );
     this.shadowGenerator.usePercentageCloserFiltering = true;
     this.shadowGenerator.filteringQuality = BABYLON.ShadowGenerator.QUALITY_LOW;
+
+    this.shadowGenerator.useBlurExponentialShadowMap = true;
+    this.shadowGenerator.useKernelBlur = true;
+    this.shadowGenerator.blurKernel = 64;
   }
 
   setLightsColors(
@@ -104,24 +110,6 @@ export default class LightManager {
     console.log(timeIn24Hours);
 
     let pixels = this.lightcycleTexture.readPixels();
-
-    // let ambientR =
-    //   pixels[(timeIn24Hours / 24) * this.lightcycleTexture.getSize().width];
-    // let ambientG =
-    //   pixels[(timeIn24Hours / 24) * this.lightcycleTexture.getSize().width + 1];
-    // let ambientB =
-    //   pixels[(timeIn24Hours / 24) * this.lightcycleTexture.getSize().width + 2];
-
-    // let directionalR =
-    //   pixels[(timeIn24Hours / 24) * this.lightcycleTexture.getSize().width * 2];
-    // let directionalG =
-    //   pixels[
-    //     (timeIn24Hours / 24) * this.lightcycleTexture.getSize().width * 2 + 1
-    //   ];
-    // let directionalB =
-    //   pixels[
-    //     (timeIn24Hours / 24) * this.lightcycleTexture.getSize().width * 2 + 2
-    //   ];
 
     let pixelOffset = Math.floor(
       (timeIn24Hours / 24) * this.lightcycleTexture.getSize().width
@@ -152,6 +140,11 @@ export default class LightManager {
         directionalRGBA.g / 256,
         directionalRGBA.b / 256
       )
+    );
+
+    //update sun direction
+    this.directionalLight.setDirectionToTarget(
+      new BABYLON.Vector3((12 - timeIn24Hours) * 10, -1, 0)
     );
   }
 
