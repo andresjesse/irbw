@@ -33,11 +33,11 @@ export default class LightManager {
     //SUN
     this.directionalLight = new BABYLON.DirectionalLight(
       "directionalLight",
-      new BABYLON.Vector3(-1, -2, 1),
+      new BABYLON.Vector3(0, -1, 0),
       this.scene
     );
 
-    this.directionalLight.position = new BABYLON.Vector3(20, 40, 20);
+    this.directionalLight.position = new BABYLON.Vector3(0, 40, 20);
     this.directionalLight.intensity = 0.7;
 
     //AMBIENT
@@ -107,8 +107,6 @@ export default class LightManager {
   }
 
   setTimeOfDay(timeIn24Hours) {
-    console.log(timeIn24Hours);
-
     let pixels = this.lightcycleTexture.readPixels();
 
     let pixelOffset = Math.floor(
@@ -142,10 +140,43 @@ export default class LightManager {
       )
     );
 
+    //normalize 24h time:
+    //  result cycles between -1 and 1 with 12pm being equal to 0.
+    let normTimeNoon = (12 - timeIn24Hours) / 12;
+
     //update sun direction
     this.directionalLight.setDirectionToTarget(
-      new BABYLON.Vector3((12 - timeIn24Hours) * 10, -1, 0)
+      new BABYLON.Vector3(
+        Math.sin(normTimeNoon * Math.PI) * 100,
+        -1,
+        -Math.cos(normTimeNoon * Math.PI) * 30 + 20
+      )
     );
+
+    //update shadow blur
+    //  normalized time is clamped between 2 and 64 (no negative blurKernel)
+    this.shadowGenerator.blurKernel = Math.max(64 * Math.abs(normTimeNoon), 2);
+
+    // //update sun direction
+    // this.directionalLight.setDirectionToTarget(
+    //   new BABYLON.Vector3((12 - timeIn24Hours) * 10, -1, 0)
+    // );
+
+    // //update shadow blur
+    // this.shadowGenerator.blurKernel = Math.max(
+    //   64 * Math.abs((12 - timeIn24Hours) / 12),
+    //   2
+    // );
+
+    //Fade between 18pm and 4am
+    // if (timeIn24Hours < 4) {
+    //   this.shadowGenerator.setDarkness((4 - timeIn24Hours) / 4);
+    // } else if (timeIn24Hours > 18) {
+    //   let n = 24 - timeIn24Hours;
+    //   this.shadowGenerator.setDarkness((4 - n) / 4);
+    // } else {
+    //   this.shadowGenerator.setDarkness(0);
+    // }
   }
 
   //TODO: create a method "freezeTime(true/false) to pause day/night cycle"
