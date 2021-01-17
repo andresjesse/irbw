@@ -53,6 +53,16 @@ export default class WaterSegment {
   }
 
   updateVerticesData(kind, data) {
+    var normals = this.ground.getVerticesData(BABYLON.VertexBuffer.NormalKind);
+
+    //update mesh
+
     this.ground.updateVerticesData(kind, data);
+
+    //recalculate normals
+
+    BABYLON.VertexData.ComputeNormals(data, this.ground.getIndices(), normals);
+
+    this.ground.updateVerticesData(BABYLON.VertexBuffer.NormalKind, normals);
   }
 }

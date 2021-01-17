@@ -16,13 +16,16 @@ export default class LightManager {
     this.createLights();
     this.setupShadows();
 
-    let h = 0;
-    setInterval(() => {
-      this.setTimeOfDay(h);
+    //TEMP: loop day/night cycle for testing
+    // let h = 0;
+    // setInterval(() => {
+    //   this.setTimeOfDay(h);
 
-      h += 0.1;
-      if (h >= 24) h = 0;
-    }, 50);
+    //   h += 0.1;
+    //   if (h >= 24) h = 0;
+    // }, 50);
+
+    this.setTimeOfDay(13);
   }
 
   addShadowsTo(obj) {

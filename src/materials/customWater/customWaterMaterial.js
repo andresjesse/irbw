@@ -13,6 +13,7 @@ const createCustomWaterMaterial = (scene) => {
     // Attributes
     attribute vec3 position;
     attribute vec2 uv;
+    attribute vec3 normal;
 
     // Uniforms
     uniform mat4 worldViewProjection;
@@ -20,21 +21,25 @@ const createCustomWaterMaterial = (scene) => {
     // Varying
     varying vec2 vUV;
     varying float yPos;
+    varying vec3 vnormal;
 
     void main(void) {
 
       yPos = position.y;
+      vnormal = normal;
 
       gl_Position = worldViewProjection * vec4(position.x, ${
         TerrainSegmentConfig.MIN_HEIGHT * 0.5
       }, position.z, 1.0);
 
-      vUV = uv;
+      vUV = uv; 
     }
   `;
 
   BABYLON.Effect.ShadersStore["customWaterFragmentShader"] = `
     precision highp float;
+
+    varying vec3 vnormal;
 
     varying vec2 vUV;
     varying float yPos;
@@ -62,7 +67,10 @@ const createCustomWaterMaterial = (scene) => {
 
       diffuse = diffuse * vec4(diffuseLightColor, alpha);
 
-      gl_FragColor = diffuse;
+      //angle between face and up vector gives water border
+      float foamAlpha = acos(dot(vnormal, vec3(0,1.0,0)));
+
+      gl_FragColor = mix(vec4(1, 0, 0 , foamAlpha), diffuse, 1.0-foamAlpha);
     }
   `;
 
