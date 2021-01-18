@@ -26,6 +26,13 @@ export default class WaterSegment {
     ).onSuccess = (task) => {
       this.textureClouds = task.texture;
     };
+
+    this.scene.assetsManager.addTextureTask(
+      "textureFoam",
+      "textures/foam.jpg"
+    ).onSuccess = (task) => {
+      this.textureFoam = task.texture;
+    };
   }
 
   onStart() {
@@ -48,6 +55,7 @@ export default class WaterSegment {
 
     customWaterMaterial.setTexture("normalMap", this.textureWaternm);
     customWaterMaterial.setTexture("reflectionMap", this.textureClouds);
+    customWaterMaterial.setTexture("foam", this.textureFoam);
 
     this.ground.material = customWaterMaterial;
   }

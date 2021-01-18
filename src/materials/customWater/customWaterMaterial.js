@@ -2,10 +2,6 @@ import * as BABYLON from "@babylonjs/core";
 
 import { TerrainSegmentConfig } from "../../gamecore/environment/TerrainSegment";
 
-const WATER_ALPHA = 0.45;
-const WAVE_DISTORTION = 0.3;
-const WAVE_SCALE = 8.0;
-
 const createCustomWaterMaterial = (scene) => {
   BABYLON.Effect.ShadersStore["customWaterVertexShader"] = `
     precision highp float;
@@ -48,29 +44,48 @@ const createCustomWaterMaterial = (scene) => {
 
     uniform sampler2D normalMap;
     uniform sampler2D reflectionMap;
+    uniform sampler2D foam;
 
-    uniform vec2 wind;
-    uniform vec3 diffuseLightColor;
+    uniform vec2 uWind;
+    uniform float uWaterAlpha;
+    uniform float uWaveDistortion;
+    uniform vec3 uDiffuseLightColor;
 
     void main(void) {
       
-      vec4 txNormal = texture2D(normalMap, vUV*${WAVE_SCALE.toFixed(
-        2
-      )} + vec2(time*wind.x, time*wind.y) );
-      vec4 diffuse = texture2D(reflectionMap, vUV + vec2(txNormal.r, txNormal.g)*${WAVE_DISTORTION.toFixed(
-        2
-      )} -vec2(time*wind.x, time*wind.y) );
+      vec4 txNormal = texture2D(normalMap, vUV*uWaveDistortion + vec2(time*uWind.x, time*uWind.y) );
+      vec4 diffuse = texture2D(reflectionMap, vUV + vec2(txNormal.r, txNormal.g)*uWaveDistortion -vec2(time*uWind.x, time*uWind.y) );
 
       float normalizedYPos = yPos/${TerrainSegmentConfig.MIN_HEIGHT.toFixed(2)};
 
-      float alpha = clamp( pow(normalizedYPos, 4.0), 0.0, ${WATER_ALPHA});
-
-      diffuse = diffuse * vec4(diffuseLightColor, alpha);
+      diffuse = diffuse * vec4(uDiffuseLightColor, 1.0);
 
       //angle between face and up vector gives water border
-      float foamAlpha = acos(dot(vnormal, vec3(0,1.0,0)));
+      float foamAlpha = acos(dot(normalize(vnormal), vec3(0,1.0,0)));
 
-      gl_FragColor = mix(vec4(1, 0, 0 , foamAlpha), diffuse, 1.0-foamAlpha);
+      //foam effect: step 1 distortion + alpha
+      // vec2 foamDistortion = vec2(txNormal.r, txNormal.g)*0.03;
+      // vec4 txFoam = texture2D(foam, vUV*8.0 + foamDistortion ); 
+      // gl_FragColor = mix(vec4(txFoam.rgb , foamAlpha), vec4(1,0,0,1), 1.0-foamAlpha*foamAlpha);
+
+      //step 2: motion vector with sin/cos loop
+      // vec2 foamNormalWave = vec2(vnormal.x*sin(time*0.1), vnormal.z*sin(time*0.1))*0.05; //sin sin pulse, sin cos wave
+      // vec4 txFoam = texture2D(foam, vUV*8.0 + foamNormalWave ); 
+      // gl_FragColor = mix(vec4(txFoam.rgb , foamAlpha), vec4(1,0,0,1), 1.0-foamAlpha*foamAlpha);
+
+      //step 3: foam distortion + wave (red debug)
+      diffuse = vec4(1,0,0,1);
+
+      vec2 foamDistortion = vec2(txNormal.r, txNormal.g)*0.03;
+      vec2 foamNormalWave = vec2(vnormal.x*sin(time*0.1), vnormal.z*cos(time*0.1))*0.05; 
+      float normalBorderAlpha = clamp( pow(normalizedYPos*1.4, 8.0), 0.0, uWaterAlpha);
+
+      vec4 txFoam = texture2D(foam, vUV*8.0 + foamNormalWave + foamDistortion); 
+
+      vec4 diffuseWithFoam = mix(vec4(txFoam.rgb , foamAlpha), diffuse, 1.0-foamAlpha );
+      diffuseWithFoam.a = normalBorderAlpha;
+
+      gl_FragColor = diffuseWithFoam;
     }
   `;
 
@@ -96,7 +111,9 @@ const createCustomWaterMaterial = (scene) => {
     }
   );
 
-  customWaterMaterial.setArray2("wind", [0.002, 0.002]);
+  customWaterMaterial.setArray2("uWind", [-0.0015, -0.002]);
+  customWaterMaterial.setFloat("uWaterAlpha", 0.45);
+  customWaterMaterial.setFloat("uWaveDistortion", 0.3);
 
   let time = 0;
   scene.registerBeforeRender(() => {
@@ -104,7 +121,7 @@ const createCustomWaterMaterial = (scene) => {
     time += 0.1;
 
     customWaterMaterial.setArray3(
-      "diffuseLightColor",
+      "uDiffuseLightColor",
       scene.lights[0].diffuse.asArray()
     );
   });
