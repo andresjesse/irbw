@@ -62,9 +62,6 @@ const createCustomWaterMaterial = (scene) => {
       // normalize yPos (from vertex) by Terrain Height
       float normalizedYPos = yPos/${TerrainSegmentConfig.MIN_HEIGHT.toFixed(2)};
 
-      // apply diffuse lighting
-      diffuse = diffuse * vec4(uDiffuseLightColor, 1.0);
-
       // angle between face and up vector gives water border
       float foamAlpha = acos(dot(normalize(vnormal), vec3(0,1.0,0)));
 
@@ -86,6 +83,9 @@ const createCustomWaterMaterial = (scene) => {
 
       // apply clamped border as alpha
       diffuseWithFoam.a = normalBorderAlpha;
+
+      // apply diffuse lighting
+      diffuseWithFoam = diffuseWithFoam * vec4(uDiffuseLightColor, 1.0);
 
       gl_FragColor = diffuseWithFoam;
     }
