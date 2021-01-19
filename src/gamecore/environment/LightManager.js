@@ -6,7 +6,7 @@ export default class LightManager {
 
     this.scene.assetsManager.addTextureTask(
       "lightcycle",
-      "textures/lightcycle.png"
+      "assets/generic/lightcycle.png"
     ).onSuccess = (task) => {
       this.lightcycleTexture = task.texture;
     };
@@ -17,15 +17,15 @@ export default class LightManager {
     this.setupShadows();
 
     //TEMP: loop day/night cycle for testing
-    let h = 0;
-    setInterval(() => {
-      this.setTimeOfDay(h);
+    // let h = 0;
+    // setInterval(() => {
+    //   this.setTimeOfDay(h);
 
-      h += 0.1;
-      if (h >= 24) h = 0;
-    }, 50);
+    //   h += 0.1;
+    //   if (h >= 24) h = 0;
+    // }, 50);
 
-    //this.setTimeOfDay(13);
+    this.setTimeOfDay(13);
   }
 
   addShadowsTo(obj) {

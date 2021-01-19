@@ -30,7 +30,7 @@ export default class TerrainSegment {
     const preloadTexture = (txFile) => {
       this.scene.assetsManager.addTextureTask(
         txFile,
-        "textures/terrain/" + txFile
+        "assets/terrain/" + txFile
       ).onSuccess = (task) => {
         this.textures[txFile] = task.texture;
       };

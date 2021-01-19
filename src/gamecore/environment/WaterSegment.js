@@ -15,21 +15,21 @@ export default class WaterSegment {
 
     this.scene.assetsManager.addTextureTask(
       "textureWaternm",
-      "textures/waternm.jpg"
+      "assets/water/waternm.jpg"
     ).onSuccess = (task) => {
       this.textureWaternm = task.texture;
     };
 
     this.scene.assetsManager.addTextureTask(
       "textureClouds",
-      "textures/clouds.jpg"
+      "assets/water/clouds.jpg"
     ).onSuccess = (task) => {
       this.textureClouds = task.texture;
     };
 
     this.scene.assetsManager.addTextureTask(
       "textureFoam",
-      "textures/foam.jpg"
+      "assets/water/foam.jpg"
     ).onSuccess = (task) => {
       this.textureFoam = task.texture;
     };
