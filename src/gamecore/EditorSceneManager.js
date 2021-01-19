@@ -6,6 +6,7 @@ import UniversalInputManager, { LogicalInputs } from "./UniversalInputManager";
 
 import Terrain from "./environment/Terrain";
 import LightManager from "./environment/LightManager";
+import VegetationManager from "./environment/VegetationManager";
 
 export default class EditorSceneManager {
   constructor(scene) {
@@ -16,12 +17,14 @@ export default class EditorSceneManager {
     //----- create children -----
     this.terrain = new Terrain(this.scene); //TODO: rename to TerrainManager (manages segments!!)
     this.lightManager = new LightManager(this.scene);
+    this.vegetationManager = new VegetationManager(this.scene);
   }
 
   onStart() {
     //----- start children -----
     this.terrain.onStart();
     this.lightManager.onStart();
+    this.vegetationManager.onStart();
 
     //----- start self -----
     this.createEditorCamera();

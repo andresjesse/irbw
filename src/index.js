@@ -19,6 +19,7 @@ scene.assetsManager = new BABYLON.AssetsManager(scene);
 
 //initialize SceneManager
 const smgr = new EditorSceneManager(scene);
+scene.smgr = smgr;
 
 //trigger Assets preloaded callback
 scene.assetsManager.onFinish = function (tasks) {

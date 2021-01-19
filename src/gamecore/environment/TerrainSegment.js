@@ -2,7 +2,7 @@ import * as BABYLON from "@babylonjs/core";
 import { Vector3 } from "@babylonjs/core";
 
 import { TriPlanarMaterial } from "../../materials/customTriPlanar";
-import Texture2DArrayHelper from "../../materials/helpers/Texture2DArrayHelper";
+import Texture2DArrayHelper from "../../helpers/Texture2DArrayHelper";
 
 import WaterSegment from "./WaterSegment";
 

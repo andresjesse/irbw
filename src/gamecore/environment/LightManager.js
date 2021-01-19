@@ -17,15 +17,15 @@ export default class LightManager {
     this.setupShadows();
 
     //TEMP: loop day/night cycle for testing
-    // let h = 0;
-    // setInterval(() => {
-    //   this.setTimeOfDay(h);
+    let h = 0;
+    setInterval(() => {
+      this.setTimeOfDay(h);
 
-    //   h += 0.1;
-    //   if (h >= 24) h = 0;
-    // }, 50);
+      h += 0.1;
+      if (h >= 24) h = 0;
+    }, 50);
 
-    this.setTimeOfDay(13);
+    //this.setTimeOfDay(13);
   }
 
   addShadowsTo(obj) {
@@ -76,7 +76,7 @@ export default class LightManager {
 
     //WebGL 2.0 (automatic fallback to 1.0 when not compatible) (fast, better!)
     this.shadowGenerator = new BABYLON.ShadowGenerator(
-      512,
+      1024,
       this.directionalLight
     );
     this.shadowGenerator.usePercentageCloserFiltering = true;
@@ -84,7 +84,12 @@ export default class LightManager {
 
     this.shadowGenerator.useBlurExponentialShadowMap = true;
     this.shadowGenerator.useKernelBlur = true;
-    this.shadowGenerator.blurKernel = 64;
+    this.shadowGenerator.blurKernel = 8;
+
+    //this.shadowGenerator.enableSoftTransparentShadow = true;
+    this.shadowGenerator.transparencyShadow = true;
+
+    //this.shadowGenerator.filteringQuality = BABYLON.ShadowGenerator.QUALITY_LOW;
   }
 
   setLightsColors(
@@ -158,7 +163,7 @@ export default class LightManager {
 
     //update shadow blur
     //  normalized time is clamped between 2 and 64 (no negative blurKernel)
-    this.shadowGenerator.blurKernel = Math.max(64 * Math.abs(normTimeNoon), 2);
+    this.shadowGenerator.blurKernel = Math.max(16 * Math.abs(normTimeNoon), 2);
 
     // //update sun direction
     // this.directionalLight.setDirectionToTarget(
