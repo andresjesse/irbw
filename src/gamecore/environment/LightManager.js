@@ -16,16 +16,35 @@ export default class LightManager {
     this.createLights();
     this.setupShadows();
 
-    //TEMP: loop day/night cycle for testing
-    let h = 0;
-    setInterval(() => {
-      this.setTimeOfDay(h);
+    //initialize light colors
+    this.pixels = this.lightcycleTexture.readPixels();
 
-      h += 0.1;
-      if (h >= 24) h = 0;
-    }, 50);
+    //TEMP: loop day/night cycle for testing
+    // let completeCycleInMs = 40000;
+    // let updateIntervalInMs = 17;
+
+    // let h = 0;
+    // setInterval(() => {
+    //   this.setTimeOfDay(h);
+
+    //   h += (updateIntervalInMs / completeCycleInMs) * 24;
+    //   if (h >= 24) h = 0;
+    // }, updateIntervalInMs);
 
     //this.setTimeOfDay(13);
+
+    this.triggerDayNightCycle(10);
+  }
+
+  triggerDayNightCycle(durationInSeconds) {
+    this.h = 0;
+
+    this.scene.onBeforeAnimationsObservable.add(() => {
+      this.setTimeOfDay(this.h);
+
+      this.h += (17 / (durationInSeconds * 1000)) * 24;
+      if (this.h >= 24) this.h = 0;
+    });
   }
 
   addShadowsTo(obj) {
@@ -115,21 +134,19 @@ export default class LightManager {
   }
 
   setTimeOfDay(timeIn24Hours) {
-    let pixels = this.lightcycleTexture.readPixels();
-
     let pixelOffset = Math.floor(
       (timeIn24Hours / 24) * this.lightcycleTexture.getSize().width
     );
 
     let ambientRGBA = this.readPixel(
-      pixels,
+      this.pixels,
       pixelOffset,
       0,
       this.lightcycleTexture.getSize().width
     );
 
     let directionalRGBA = this.readPixel(
-      pixels,
+      this.pixels,
       pixelOffset,
       1,
       this.lightcycleTexture.getSize().width
@@ -162,29 +179,8 @@ export default class LightManager {
     );
 
     //update shadow blur
-    //  normalized time is clamped between 2 and 64 (no negative blurKernel)
+    //  normalized time is clamped between 2 and 16 (no negative blurKernel)
     this.shadowGenerator.blurKernel = Math.max(16 * Math.abs(normTimeNoon), 2);
-
-    // //update sun direction
-    // this.directionalLight.setDirectionToTarget(
-    //   new BABYLON.Vector3((12 - timeIn24Hours) * 10, -1, 0)
-    // );
-
-    // //update shadow blur
-    // this.shadowGenerator.blurKernel = Math.max(
-    //   64 * Math.abs((12 - timeIn24Hours) / 12),
-    //   2
-    // );
-
-    //Fade between 18pm and 4am
-    // if (timeIn24Hours < 4) {
-    //   this.shadowGenerator.setDarkness((4 - timeIn24Hours) / 4);
-    // } else if (timeIn24Hours > 18) {
-    //   let n = 24 - timeIn24Hours;
-    //   this.shadowGenerator.setDarkness((4 - n) / 4);
-    // } else {
-    //   this.shadowGenerator.setDarkness(0);
-    // }
   }
 
   //TODO: create a method "freezeTime(true/false) to pause day/night cycle"

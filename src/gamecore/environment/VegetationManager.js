@@ -47,6 +47,7 @@ export default class VegetationManager {
       node.rotation.y = rot;
 
       this.scene.smgr.lightManager.addShadowsTo(node);
+      node.receiveShadows = true;
     }
   }
 
