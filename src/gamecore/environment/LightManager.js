@@ -31,9 +31,9 @@ export default class LightManager {
     //   if (h >= 24) h = 0;
     // }, updateIntervalInMs);
 
-    //this.setTimeOfDay(13);
+    this.setTimeOfDay(13);
 
-    this.triggerDayNightCycle(10);
+    //this.triggerDayNightCycle(10);
   }
 
   triggerDayNightCycle(durationInSeconds) {
@@ -94,6 +94,8 @@ export default class LightManager {
     */
 
     //WebGL 2.0 (automatic fallback to 1.0 when not compatible) (fast, better!)
+    //TODO: This shadow technique (PCF) is showing glitches on the "first" day/night cycle when running Chrome/Ubuntu. Does not happen on Chrome/Mac.
+    //  Option to fix: provide alternative shadow method in IRB Config (user can change)
     this.shadowGenerator = new BABYLON.ShadowGenerator(
       1024,
       this.directionalLight

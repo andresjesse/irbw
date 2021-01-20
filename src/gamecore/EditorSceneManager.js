@@ -7,6 +7,7 @@ import UniversalInputManager, { LogicalInputs } from "./UniversalInputManager";
 import Terrain from "./environment/Terrain";
 import LightManager from "./environment/LightManager";
 import VegetationManager from "./environment/VegetationManager";
+import EditorUI from "./ui/EditorUI";
 
 export default class EditorSceneManager {
   constructor(scene) {
@@ -18,6 +19,7 @@ export default class EditorSceneManager {
     this.terrain = new Terrain(this.scene); //TODO: rename to TerrainManager (manages segments!!)
     this.lightManager = new LightManager(this.scene);
     this.vegetationManager = new VegetationManager(this.scene);
+    this.uiManager = new EditorUI(this.scene);
   }
 
   onStart() {
