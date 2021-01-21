@@ -27,6 +27,7 @@ export default class EditorSceneManager {
     this.terrain.onStart();
     this.lightManager.onStart();
     this.vegetationManager.onStart();
+    this.uiManager.onStart();
 
     //----- start self -----
     this.createEditorCamera();
