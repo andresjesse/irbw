@@ -7,7 +7,7 @@ import UniversalInputManager, { LogicalInputs } from "./UniversalInputManager";
 import Terrain from "./environment/Terrain";
 import LightManager from "./environment/LightManager";
 import VegetationManager from "./environment/VegetationManager";
-import EditorUI from "./ui/EditorUI";
+import EditorUI from "./ui/editor/EditorUI";
 
 export default class EditorSceneManager {
   constructor(scene) {
