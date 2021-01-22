@@ -1,7 +1,7 @@
 import * as GUI from "@babylonjs/gui";
 
+import store, { editorUiMainToolbarSetTab } from "../ReduxStore";
 import ComponentFactory from "./ComponentFactory";
-
 import lang from "./lang";
 
 const defaultLang = "en-US";
@@ -20,6 +20,9 @@ export default class EditorUI {
 
     this.createMainToolbar();
     this.createToolsetToolbar();
+
+    //subscribe for redux events
+    store.subscribe(() => console.log(store.getState()));
   }
 
   createMainToolbar() {
@@ -50,6 +53,9 @@ export default class EditorUI {
       height: height,
       padding: "4px",
     });
+    btProject.onPointerClickObservable.add(() => {
+      store.dispatch(editorUiMainToolbarSetTab("project"));
+    });
 
     let btEnvironment = ComponentFactory.createButton({
       parent: leftStackPanel,
@@ -58,6 +64,9 @@ export default class EditorUI {
       width: "120px",
       height: height,
       padding: "4px",
+    });
+    btEnvironment.onPointerClickObservable.add(() => {
+      store.dispatch(editorUiMainToolbarSetTab("environment"));
     });
 
     //configure right panel
@@ -88,7 +97,17 @@ export default class EditorUI {
       isBackground: true,
       isPointerBlocker: true,
       verticalAlignment: GUI.Control.VERTICAL_ALIGNMENT_TOP,
+      horizontalAlignment: GUI.Control.HORIZONTAL_ALIGNMENT_LEFT,
     });
     backgroundPanel.top = offset;
+
+    ComponentFactory.createButton({
+      parent: backgroundPanel,
+      name: "btPlay",
+      text: "placeholder toolset env", //lang.get("editor_ui_"),
+      width: "80px",
+      height: height,
+      padding: "4px",
+    });
   }
 }

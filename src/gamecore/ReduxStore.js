@@ -7,19 +7,29 @@ import { createSlice, configureStore } from "@reduxjs/toolkit";
 const appSlice = createSlice({
   name: "appWebGL",
   initialState: {
-    gameMode: "TERRAIN_EDIT",
+    editor: {
+      ui: {
+        mainToolbar: {
+          activeTab: "project",
+        },
+      },
+    },
+    //gameMode: "TERRAIN_EDIT",
   },
   reducers: {
-    gameModeTerrainEdit: (state) => {
-      state.gameMode = "TERRAIN_EDIT";
+    editorUiMainToolbarSetTab: (state, action) => {
+      state.editor.ui.mainToolbar.activeTab = action.payload;
     },
-    gameModeGameplay: (state) => {
-      state.gameMode = "GAMEPLAY";
-    },
+    // gameModeTerrainEdit: (state) => {
+    //   state.gameMode = "TERRAIN_EDIT";
+    // },
+    // gameModeGameplay: (state) => {
+    //   state.gameMode = "GAMEPLAY";
+    // },
   },
 });
 
-export const { gameModeTerrainEdit, gameModeGameplay } = appSlice.actions;
+export const { editorUiMainToolbarSetTab } = appSlice.actions;
 
 const store = configureStore({
   reducer: appSlice.reducer,

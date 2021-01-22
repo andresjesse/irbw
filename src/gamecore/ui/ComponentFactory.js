@@ -59,6 +59,9 @@ const createPanel = function (options) {
   if (options.verticalAlignment != undefined)
     rect.verticalAlignment = options.verticalAlignment;
 
+  if (options.horizontalAlignment != undefined)
+    rect.horizontalAlignment = options.horizontalAlignment;
+
   options.parent.addControl(rect);
 
   return rect;
