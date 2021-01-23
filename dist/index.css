@@ -10,12 +10,27 @@ body {
 canvas {
   height: 100vh;
   width: 100vw;
+  z-index: 1;
   display: block;
 }
 
-/** FONTS **/
+#reactRoot {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 2;
+  pointer-events: none;
+}
 
-@font-face {
+#reactRoot > * {
+  pointer-events: auto;
+}
+
+/** FONTS -- TODO:define in future **/
+
+/* @font-face {
   font-family: "Roboto";
   font-style: normal;
   font-weight: 400;
@@ -41,4 +56,4 @@ canvas {
   font-style: normal;
   font-weight: 700;
   src: url("./fonts/Ubuntu-Bold.ttf") format("truetype");
-}
+} */

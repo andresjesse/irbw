@@ -7,7 +7,7 @@ import UniversalInputManager, { LogicalInputs } from "./UniversalInputManager";
 import Terrain from "./environment/Terrain";
 import LightManager from "./environment/LightManager";
 import VegetationManager from "./environment/VegetationManager";
-import EditorUI from "./ui/editor/EditorUI";
+import EditorUI from "../ui/editor/EditorUI";
 
 export default class EditorSceneManager {
   constructor(scene) {
@@ -27,7 +27,7 @@ export default class EditorSceneManager {
     this.terrain.onStart();
     this.lightManager.onStart();
     this.vegetationManager.onStart();
-    this.uiManager.onStart();
+    //this.uiManager.onStart();
 
     //----- start self -----
     this.createEditorCamera();
