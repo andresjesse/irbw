@@ -7,7 +7,7 @@ import UniversalInputManager, { LogicalInputs } from "./UniversalInputManager";
 import Terrain from "./environment/Terrain";
 import LightManager from "./environment/LightManager";
 import VegetationManager from "./environment/VegetationManager";
-import EditorUI from "../ui/editor/EditorUI";
+import EditorApp from "../ui/editor/EditorApp";
 
 export default class EditorSceneManager {
   constructor(scene) {
@@ -16,35 +16,35 @@ export default class EditorSceneManager {
     this.imgr = new UniversalInputManager(scene);
 
     //----- create children -----
-    this.terrain = new Terrain(this.scene); //TODO: rename to TerrainManager (manages segments!!)
-    this.lightManager = new LightManager(this.scene);
-    this.vegetationManager = new VegetationManager(this.scene);
-    this.uiManager = new EditorUI(this.scene);
+    // this.terrain = new Terrain(this.scene); //TODO: rename to TerrainManager (manages segments!!)
+    // this.lightManager = new LightManager(this.scene);
+    // this.vegetationManager = new VegetationManager(this.scene);
   }
 
   onStart() {
     //----- start children -----
-    this.terrain.onStart();
-    this.lightManager.onStart();
-    this.vegetationManager.onStart();
-    //this.uiManager.onStart();
+    this.terrain?.onStart();
+    this.lightManager?.onStart();
+    this.vegetationManager?.onStart();
+
+    EditorApp.initializeReactApp();
 
     //----- start self -----
     this.createEditorCamera();
 
     //----------------------------- temp stuff -----------------------
-    this.box = BABYLON.MeshBuilder.CreateBox(
-      "playerRef",
-      { height: 2, width: 1, depth: 1 },
-      this.scene
-    );
-    this.box.position = new BABYLON.Vector3(0, 1, 0);
-    this.box.receiveShadows = true;
-    this.lightManager.addShadowsTo(this.box);
-    // Torus
-    var torus = BABYLON.Mesh.CreateTorus("torus", 4, 2, 30, this.scene, false);
-    torus.position = new BABYLON.Vector3(4, 3, 0);
-    this.lightManager.addShadowsTo(torus);
+    // this.box = BABYLON.MeshBuilder.CreateBox(
+    //   "playerRef",
+    //   { height: 2, width: 1, depth: 1 },
+    //   this.scene
+    // );
+    // this.box.position = new BABYLON.Vector3(0, 1, 0);
+    // this.box.receiveShadows = true;
+    // this.lightManager.addShadowsTo(this.box);
+    // // Torus
+    // var torus = BABYLON.Mesh.CreateTorus("torus", 4, 2, 30, this.scene, false);
+    // torus.position = new BABYLON.Vector3(4, 3, 0);
+    // this.lightManager.addShadowsTo(torus);
   }
 
   onUpdate() {
