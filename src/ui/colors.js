@@ -18,4 +18,9 @@ const colors = {
   },
 };
 
-export { colors };
+//TODO: load theme from user prefs
+const get = function (colorKey) {
+  return colors["dark"][colorKey];
+};
+
+export default get;
