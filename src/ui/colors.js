@@ -3,8 +3,8 @@ const colors = {
     background: "#28272a",
     panelBackground: "#474747",
     foreground: "#f8f8f8",
-    hightlight: "#59e888",
-    hightlightAlternate: "#46d7fa",
+    highlight: "#59e888",
+    highlightAlternate: "#46d7fa",
     danger: "#ff5a5a",
   },
 
@@ -12,8 +12,8 @@ const colors = {
     background: "#c9c9c9",
     panelBackground: "#f8f7f2",
     foreground: "#282826",
-    hightlight: "#1e9e61",
-    hightlightAlternate: "#3878b9",
+    highlight: "#1e9e61",
+    highlightAlternate: "#3878b9",
     danger: "#ff3939",
   },
 };

@@ -4,11 +4,17 @@ const langData = {
     editor_ui_project: "Project",
     editor_ui_environment: "Environment",
     editor_ui_settings: "Settings",
+    editor_ui_language: "Language",
+    editor_ui_theme: "Theme",
+    editor_ui_save_and_reload: "Save and Reload",
   },
   "pt-BR": {
     editor_ui_project: "Projeto",
     editor_ui_environment: "Ambiente",
     editor_ui_settings: "Configurações",
+    editor_ui_language: "Idioma",
+    editor_ui_theme: "Tema",
+    editor_ui_save_and_reload: "Salvar e Recarregar",
   },
 };
 

@@ -1,5 +1,6 @@
 import React from "react";
 
+import lang from "../../lang";
 import colors from "../../colors";
 
 import { useSelector, useDispatch } from "react-redux";

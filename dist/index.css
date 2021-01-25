@@ -28,6 +28,6 @@ canvas {
   pointer-events: auto;
 }
 
-button:focus {
+*:focus {
   outline: 0;
 }

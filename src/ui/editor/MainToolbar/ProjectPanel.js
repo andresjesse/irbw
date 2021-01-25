@@ -16,7 +16,6 @@ export default function (props) {
 
 const styles = {
   container: {
-    height: "64pt",
     display: "flex",
     flexDirection: "row",
     backgroundColor: colors("panelBackground"),
