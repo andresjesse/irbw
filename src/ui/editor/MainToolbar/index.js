@@ -48,7 +48,7 @@ const styles = {
   },
   tab: {
     borderWidth: 0,
-    background: colors("panelBackground"),
+    background: colors("background"),
     color: colors("foreground"),
     height: "24pt",
     marginRight: "2pt",
@@ -56,8 +56,8 @@ const styles = {
   },
   activeTab: {
     borderWidth: 0,
-    background: colors("hightlight"),
-    color: colors("panelBackground"),
+    background: colors("panelBackground"),
+    color: colors("foreground"),
     height: "24pt",
     fontWeight: "bold",
     marginRight: "2pt",
