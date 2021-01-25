@@ -1,9 +1,11 @@
 import React from "react";
 
 import colors from "../../colors";
+import lang from "../../lang";
 
 import ProjectPanel from "./ProjectPanel";
 import EnvironmentPanel from "./EnvironmentPanel";
+import SettingsPanel from "./SettingsPanel";
 
 import { useSelector, useDispatch } from "react-redux";
 import { editorUiMainToolbarSetTab } from "../../../gamecore/ReduxStore";
@@ -21,6 +23,10 @@ export default function (props) {
         return <ProjectPanel />;
       case "environment":
         return <EnvironmentPanel />;
+      case "settings":
+        return <SettingsPanel />;
+      default:
+        return <div />;
     }
   };
 
@@ -31,13 +37,21 @@ export default function (props) {
           style={activeTab == "project" ? styles.activeTab : styles.tab}
           onClick={() => dispatch(editorUiMainToolbarSetTab("project"))}
         >
-          Project
+          {lang.get("editor_ui_project")}
         </button>
+
         <button
           style={activeTab == "environment" ? styles.activeTab : styles.tab}
           onClick={() => dispatch(editorUiMainToolbarSetTab("environment"))}
         >
-          Environment
+          {lang.get("editor_ui_environment")}
+        </button>
+
+        <button
+          style={activeTab == "settings" ? styles.activeTab : styles.tab}
+          onClick={() => dispatch(editorUiMainToolbarSetTab("settings"))}
+        >
+          {lang.get("editor_ui_settings")}
         </button>
       </div>
 

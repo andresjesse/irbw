@@ -25,10 +25,19 @@ const setTheme = function (newTheme) {
   localStorage.setItem("theme", newTheme);
 };
 
+const getTheme = function () {
+  return theme;
+};
+
+//external getter for themes list
+const getAvailableThemes = function () {
+  return Object.keys(colors);
+};
+
 // external color getter
 const get = function (colorKey) {
   return colors[theme][colorKey];
 };
 
-export { theme };
+export { setTheme, getTheme, getAvailableThemes };
 export default get;
