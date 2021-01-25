@@ -28,6 +28,10 @@ canvas {
   pointer-events: auto;
 }
 
+button:focus {
+  outline: 0;
+}
+
 /** FONTS -- TODO:define in future **/
 
 /* @font-face {
