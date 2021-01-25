@@ -3,10 +3,15 @@ import ReactDOM from "react-dom";
 
 import MainToolbar from "./MainToolbar";
 
+import { Provider } from "react-redux";
+import store from "../../gamecore/ReduxStore";
+
 const EditorUI = function () {
   return (
     <>
-      <MainToolbar />
+      <Provider store={store}>
+        <MainToolbar />
+      </Provider>
     </>
   );
 };
