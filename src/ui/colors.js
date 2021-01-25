@@ -18,9 +18,17 @@ const colors = {
   },
 };
 
-//TODO: load theme from user prefs
-const get = function (colorKey) {
-  return colors["dark"][colorKey];
+//theme management (requires page reload)
+let theme = localStorage.getItem("theme") || "light";
+
+const setTheme = function (newTheme) {
+  localStorage.setItem("theme", newTheme);
 };
 
+// external color getter
+const get = function (colorKey) {
+  return colors[theme][colorKey];
+};
+
+export { theme };
 export default get;

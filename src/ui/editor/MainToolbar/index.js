@@ -1,14 +1,35 @@
 import React from "react";
 
 import colors from "../../colors";
+import store, { editorUiMainToolbarSetTab } from "../../../gamecore/ReduxStore";
 
 export default function (props) {
+  const [activeTab, setActiveTab] = React.useState("environment");
+
+  React.useEffect(() => {
+    store.subscribe(() =>
+      setActiveTab(store.getState().editor.ui.mainToolbar.activeTab)
+    );
+    console.log("s");
+  }, []);
+
   return (
     <div style={styles.container}>
       <div style={styles.horizontalBar}>
-        <button style={styles.tab}>Project</button>
-
-        <button style={styles.tab}>Environment</button>
+        <button
+          style={activeTab == "project" ? styles.activeTab : styles.tab}
+          onClick={() => store.dispatch(editorUiMainToolbarSetTab("project"))}
+        >
+          Project
+        </button>
+        <button
+          style={activeTab == "environment" ? styles.activeTab : styles.tab}
+          onClick={() =>
+            store.dispatch(editorUiMainToolbarSetTab("environment"))
+          }
+        >
+          Environment
+        </button>
       </div>
     </div>
   );
@@ -26,10 +47,20 @@ const styles = {
     flexDirection: "row",
   },
   tab: {
-    borderRadius: "8pt 8pt 0 0",
     borderWidth: 0,
     background: colors("panelBackground"),
     color: colors("foreground"),
     height: "24pt",
+    marginRight: "2pt",
+    cursor: "pointer",
+  },
+  activeTab: {
+    borderWidth: 0,
+    background: colors("hightlight"),
+    color: colors("panelBackground"),
+    height: "24pt",
+    fontWeight: "bold",
+    marginRight: "2pt",
+    cursor: "pointer",
   },
 };
