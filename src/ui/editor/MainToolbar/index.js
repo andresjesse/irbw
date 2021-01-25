@@ -1,9 +1,12 @@
 import React from "react";
 
 import colors from "../../colors";
-import store, { editorUiMainToolbarSetTab } from "../../../gamecore/ReduxStore";
+
+import ProjectPanel from "./ProjectPanel";
+import EnvironmentPanel from "./EnvironmentPanel";
 
 import { useSelector, useDispatch } from "react-redux";
+import { editorUiMainToolbarSetTab } from "../../../gamecore/ReduxStore";
 
 export default function (props) {
   const activeTab = useSelector(
@@ -11,6 +14,15 @@ export default function (props) {
   );
 
   const dispatch = useDispatch();
+
+  const RenderPanel = () => {
+    switch (activeTab) {
+      case "project":
+        return <ProjectPanel />;
+      case "environment":
+        return <EnvironmentPanel />;
+    }
+  };
 
   return (
     <div style={styles.container}>
@@ -28,6 +40,8 @@ export default function (props) {
           Environment
         </button>
       </div>
+
+      <RenderPanel />
     </div>
   );
 }
