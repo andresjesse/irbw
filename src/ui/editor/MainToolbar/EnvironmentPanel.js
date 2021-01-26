@@ -6,6 +6,8 @@ import colors from "../../colors";
 
 import { useSelector, useDispatch } from "react-redux";
 
+import EditorIcons from "../EditorIcons.svg";
+
 export default function (props) {
   const dispatch = useDispatch();
 
@@ -15,6 +17,13 @@ export default function (props) {
   return (
     <div style={styles.container}>
       <h1>Environment Panel Placeholder</h1>
+
+      <EditorIcons
+        stroke={colors("foreground")}
+        viewBox="0 128 64 64"
+        width="48"
+        height="48"
+      />
 
       <div style={styles.contentBlock}>
         <div style={styles.brushConfigBlock}>

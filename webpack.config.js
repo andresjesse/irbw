@@ -16,6 +16,23 @@ module.exports = {
           loader: "babel-loader",
           options: {
             presets: ["@babel/preset-react", "@babel/preset-env"],
+            plugins: [
+              [
+                "inline-react-svg",
+                {
+                  svgo: {
+                    plugins: [
+                      {
+                        removeAttrs: { attrs: "g:stroke" }, //remove svg "stroke" color
+                      },
+                      {
+                        cleanupIDs: true,
+                      },
+                    ],
+                  },
+                },
+              ],
+            ],
           },
         },
       },
