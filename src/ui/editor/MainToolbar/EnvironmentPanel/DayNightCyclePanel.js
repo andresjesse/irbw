@@ -25,8 +25,7 @@ export default function () {
   return (
     <div style={styles.contentBlock}>
       <div style={styles.brushConfigBlock}>
-        {lang.get("editor_ui_day_night_cycle_config")}
-
+        {lang.get("editor_ui_day_night_cycle_config")}: {timeOfDay.toFixed(2)}
         <div style={styles.contentRow}>
           <Range
             step={0.1}
@@ -62,7 +61,6 @@ export default function () {
             )}
           />
         </div>
-
         <div style={styles.contentRow}>
           {lang.get("editor_ui_day_night_cycle_dynamic")}
           <input
@@ -75,7 +73,6 @@ export default function () {
             //onChange={(event) => setDynamic(event.target.checked)}
           />
         </div>
-
         {dynamic && (
           <div style={styles.contentRow}>
             {lang.get("editor_ui_day_night_cycle_duration")}
