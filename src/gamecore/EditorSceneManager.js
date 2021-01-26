@@ -16,8 +16,8 @@ export default class EditorSceneManager {
     this.imgr = new UniversalInputManager(scene);
 
     //----- create children -----
-    // this.terrain = new Terrain(this.scene); //TODO: rename to TerrainManager (manages segments!!)
-    // this.lightManager = new LightManager(this.scene);
+    this.terrain = new Terrain(this.scene); //TODO: rename to TerrainManager (manages segments!!)
+    this.lightManager = new LightManager(this.scene);
     // this.vegetationManager = new VegetationManager(this.scene);
   }
 

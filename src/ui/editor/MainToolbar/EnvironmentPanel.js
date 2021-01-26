@@ -15,6 +15,15 @@ export default function (props) {
     (state) => state.editor.ui.mainToolbar.activeTool
   );
 
+  const renderToolPanel = () => {
+    switch (activeTool) {
+      case "terrain_edit_level":
+        return <TerrainEditOptionsPanel />;
+      default:
+        return <div />;
+    }
+  };
+
   const dispatch = useDispatch();
 
   return (
@@ -46,6 +55,16 @@ export default function (props) {
               dispatch(editorUiMainToolbarSetTool("terrain_normalize_level"));
             }}
           />
+
+          <SvgButton
+            name="terrain_soften_level"
+            tileX={2}
+            tileY={1}
+            active={activeTool == "terrain_soften_level"}
+            onClick={() => {
+              dispatch(editorUiMainToolbarSetTool("terrain_soften_level"));
+            }}
+          />
         </div>
 
         {/* --------------------------
@@ -69,9 +88,39 @@ export default function (props) {
         </div>
 
         <div style={styles.separator} />
+
+        {/* --------------------------
+        
+        Climate & Time Related Tools 
+        
+        -------------------------- */}
+
+        <div style={styles.contentGrid}>
+          <SvgButton
+            name="day_night_cycle"
+            tileX={0}
+            tileY={3}
+            active={activeTool == "day_night_cycle"}
+            onClick={() => {
+              dispatch(editorUiMainToolbarSetTool("day_night_cycle"));
+            }}
+          />
+
+          <SvgButton
+            name="climate_tool"
+            tileX={1}
+            tileY={3}
+            active={activeTool == "climate_tool"}
+            onClick={() => {
+              dispatch(editorUiMainToolbarSetTool("climate_tool"));
+            }}
+          />
+        </div>
+
+        <div style={styles.separator} />
       </div>
 
-      <TerrainEditOptionsPanel />
+      {renderToolPanel()}
     </div>
   );
 }

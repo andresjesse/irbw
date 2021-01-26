@@ -11,9 +11,11 @@ export default function () {
   return (
     <div style={styles.contentBlock}>
       <div style={styles.brushConfigBlock}>
-        Brush Configuration
+        {lang.get("editor_ui_brush_config")}
+
         <div style={styles.contentRow}>
-          Size
+          {lang.get("editor_ui_brush_size")}
+
           <Range
             step={0.1}
             min={0}
@@ -47,7 +49,8 @@ export default function () {
           />
         </div>
         <div style={styles.contentRow}>
-          Strength
+          {lang.get("editor_ui_brush_strength")}
+
           <Range
             step={0.1}
             min={0}
@@ -97,5 +100,9 @@ const styles = {
     width: "200pt",
     paddingTop: "4pt",
     paddingBottom: "4pt",
+    display: "flex",
+    flexDirection: "column",
+    height: "100%",
+    justifyContent: "space-between",
   },
 };

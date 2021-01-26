@@ -7,6 +7,9 @@ const langData = {
     editor_ui_language: "Language",
     editor_ui_theme: "Theme",
     editor_ui_save_and_reload: "Save and Reload",
+    editor_ui_brush_config: "Brush Configuration",
+    editor_ui_brush_size: "Size",
+    editor_ui_brush_strength: "Strength",
   },
   "pt-BR": {
     editor_ui_project: "Projeto",
@@ -15,6 +18,9 @@ const langData = {
     editor_ui_language: "Idioma",
     editor_ui_theme: "Tema",
     editor_ui_save_and_reload: "Salvar e Recarregar",
+    editor_ui_brush_config: "Configuração do Pincel",
+    editor_ui_brush_size: "Tamanho",
+    editor_ui_brush_strength: "Força",
   },
 };
 
