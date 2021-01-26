@@ -1,5 +1,7 @@
 import * as BABYLON from "@babylonjs/core";
 
+import store, { smgrLightManagerSetTimeOfDay } from "../ReduxStore";
+
 export default class LightManager {
   constructor(scene) {
     this.scene = scene;
@@ -10,6 +12,16 @@ export default class LightManager {
     ).onSuccess = (task) => {
       this.lightcycleTexture = task.texture;
     };
+
+    this.timeOfDay = store.getState().smgr.lightManager.timeOfDay;
+    this.dynamic = store.getState().smgr.lightManager.dynamic;
+    this.cycleDurationSec = store.getState().smgr.lightManager.cycleDurationSec;
+
+    store.subscribe(() => {
+      this.timeOfDay = store.getState().smgr.lightManager.timeOfDay;
+      this.dynamic = store.getState().smgr.lightManager.dynamic;
+      this.cycleDurationSec = store.getState().smgr.lightManager.cycleDurationSec;
+    });
   }
 
   onStart() {
@@ -19,33 +31,33 @@ export default class LightManager {
     //initialize light colors
     this.pixels = this.lightcycleTexture.readPixels();
 
-    //TEMP: loop day/night cycle for testing
-    // let completeCycleInMs = 40000;
-    // let updateIntervalInMs = 17;
+    //default value
+    this.setTimeOfDay(this.timeOfDay);
 
-    // let h = 0;
-    // setInterval(() => {
-    //   this.setTimeOfDay(h);
-
-    //   h += (updateIntervalInMs / completeCycleInMs) * 24;
-    //   if (h >= 24) h = 0;
-    // }, updateIntervalInMs);
-
-    this.setTimeOfDay(13);
-
-    //this.triggerDayNightCycle(10);
-  }
-
-  triggerDayNightCycle(durationInSeconds) {
-    this.h = 0;
-
+    //trigger updates
     this.scene.onBeforeAnimationsObservable.add(() => {
-      this.setTimeOfDay(this.h);
+      this.setTimeOfDay(this.timeOfDay);
 
-      this.h += (17 / (durationInSeconds * 1000)) * 24;
-      if (this.h >= 24) this.h = 0;
+      if (this.dynamic) {
+        this.timeOfDay += (17 / (this.cycleDurationSec * 1000)) * 24;
+        if (this.timeOfDay >= 24) this.timeOfDay = 0;
+
+        //notify changes to redux store.
+        store.dispatch(smgrLightManagerSetTimeOfDay(this.timeOfDay));
+      }
     });
   }
+
+  // triggerDayNightCycle(durationInSeconds) {
+  //   this.h = 0;
+
+  //   this.scene.onBeforeAnimationsObservable.add(() => {
+  //     this.setTimeOfDay(this.h);
+
+  //     this.h += (17 / (durationInSeconds * 1000)) * 24;
+  //     if (this.h >= 24) this.h = 0;
+  //   });
+  // }
 
   addShadowsTo(obj) {
     this.shadowGenerator.getShadowMap().renderList.push(obj);

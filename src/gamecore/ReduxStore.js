@@ -10,13 +10,21 @@ const appSlice = createSlice({
     editor: {
       ui: {
         mainToolbar: {
-          activeTab: "project",
+          activeTab: "environment", //TODO: default project
           activeTool: null,
         },
       },
     },
+    smgr: {
+      lightManager: {
+        timeOfDay: 12,
+        dynamic: true,
+        cycleDurationSec: 10,
+      },
+    },
   },
   reducers: {
+    //editor
     editorUiMainToolbarSetTab: (state, action) => {
       state.editor.ui.mainToolbar.activeTab = action.payload;
       state.editor.ui.mainToolbar.activeTool = null;
@@ -24,12 +32,25 @@ const appSlice = createSlice({
     editorUiMainToolbarSetTool: (state, action) => {
       state.editor.ui.mainToolbar.activeTool = action.payload;
     },
+    //smgr
+    smgrLightManagerSetTimeOfDay: (state, action) => {
+      state.smgr.lightManager.timeOfDay = action.payload;
+    },
+    smgrLightManagerSetDynamic: (state, action) => {
+      state.smgr.lightManager.dynamic = action.payload;
+    },
+    smgrLightManagerSetCycleDurationSec: (state, action) => {
+      state.smgr.lightManager.cycleDurationSec = action.payload;
+    },
   },
 });
 
 export const {
   editorUiMainToolbarSetTab,
   editorUiMainToolbarSetTool,
+  smgrLightManagerSetTimeOfDay,
+  smgrLightManagerSetDynamic,
+  smgrLightManagerSetCycleDurationSec,
 } = appSlice.actions;
 
 const store = configureStore({

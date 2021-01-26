@@ -1,14 +1,26 @@
 import React from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { Range } from "react-range";
 
 import lang from "../../../lang";
 import colors from "../../../colors";
+import {
+  smgrLightManagerSetTimeOfDay,
+  smgrLightManagerSetDynamic,
+  smgrLightManagerSetCycleDurationSec,
+} from "../../../../gamecore/ReduxStore";
 
 export default function () {
-  //TODO: load default values from Redux (useful when loading saved scene)
-  const [timeOfDay, setTimeOfDay] = React.useState([50]);
-  const [dynamic, setDynamic] = React.useState(false);
-  const [speed, setSpeed] = React.useState(1.0);
+  // const [dynamic, setDynamic] = React.useState(false);
+  // const [cycleDurationSec, setCycleDurationSec] = React.useState(1.0);
+
+  const timeOfDay = useSelector((state) => state.smgr.lightManager.timeOfDay);
+  const dynamic = useSelector((state) => state.smgr.lightManager.dynamic);
+  const cycleDurationSec = useSelector(
+    (state) => state.smgr.lightManager.cycleDurationSec
+  );
+
+  const dispatch = useDispatch();
 
   return (
     <div style={styles.contentBlock}>
@@ -19,9 +31,11 @@ export default function () {
           <Range
             step={0.1}
             min={0}
-            max={100}
-            values={timeOfDay}
-            onChange={(values) => setTimeOfDay(values)}
+            max={24}
+            values={[timeOfDay]}
+            onChange={(values) =>
+              dispatch(smgrLightManagerSetTimeOfDay(values[0]))
+            }
             renderTrack={({ props, children }) => (
               <div
                 {...props}
@@ -55,23 +69,28 @@ export default function () {
             name="dynamic"
             type="checkbox"
             checked={dynamic}
-            onChange={(event) => setDynamic(event.target.checked)}
+            onChange={(event) =>
+              dispatch(smgrLightManagerSetDynamic(event.target.checked))
+            }
+            //onChange={(event) => setDynamic(event.target.checked)}
           />
         </div>
 
         {dynamic && (
           <div style={styles.contentRow}>
-            {lang.get("editor_ui_day_night_cycle_speed")}
+            {lang.get("editor_ui_day_night_cycle_duration")}
 
             {/* float input from: https://stackoverflow.com/questions/43687964/only-numbers-input-number-in-react */}
             <input
               style={styles.input}
               type="tel"
-              value={speed}
+              value={cycleDurationSec}
               onChange={(e) => {
                 const val = e.target.value;
-                if (e.target.validity.valid) setSpeed(e.target.value);
-                else if (val === "" || val === "-") setSpeed(val);
+                if (e.target.validity.valid)
+                  dispatch(smgrLightManagerSetCycleDurationSec(e.target.value));
+                else if (val === "" || val === "-")
+                  dispatch(smgrLightManagerSetCycleDurationSec(val));
               }}
               pattern="^-?[0-9]\d*\.?\d*$"
               disabled={!dynamic}
