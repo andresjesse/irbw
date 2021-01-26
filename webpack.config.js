@@ -23,7 +23,7 @@ module.exports = {
                   svgo: {
                     plugins: [
                       {
-                        removeAttrs: { attrs: "g:stroke" }, //remove svg "stroke" color
+                        removeAttrs: { attrs: "*:(stroke|stroke-width)" }, //remove svg "stroke" attrs (set by react)
                       },
                       {
                         cleanupIDs: true,

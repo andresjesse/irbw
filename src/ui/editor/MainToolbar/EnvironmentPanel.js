@@ -1,132 +1,105 @@
 import React from "react";
-import { Range } from "react-range";
+
+import TerrainEditOptionsPanel from "./EnvironmentPanel/TerrainEditOptionsPanel";
 
 import lang from "../../lang";
 import colors from "../../colors";
 
 import { useSelector, useDispatch } from "react-redux";
+import { editorUiMainToolbarSetTool } from "../../../gamecore/ReduxStore";
 
-import EditorIcons from "../EditorIcons.svg";
+import SvgButton from "./SvgButton";
 
 export default function (props) {
-  const dispatch = useDispatch();
+  const activeTool = useSelector(
+    (state) => state.editor.ui.mainToolbar.activeTool
+  );
 
-  const [brushSize, setBrushSize] = React.useState([50]);
-  const [brushStrength, setBrushStrength] = React.useState([50]);
+  const dispatch = useDispatch();
 
   return (
     <div style={styles.container}>
-      <h1>Environment Panel Placeholder</h1>
+      <div style={styles.buttonsDiv}>
+        {/* --------------------------
+        
+        Terrain Related Tools 
+        
+        -------------------------- */}
 
-      <EditorIcons
-        stroke={colors("foreground")}
-        viewBox="0 128 64 64"
-        width="48"
-        height="48"
-      />
+        <div style={styles.contentGrid}>
+          <SvgButton
+            name="terrain_edit_level"
+            tileX={0}
+            tileY={1}
+            active={activeTool == "terrain_edit_level"}
+            onClick={() => {
+              dispatch(editorUiMainToolbarSetTool("terrain_edit_level"));
+            }}
+          />
 
-      <div style={styles.contentBlock}>
-        <div style={styles.brushConfigBlock}>
-          Brush Configuration
-          <div style={styles.contentRow}>
-            Size
-            <Range
-              step={0.1}
-              min={0}
-              max={100}
-              values={brushSize}
-              onChange={(values) => setBrushSize(values)}
-              renderTrack={({ props, children }) => (
-                <div
-                  {...props}
-                  style={{
-                    ...props.style,
-                    height: "2pt",
-                    width: "100%",
-                    backgroundColor: colors("foregroundShaded"),
-                  }}
-                >
-                  {children}
-                </div>
-              )}
-              renderThumb={({ props }) => (
-                <div
-                  {...props}
-                  style={{
-                    ...props.style,
-                    height: "12pt",
-                    width: "12pt",
-                    backgroundColor: colors("foreground"),
-                  }}
-                />
-              )}
-            />
-          </div>
-          <div style={styles.contentRow}>
-            Strength
-            <Range
-              step={0.1}
-              min={0}
-              max={100}
-              values={brushStrength}
-              onChange={(values) => setBrushStrength(values)}
-              renderTrack={({ props, children }) => (
-                <div
-                  {...props}
-                  style={{
-                    ...props.style,
-                    height: "2pt",
-                    width: "100%",
-                    backgroundColor: colors("foregroundShaded"),
-                  }}
-                >
-                  {children}
-                </div>
-              )}
-              renderThumb={({ props }) => (
-                <div
-                  {...props}
-                  style={{
-                    ...props.style,
-                    height: "12pt",
-                    width: "12pt",
-                    backgroundColor: colors("foreground"),
-                  }}
-                />
-              )}
-            />
-          </div>
+          <SvgButton
+            name="terrain_normalize_level"
+            tileX={1}
+            tileY={1}
+            active={activeTool == "terrain_normalize_level"}
+            onClick={() => {
+              dispatch(editorUiMainToolbarSetTool("terrain_normalize_level"));
+            }}
+          />
         </div>
+
+        {/* --------------------------
+        
+        Vegetation Paint Related Tools 
+        
+        -------------------------- */}
+
+        <div style={styles.separator} />
+
+        <div style={styles.contentGrid}>
+          <SvgButton
+            name="vegetation_paint"
+            tileX={0}
+            tileY={2}
+            active={activeTool == "vegetation_paint"}
+            onClick={() => {
+              dispatch(editorUiMainToolbarSetTool("vegetation_paint"));
+            }}
+          />
+        </div>
+
+        <div style={styles.separator} />
       </div>
+
+      <TerrainEditOptionsPanel />
     </div>
   );
 }
 
 const styles = {
   container: {
-    height: "64pt",
     display: "flex",
     flexDirection: "row",
     backgroundColor: colors("panelBackground"),
     padding: 4,
     justifyContent: "space-between",
   },
-  contentBlock: {
+  buttonsDiv: {
     display: "flex",
-    flexDirection: "column",
+    flexDirection: "row",
+  },
+  contentGrid: {
+    display: "inline-grid",
+    gridTemplateRows: "repeat(2, auto)",
+    gridAutoFlow: "column",
     padding: "4pt",
     color: colors("foreground"),
     fontSize: "10pt",
   },
-  contentRow: {
-    display: "flex",
-    flexDirection: "row",
-    marginTop: "4pt",
-    marginBottom: "4pt",
-  },
-  brushConfigBlock: {
-    width: "200pt",
-    paddingTop: "4pt",
-    paddingBottom: "4pt",
+  separator: {
+    width: "2pt",
+    height: "64pt",
+    background: colors("background"),
+    alignSelf: "center",
   },
 };

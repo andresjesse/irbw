@@ -11,25 +11,26 @@ const appSlice = createSlice({
       ui: {
         mainToolbar: {
           activeTab: "project",
+          activeTool: null,
         },
       },
     },
-    //gameMode: "TERRAIN_EDIT",
   },
   reducers: {
     editorUiMainToolbarSetTab: (state, action) => {
       state.editor.ui.mainToolbar.activeTab = action.payload;
+      state.editor.ui.mainToolbar.activeTool = null;
     },
-    // gameModeTerrainEdit: (state) => {
-    //   state.gameMode = "TERRAIN_EDIT";
-    // },
-    // gameModeGameplay: (state) => {
-    //   state.gameMode = "GAMEPLAY";
-    // },
+    editorUiMainToolbarSetTool: (state, action) => {
+      state.editor.ui.mainToolbar.activeTool = action.payload;
+    },
   },
 });
 
-export const { editorUiMainToolbarSetTab } = appSlice.actions;
+export const {
+  editorUiMainToolbarSetTab,
+  editorUiMainToolbarSetTool,
+} = appSlice.actions;
 
 const store = configureStore({
   reducer: appSlice.reducer,
