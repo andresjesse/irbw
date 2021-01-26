@@ -1,6 +1,7 @@
 import React from "react";
 
 import TerrainEditOptionsPanel from "./EnvironmentPanel/TerrainEditOptionsPanel";
+import DayNightCyclePanel from "./EnvironmentPanel/DayNightCyclePanel";
 
 import lang from "../../lang";
 import colors from "../../colors";
@@ -19,6 +20,8 @@ export default function (props) {
     switch (activeTool) {
       case "terrain_edit_level":
         return <TerrainEditOptionsPanel />;
+      case "day_night_cycle":
+        return <DayNightCyclePanel />;
       default:
         return <div />;
     }
@@ -138,6 +141,7 @@ const styles = {
     flexDirection: "row",
   },
   contentGrid: {
+    height: "fit-content",
     display: "inline-grid",
     gridTemplateRows: "repeat(2, auto)",
     gridAutoFlow: "column",
@@ -146,8 +150,8 @@ const styles = {
     fontSize: "10pt",
   },
   separator: {
-    width: "2pt",
-    height: "64pt",
+    width: "2px",
+    height: "98%",
     background: colors("background"),
     alignSelf: "center",
   },

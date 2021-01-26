@@ -10,6 +10,9 @@ const langData = {
     editor_ui_brush_config: "Brush Configuration",
     editor_ui_brush_size: "Size",
     editor_ui_brush_strength: "Strength",
+    editor_ui_day_night_cycle_config: "Time of Day",
+    editor_ui_day_night_cycle_dynamic: "Dynamic Mode",
+    editor_ui_day_night_cycle_speed: "Time Speed",
   },
   "pt-BR": {
     editor_ui_project: "Projeto",
@@ -21,6 +24,9 @@ const langData = {
     editor_ui_brush_config: "Configuração do Pincel",
     editor_ui_brush_size: "Tamanho",
     editor_ui_brush_strength: "Força",
+    editor_ui_day_night_cycle_config: "Hora do Dia",
+    editor_ui_day_night_cycle_dynamic: "Modo Dinâmico",
+    editor_ui_day_night_cycle_speed: "Velocidade do Tempo",
   },
 };
 

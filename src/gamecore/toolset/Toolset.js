@@ -21,5 +21,7 @@ export default class Toolset {
 
   onUpdate() {
     this.tools[this.activeTool]?.onUpdate();
+
+    //TODO: camera movement free (always updated)
   }
 }

@@ -17,12 +17,13 @@ const SvgButton = (props) => {
 
 const styles = {
   svgButton: {
-    height: "fit-content",
+    width: "48px",
+    height: "48px",
     borderWidth: 0,
     background: colors("panelBackground"),
     color: colors("foreground"),
-    marginRight: "2pt",
     cursor: "pointer",
+    padding: "4px",
   },
 };
 export default SvgButton;
