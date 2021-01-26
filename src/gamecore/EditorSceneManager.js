@@ -9,6 +9,8 @@ import LightManager from "./environment/LightManager";
 import VegetationManager from "./environment/VegetationManager";
 import EditorApp from "../ui/editor/EditorApp";
 
+import Toolset from "./toolset/Toolset";
+
 export default class EditorSceneManager {
   constructor(scene) {
     this.scene = scene;
@@ -19,6 +21,9 @@ export default class EditorSceneManager {
     this.terrain = new Terrain(this.scene); //TODO: rename to TerrainManager (manages segments!!)
     this.lightManager = new LightManager(this.scene);
     // this.vegetationManager = new VegetationManager(this.scene);
+
+    // Editor Toolset: applies UI tools/actions to Webgl context
+    this.toolset = new Toolset(this);
   }
 
   onStart() {
@@ -27,7 +32,11 @@ export default class EditorSceneManager {
     this.lightManager?.onStart();
     this.vegetationManager?.onStart();
 
+    // UI
     EditorApp.initializeReactApp();
+
+    // Toolset
+    this.toolset?.onStart();
 
     //----- start self -----
     this.createEditorCamera();
@@ -48,32 +57,11 @@ export default class EditorSceneManager {
   }
 
   onUpdate() {
-    if (this.imgr.getInput(LogicalInputs.Action1)) {
-      this.terrain.transform({
-        x: this.imgr.getInput(LogicalInputs.PointerX),
-        y: this.imgr.getInput(LogicalInputs.PointerY),
-        factor: 1,
-      });
-    } else if (this.imgr.getInput(LogicalInputs.Action2)) {
-      this.terrain.transform({
-        x: this.imgr.getInput(LogicalInputs.PointerX),
-        y: this.imgr.getInput(LogicalInputs.PointerY),
-        factor: -1,
-      });
-    } else if (this.imgr.getInput(LogicalInputs.Action3)) {
-      this.terrain.transform({
-        x: this.imgr.getInput(LogicalInputs.PointerX),
-        y: this.imgr.getInput(LogicalInputs.PointerY),
-        factor: 0,
-      });
-    }
-
-    //TODO: update all entities (onUpdate -- or "Step" from original IRB)
-    // if (box !== undefined) {
-    //   var deltaTimeInMillis = scene.getEngine().getDeltaTime();
-    //   const rpm = 10;
-    //   box.rotation.y += (rpm / 60) * Math.PI * 2 * (deltaTimeInMillis / 1000);
-    // }
+    /**
+     * Toolset Update: apply terrain transformations, climate changes, etc.
+     * according to React UI actions & Redux State.
+     */
+    this.toolset?.onUpdate();
   }
 
   createEditorCamera(type) {
