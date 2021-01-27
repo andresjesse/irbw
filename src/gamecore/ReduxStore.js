@@ -19,7 +19,7 @@ const appSlice = createSlice({
       lightManager: {
         timeOfDay: 12,
         dynamic: true,
-        cycleDurationSec: 60,
+        cycleDurationSec: 360,
       },
     },
   },

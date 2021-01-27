@@ -11,9 +11,6 @@ import {
 } from "../../../../gamecore/ReduxStore";
 
 export default function () {
-  // const [dynamic, setDynamic] = React.useState(false);
-  // const [cycleDurationSec, setCycleDurationSec] = React.useState(1.0);
-
   const timeOfDay = useSelector((state) => state.smgr.lightManager.timeOfDay);
   const dynamic = useSelector((state) => state.smgr.lightManager.dynamic);
   const cycleDurationSec = useSelector(
@@ -25,10 +22,10 @@ export default function () {
   return (
     <div style={styles.contentBlock}>
       <div style={styles.brushConfigBlock}>
-        {lang.get("editor_ui_day_night_cycle_config")}: {timeOfDay.toFixed(2)}
+        {lang.get("editor_ui_day_night_cycle_config")}: {timeOfDay.toFixed(0)}
         <div style={styles.contentRow}>
           <Range
-            step={0.1}
+            step={0.01}
             min={0}
             max={24}
             values={[timeOfDay]}
