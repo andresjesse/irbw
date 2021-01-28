@@ -34,6 +34,12 @@ export default class WaterSegment {
       this.scene
     );
 
+    this.ground.position = new BABYLON.Vector3(
+      parseInt(this.id.split("_")[0]) * TerrainSegmentConfig.MESH_SIZE,
+      0,
+      parseInt(this.id.split("_")[1]) * TerrainSegmentConfig.MESH_SIZE
+    );
+
     let customWaterMaterial = createCustomWaterMaterial(this.scene);
 
     customWaterMaterial.setTexture(
@@ -51,6 +57,7 @@ export default class WaterSegment {
       this.scene.assetPreloader.getTexture("assets/water/foam.jpg")
     );
 
+    //if (this.id == "0_1")
     this.ground.material = customWaterMaterial;
   }
 

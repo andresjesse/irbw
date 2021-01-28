@@ -1,5 +1,4 @@
 import * as BABYLON from "@babylonjs/core";
-import { Vector3 } from "@babylonjs/core";
 
 import { TriPlanarMaterial } from "../../materials/customTriPlanar";
 import Texture2DArrayHelper from "../../helpers/Texture2DArrayHelper";
@@ -59,7 +58,7 @@ export default class TerrainSegment {
       this.scene
     );
 
-    this.ground.position = new Vector3(
+    this.ground.position = new BABYLON.Vector3(
       parseInt(this.id.split("_")[0]) * TerrainSegmentConfig.MESH_SIZE,
       0,
       parseInt(this.id.split("_")[1]) * TerrainSegmentConfig.MESH_SIZE
@@ -111,7 +110,7 @@ export default class TerrainSegment {
 
     var numberOfVertices = positions.length / 3;
     for (let i = 0; i < numberOfVertices; i++) {
-      let o = new Vector3(
+      let o = new BABYLON.Vector3(
         positions[i * 3] + this.ground.position.x,
         positions[i * 3 + 1] + this.ground.position.y,
         positions[i * 3 + 2] + this.ground.position.z
@@ -184,7 +183,7 @@ export default class TerrainSegment {
 
     var numberOfVertices = positions.length / 3;
     for (let i = 0; i < numberOfVertices; i++) {
-      let o = new Vector3(
+      let o = new BABYLON.Vector3(
         positions[i * 3],
         positions[i * 3 + 1],
         positions[i * 3 + 2]
