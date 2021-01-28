@@ -1,6 +1,24 @@
 import * as BABYLON from "@babylonjs/core";
 
 import { mulberry32 } from "../../helpers/DeterministicRandom";
+import { TerrainSegmentConfig } from "./TerrainSegment";
+
+/** Assets Manager Preloading - Singleton Instance */
+const containers = {};
+
+const preloadAssets = (scene) => {
+  // preload assets if empty
+  if (Object.keys(containers).length == 0) {
+    scene.assetsManager.addContainerTask(
+      "tree1",
+      "",
+      "assets/nature/",
+      "tree1.babylon"
+    ).onSuccess = (task) => {
+      containers["tree1"] = task.loadedContainer;
+    };
+  }
+};
 
 /**
  * Initial ideas:
@@ -20,27 +38,40 @@ import { mulberry32 } from "../../helpers/DeterministicRandom";
  *      }
  *    - option 2: save as an vec2 matrix: [[bioma, density], [,], ...]
  */
-export default class VegetationManager {
-  constructor(scene) {
+export default class VegetationSegment {
+  constructor(scene, id, parent) {
     this.scene = scene;
+    this.id = id;
+    this.parent = parent;
 
-    this.containers = {};
+    preloadAssets(scene);
 
-    this.scene.assetsManager.addContainerTask(
-      "tree1",
-      "",
-      "assets/nature/",
-      "tree1.babylon"
-    ).onSuccess = (task) => {
-      this.containers["tree1"] = task.loadedContainer;
-    };
+    // create a square matrix of dimension TerrainSegmentConfig.MESH_RESOLUTION
+    this.vegetationLayer = Array(TerrainSegmentConfig.MESH_RESOLUTION).fill(
+      Array(TerrainSegmentConfig.MESH_RESOLUTION)
+    );
+  }
+
+  onStart() {
+    // for (let i = -10; i < 10; i += 5) {
+    //   for (let j = -10; j < 10; j += 5) {
+    //     this.instantiate(i, j);
+    //   }
+    // }
+  }
+
+  paintVegetation(options) {
+    console.log(options);
+    let nearestVertex = this.parent.findNearestVertex(options.pickedPoint); // TODO: check if its transformed to LOCAL POSITION! (otherwise multiple segments can break!)
+
+    console.log(nearestVertex);
   }
 
   instantiate(x, z) {
     //generate a random generator based on instance coordinates
     let rand = mulberry32(x + 10 * z);
 
-    let entries = this.containers["tree1"].instantiateModelsToScene();
+    let entries = containers["tree1"].instantiateModelsToScene();
 
     let factor = 5;
     let offset = [rand() * factor - factor / 2, rand() * factor - factor / 2];
@@ -56,14 +87,6 @@ export default class VegetationManager {
 
       this.scene.smgr.lightManager.addShadowsTo(node);
       node.receiveShadows = true;
-    }
-  }
-
-  onStart() {
-    for (let i = -10; i < 10; i += 5) {
-      for (let j = -10; j < 10; j += 5) {
-        this.instantiate(i, j);
-      }
     }
   }
 }

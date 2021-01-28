@@ -10,7 +10,7 @@ export default class TerrainEditLevel {
       this.smgr.terrain.transform({
         x: this.smgr.imgr.getInput(LogicalInputs.PointerX),
         y: this.smgr.imgr.getInput(LogicalInputs.PointerY),
-        factor: 1,
+        factor: 1, //TODO: get factor from UI (brush configs)
       });
     } else if (this.smgr.imgr.getInput(LogicalInputs.Action2)) {
       this.smgr.terrain.transform({

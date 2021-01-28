@@ -6,7 +6,6 @@ import UniversalInputManager, { LogicalInputs } from "./UniversalInputManager";
 
 import Terrain from "./environment/Terrain";
 import LightManager from "./environment/LightManager";
-import VegetationManager from "./environment/VegetationManager";
 import EditorApp from "../ui/editor/EditorApp";
 
 import Toolset from "./toolset/Toolset";
@@ -18,9 +17,8 @@ export default class EditorSceneManager {
     this.imgr = new UniversalInputManager(scene);
 
     //----- create children -----
-    this.terrain = new Terrain(this.scene); //TODO: rename to TerrainManager (manages segments!!)
     this.lightManager = new LightManager(this.scene);
-    // this.vegetationManager = new VegetationManager(this.scene);
+    this.terrain = new Terrain(this.scene); //TODO: rename to TerrainManager (manages segments!!)
 
     // Editor Toolset: applies UI tools/actions to Webgl context
     this.toolset = new Toolset(this);
@@ -28,9 +26,8 @@ export default class EditorSceneManager {
 
   onStart() {
     //----- start children -----
-    this.terrain?.onStart();
     this.lightManager?.onStart();
-    this.vegetationManager?.onStart();
+    this.terrain?.onStart();
 
     // UI
     EditorApp.initializeReactApp();
@@ -67,7 +64,8 @@ export default class EditorSceneManager {
   createEditorCamera(type) {
     this.camera = new FreeCamera(
       "EDITOR_CAMERA",
-      new Vector3(0, 32, -32),
+      //new Vector3(0, 32, -32),
+      new Vector3(0, 60, -50),
       this.scene
     );
 

@@ -10,15 +10,15 @@ const appSlice = createSlice({
     editor: {
       ui: {
         mainToolbar: {
-          activeTab: "environment", //TODO: default project
-          activeTool: null,
+          activeTab: "environment",
+          activeTool: "vegetation_paint",
         },
       },
     },
     smgr: {
       lightManager: {
         timeOfDay: 12,
-        dynamic: true,
+        dynamic: false,
         cycleDurationSec: 360,
       },
     },

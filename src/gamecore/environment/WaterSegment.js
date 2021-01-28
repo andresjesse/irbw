@@ -11,7 +11,7 @@ export default class WaterSegment {
 
     //----- create children -----
 
-    //----- preload self assets -----
+    //----- preload self assets ----- TODO: check for singleton preloading (see VegetationSegment approach)
 
     this.scene.assetsManager.addTextureTask(
       "textureWaternm",

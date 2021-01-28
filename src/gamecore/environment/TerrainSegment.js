@@ -5,12 +5,13 @@ import { TriPlanarMaterial } from "../../materials/customTriPlanar";
 import Texture2DArrayHelper from "../../helpers/Texture2DArrayHelper";
 
 import WaterSegment from "./WaterSegment";
+import VegetationSegment from "./VegetationSegment";
 
 export const TerrainSegmentConfig = {
   MAX_HEIGHT: 20,
   MIN_HEIGHT: -4,
 
-  MESH_SIZE: 100,
+  MESH_SIZE: 50,
   MESH_RESOLUTION: 64,
 };
 
@@ -21,9 +22,10 @@ export default class TerrainSegment {
 
     //----- create children -----
 
-    this.waterSegment = new WaterSegment(this.scene, this.id);
+    //this.waterSegment = new WaterSegment(this.scene, this.id);
+    //this.vegetationSegment = new VegetationSegment(this.scene, this.id, this);
 
-    //----- preload self assets -----
+    //----- preload self assets ----- TODO: implement singleton preload (check vegetationSegment) -- different textures in different segments? or just in different scenes?
 
     this.textures = {};
 
@@ -52,11 +54,11 @@ export default class TerrainSegment {
   onStart() {
     //----- start children -----
 
-    this.waterSegment.onStart();
+    this.waterSegment?.onStart();
+    this.vegetationSegment?.onStart();
 
     //----- start self -----
 
-    //mesh OK!!!
     this.ground = BABYLON.MeshBuilder.CreateGround(
       "ground_" + this.id,
       {
@@ -68,18 +70,11 @@ export default class TerrainSegment {
       this.scene
     );
 
-    //TEMP GROUND!!!
-    // this.ground = BABYLON.Mesh.CreateGroundFromHeightMap(
-    //   "ground",
-    //   "textures/TEMPHeightmap.png",
-    //   100,
-    //   100,
-    //   250,
-    //   -4,
-    //   10,
-    //   this.scene,
-    //   false
-    // );
+    this.ground.position = new Vector3(
+      parseInt(this.id.split("_")[0]) * TerrainSegmentConfig.MESH_SIZE,
+      0,
+      parseInt(this.id.split("_")[1]) * TerrainSegmentConfig.MESH_SIZE
+    );
 
     var triPlanarMaterial = new TriPlanarMaterial("triplanar", this.scene);
 
@@ -111,6 +106,10 @@ export default class TerrainSegment {
     this.ground.material = triPlanarMaterial;
 
     this.ground.receiveShadows = true;
+  }
+
+  paintVegetation(options) {
+    this.vegetationSegment.paintVegetation(options);
   }
 
   transform(options) {
@@ -182,5 +181,32 @@ export default class TerrainSegment {
     );
 
     this.ground.updateVerticesData(BABYLON.VertexBuffer.NormalKind, normals);
+  }
+
+  findNearestVertex(refPoint) {
+    let positions = this.ground.getVerticesData(
+      BABYLON.VertexBuffer.PositionKind
+    );
+
+    let nearest = null;
+    let nearestDist = Number.MAX_VALUE;
+
+    var numberOfVertices = positions.length / 3;
+    for (let i = 0; i < numberOfVertices; i++) {
+      let o = new Vector3(
+        positions[i * 3],
+        positions[i * 3 + 1],
+        positions[i * 3 + 2]
+      );
+
+      let dist = BABYLON.Vector3.Distance(o, refPoint);
+
+      if (dist < nearestDist) {
+        nearestDist = dist;
+        nearest = o;
+      }
+    }
+
+    return nearest;
   }
 }
