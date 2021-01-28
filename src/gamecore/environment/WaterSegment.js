@@ -11,28 +11,11 @@ export default class WaterSegment {
 
     //----- create children -----
 
-    //----- preload self assets ----- TODO: check for singleton preloading (see VegetationSegment approach)
+    //----- preload self assets -----
 
-    this.scene.assetsManager.addTextureTask(
-      "textureWaternm",
-      "assets/water/waternm.jpg"
-    ).onSuccess = (task) => {
-      this.textureWaternm = task.texture;
-    };
-
-    this.scene.assetsManager.addTextureTask(
-      "textureClouds",
-      "assets/water/clouds.jpg"
-    ).onSuccess = (task) => {
-      this.textureClouds = task.texture;
-    };
-
-    this.scene.assetsManager.addTextureTask(
-      "textureFoam",
-      "assets/water/foam.jpg"
-    ).onSuccess = (task) => {
-      this.textureFoam = task.texture;
-    };
+    this.scene.assetPreloader.preloadTexture("assets/water/waternm.jpg");
+    this.scene.assetPreloader.preloadTexture("assets/water/clouds.jpg");
+    this.scene.assetPreloader.preloadTexture("assets/water/foam.jpg");
   }
 
   onStart() {
@@ -53,9 +36,20 @@ export default class WaterSegment {
 
     let customWaterMaterial = createCustomWaterMaterial(this.scene);
 
-    customWaterMaterial.setTexture("normalMap", this.textureWaternm);
-    customWaterMaterial.setTexture("reflectionMap", this.textureClouds);
-    customWaterMaterial.setTexture("foam", this.textureFoam);
+    customWaterMaterial.setTexture(
+      "normalMap",
+      this.scene.assetPreloader.getTexture("assets/water/waternm.jpg")
+    );
+
+    customWaterMaterial.setTexture(
+      "reflectionMap",
+      this.scene.assetPreloader.getTexture("assets/water/clouds.jpg")
+    );
+
+    customWaterMaterial.setTexture(
+      "foam",
+      this.scene.assetPreloader.getTexture("assets/water/foam.jpg")
+    );
 
     this.ground.material = customWaterMaterial;
   }

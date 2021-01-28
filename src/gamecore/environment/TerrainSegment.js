@@ -22,33 +22,22 @@ export default class TerrainSegment {
 
     //----- create children -----
 
-    //this.waterSegment = new WaterSegment(this.scene, this.id);
-    //this.vegetationSegment = new VegetationSegment(this.scene, this.id, this);
+    this.waterSegment = new WaterSegment(this.scene, this.id);
+    this.vegetationSegment = new VegetationSegment(this.scene, this.id, this);
 
-    //----- preload self assets ----- TODO: implement singleton preload (check vegetationSegment) -- different textures in different segments? or just in different scenes?
+    //----- preload self assets -----
 
-    this.textures = {};
+    this.scene.assetPreloader.preloadTexture("assets/terrain/layer1_grass.jpg");
+    this.scene.assetPreloader.preloadTexture("assets/terrain/layer1_sand.jpg");
+    this.scene.assetPreloader.preloadTexture("assets/terrain/layer1_rock.jpg");
+    this.scene.assetPreloader.preloadTexture("assets/terrain/layer1_cliff.jpg");
 
-    const preloadTexture = (txFile) => {
-      this.scene.assetsManager.addTextureTask(
-        txFile,
-        "assets/terrain/" + txFile
-      ).onSuccess = (task) => {
-        this.textures[txFile] = task.texture;
-      };
-    };
+    this.scene.assetPreloader.preloadTexture("assets/terrain/layer2_grass.jpg");
+    this.scene.assetPreloader.preloadTexture("assets/terrain/layer2_sand.jpg");
+    this.scene.assetPreloader.preloadTexture("assets/terrain/layer2_rock.jpg");
+    this.scene.assetPreloader.preloadTexture("assets/terrain/layer2_cliff.jpg");
 
-    preloadTexture("layer1_grass.jpg");
-    preloadTexture("layer1_sand.jpg");
-    preloadTexture("layer1_rock.jpg");
-    preloadTexture("layer1_cliff.jpg");
-
-    preloadTexture("layer2_grass.jpg");
-    preloadTexture("layer2_sand.jpg");
-    preloadTexture("layer2_rock.jpg");
-    preloadTexture("layer2_cliff.jpg");
-
-    preloadTexture("noise.jpg");
+    this.scene.assetPreloader.preloadTexture("assets/terrain/noise.jpg");
   }
 
   onStart() {
@@ -76,29 +65,31 @@ export default class TerrainSegment {
       parseInt(this.id.split("_")[1]) * TerrainSegmentConfig.MESH_SIZE
     );
 
-    var triPlanarMaterial = new TriPlanarMaterial("triplanar", this.scene);
+    let triPlanarMaterial = new TriPlanarMaterial("triplanar", this.scene);
 
     triPlanarMaterial.diffuseTextureX = Texture2DArrayHelper.createFromTextures(
       this.scene,
       [
-        this.textures["layer1_grass.jpg"],
-        this.textures["layer1_sand.jpg"],
-        this.textures["layer1_rock.jpg"],
-        this.textures["layer1_cliff.jpg"],
+        this.scene.assetPreloader.getTexture("assets/terrain/layer1_grass.jpg"),
+        this.scene.assetPreloader.getTexture("assets/terrain/layer1_sand.jpg"),
+        this.scene.assetPreloader.getTexture("assets/terrain/layer1_rock.jpg"),
+        this.scene.assetPreloader.getTexture("assets/terrain/layer1_cliff.jpg"),
       ]
     );
 
     triPlanarMaterial.diffuseTextureY = Texture2DArrayHelper.createFromTextures(
       this.scene,
       [
-        this.textures["layer2_grass.jpg"],
-        this.textures["layer2_sand.jpg"],
-        this.textures["layer2_rock.jpg"],
-        this.textures["layer2_cliff.jpg"],
+        this.scene.assetPreloader.getTexture("assets/terrain/layer2_grass.jpg"),
+        this.scene.assetPreloader.getTexture("assets/terrain/layer2_sand.jpg"),
+        this.scene.assetPreloader.getTexture("assets/terrain/layer2_rock.jpg"),
+        this.scene.assetPreloader.getTexture("assets/terrain/layer2_cliff.jpg"),
       ]
     );
 
-    triPlanarMaterial.diffuseTextureZ = this.textures["noise.jpg"];
+    triPlanarMaterial.diffuseTextureZ = this.scene.assetPreloader.getTexture(
+      "assets/terrain/noise.jpg"
+    );
 
     triPlanarMaterial.specularPower = 32;
     triPlanarMaterial.tileSize = 7;

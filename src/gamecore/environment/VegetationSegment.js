@@ -3,23 +3,6 @@ import * as BABYLON from "@babylonjs/core";
 import { mulberry32 } from "../../helpers/DeterministicRandom";
 import { TerrainSegmentConfig } from "./TerrainSegment";
 
-/** Assets Manager Preloading - Singleton Instance */
-const containers = {};
-
-const preloadAssets = (scene) => {
-  // preload assets if empty
-  if (Object.keys(containers).length == 0) {
-    scene.assetsManager.addContainerTask(
-      "tree1",
-      "",
-      "assets/nature/",
-      "tree1.babylon"
-    ).onSuccess = (task) => {
-      containers["tree1"] = task.loadedContainer;
-    };
-  }
-};
-
 /**
  * Initial ideas:
  *  - Brush size set by UI
@@ -44,7 +27,7 @@ export default class VegetationSegment {
     this.id = id;
     this.parent = parent;
 
-    preloadAssets(scene);
+    this.scene.assetPreloader.preloadContainer("assets/nature/tree1.babylon");
 
     // create a square matrix of dimension TerrainSegmentConfig.MESH_RESOLUTION
     this.vegetationLayer = Array(TerrainSegmentConfig.MESH_RESOLUTION).fill(
@@ -53,11 +36,11 @@ export default class VegetationSegment {
   }
 
   onStart() {
-    // for (let i = -10; i < 10; i += 5) {
-    //   for (let j = -10; j < 10; j += 5) {
-    //     this.instantiate(i, j);
-    //   }
-    // }
+    for (let i = -10; i < 10; i += 5) {
+      for (let j = -10; j < 10; j += 5) {
+        this.instantiate(i, j);
+      }
+    }
   }
 
   paintVegetation(options) {
@@ -71,7 +54,9 @@ export default class VegetationSegment {
     //generate a random generator based on instance coordinates
     let rand = mulberry32(x + 10 * z);
 
-    let entries = containers["tree1"].instantiateModelsToScene();
+    let entries = this.scene.assetPreloader
+      .getContainer("assets/nature/tree1.babylon")
+      .instantiateModelsToScene();
 
     let factor = 5;
     let offset = [rand() * factor - factor / 2, rand() * factor - factor / 2];

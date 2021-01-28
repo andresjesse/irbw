@@ -3,6 +3,7 @@ import { FreeCamera, Vector3, HemisphericLight } from "@babylonjs/core";
 import * as BABYLON from "@babylonjs/core";
 
 import UniversalInputManager, { LogicalInputs } from "./UniversalInputManager";
+import AssetPreloader from "./AssetPreloader";
 
 import Terrain from "./environment/Terrain";
 import LightManager from "./environment/LightManager";
@@ -15,6 +16,7 @@ export default class EditorSceneManager {
     this.scene = scene;
 
     this.imgr = new UniversalInputManager(scene);
+    this.scene.assetPreloader = new AssetPreloader(scene);
 
     //----- create children -----
     this.lightManager = new LightManager(this.scene);
