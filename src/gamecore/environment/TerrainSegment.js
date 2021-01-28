@@ -23,7 +23,7 @@ export default class TerrainSegment {
     //----- create children -----
 
     this.waterSegment = new WaterSegment(this.scene, this.id);
-    this.vegetationSegment = new VegetationSegment(this.scene, this.id, this);
+    //this.vegetationSegment = new VegetationSegment(this.scene, this.id, this);
 
     //----- preload self assets -----
 
@@ -112,9 +112,9 @@ export default class TerrainSegment {
     var numberOfVertices = positions.length / 3;
     for (let i = 0; i < numberOfVertices; i++) {
       let o = new Vector3(
-        positions[i * 3],
-        positions[i * 3 + 1],
-        positions[i * 3 + 2]
+        positions[i * 3] + this.ground.position.x,
+        positions[i * 3 + 1] + this.ground.position.y,
+        positions[i * 3 + 2] + this.ground.position.z
       );
 
       let dist = BABYLON.Vector3.Distance(o, options.pickedPoint);
