@@ -66,19 +66,11 @@ export default class EditorSceneManager {
   createEditorCamera(type) {
     this.camera = new FreeCamera(
       "EDITOR_CAMERA",
-      //new Vector3(0, 32, -32),
-      new Vector3(25, 60, -50),
+      new Vector3(0, 32, -32),
       this.scene
     );
 
-    this.camera.setTarget(
-      new Vector3(
-        this.camera.position.x,
-        0,
-        0 //-this.camera.position.z - this.camera.position.y / 2
-      )
-    );
-    //this.camera.setTarget(Vector3.Zero());
+    this.camera.setTarget(Vector3.Zero());
 
     const canvas = this.scene.getEngine().getRenderingCanvas();
 

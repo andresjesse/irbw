@@ -7,35 +7,12 @@
  *  - Action2: Mouse RB Click,
  *  - etc...
  * UI Graphics:
- *  - returned according to last physical input method
- *  - gui images for gamepad buttons, mouse buttons, keys.. etc
+ *  - TODO: change input responses according to the last physical input method (seamless transition between mouse/keyboard/gamepad)
+ *  - TODO: input methods cab be create from gui images for virtual gamepad buttons (mobile gameplay), mouse buttons, keys.. etc
  */
 
 import * as BABYLON from "@babylonjs/core";
 
-// switch (pointerInfo.type) {
-//   case BABYLON.PointerEventTypes.POINTERDOWN:
-//     console.log("POINTER DOWN");
-//     break;
-//   case BABYLON.PointerEventTypes.POINTERUP:
-//     console.log("POINTER UP");
-//     break;
-//   case BABYLON.PointerEventTypes.POINTERMOVE:
-//     console.log("POINTER MOVE");
-//     break;
-//   case BABYLON.PointerEventTypes.POINTERWHEEL:
-//     console.log("POINTER WHEEL");
-//     break;
-//   case BABYLON.PointerEventTypes.POINTERPICK:
-//     console.log("POINTER PICK");
-//     break;
-//   case BABYLON.PointerEventTypes.POINTERTAP:
-//     console.log("POINTER TAP");
-//     break;
-//   case BABYLON.PointerEventTypes.POINTERDOUBLETAP:
-//     console.log("POINTER DOUBLE-TAP");
-//     break;
-// }
 class ImgrMouse {
   constructor(scene) {
     this.scene = scene;
@@ -70,44 +47,80 @@ class ImgrMouse {
   }
 }
 
+class ImgrKeyboard {
+  constructor(scene) {
+    this.scene = scene;
+
+    this.state = {};
+
+    this.scene.onKeyboardObservable.add((kbInfo) => {
+      switch (kbInfo.type) {
+        case BABYLON.KeyboardEventTypes.KEYDOWN:
+          //console.log("KEY DOWN: ", kbInfo.event.key);
+          //console.log("KEY UP: ", kbInfo.event.keyCode);
+          this.state[kbInfo.event.key] = 1;
+          break;
+        case BABYLON.KeyboardEventTypes.KEYUP:
+          this.state[kbInfo.event.key] = 0;
+          break;
+      }
+    });
+  }
+}
+
 export const LogicalInputs = {
   Action1: "Action1",
   Action2: "Action2",
   PointerX: "PointerX",
   PointerY: "PointerY",
+  MainAxisX: "MainAxisX",
+  MainAxisY: "MainAxisY",
 };
 
+/**
+ * Default Implementation:
+ *  - Action1 = Left Mouse
+ *  - Action2 = Right Mouse
+ *  - Action3 = Middle Mouse
+ *  - PointerX = Mouse Position X
+ *  - PointerY = Mouse Position Y
+ *  - MainAxisX = Keyboard a|A <- -> d|D
+ *  - MainAxisY = Keyboard s|S \/ /\ w|W
+ *
+ *  Note: alternate InputManagers can be created rewritting this class :)
+ */
 export default class UniversalInputManager {
   constructor(scene) {
     this.scene = scene;
 
     this.imgrMouse = new ImgrMouse(scene);
+    this.imgrKeyboard = new ImgrKeyboard(scene);
   }
 
   getInput(logical) {
     switch (logical) {
-      case LogicalInputs.Action1: // LEFT MOUSE
-        //TODO: map Keyboard, Touch and Gamepad...
+      case LogicalInputs.Action1: // mouse l
         return this.imgrMouse.state.buttons[0];
-      case LogicalInputs.Action2: // RIGHT MOUSE
-        //TODO: map Keyboard, Touch and Gamepad...
+      case LogicalInputs.Action2: // mouse r
         return this.imgrMouse.state.buttons[2];
-      case LogicalInputs.Action3: // MIDDLE MOUSE
-        //TODO: map Keyboard, Touch and Gamepad...
+      case LogicalInputs.Action3: // mouse wheel
         return this.imgrMouse.state.buttons[1];
-      case LogicalInputs.PointerX:
-        //TODO: map arrows and gamepad to update logical pointer position
+      case LogicalInputs.PointerX: // mouse x
         return this.imgrMouse.state.x;
-      case LogicalInputs.PointerY:
-        //TODO: map arrows and gamepad to update logical pointer position
+      case LogicalInputs.PointerY: // mouse y
         return this.imgrMouse.state.y;
+      case LogicalInputs.MainAxisX: // a d
+        let positiveX = this.imgrKeyboard.state["d"] || 0;
+        let negativeX = this.imgrKeyboard.state["a"] || 0;
+        return positiveX - negativeX;
+      case LogicalInputs.MainAxisY: // s w
+        let positiveY = this.imgrKeyboard.state["w"] || 0;
+        let negativeY = this.imgrKeyboard.state["s"] || 0;
+        return positiveY - negativeY;
     }
   }
 
   subscribeForInput(logical) {
-    // switch (logical) {
-    //   case LogicalInputs.Action1:
-    //     this.imgrMouse.state.buttons[0]; //add observer for mb0
-    // }
+    //reserved for observers
   }
 }

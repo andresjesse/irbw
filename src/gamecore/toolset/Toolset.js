@@ -1,4 +1,5 @@
 import store from "../ReduxStore";
+import CameraMovement from "./CameraMovement";
 
 import TerrainEditLevel from "./TerrainEditLevel";
 import VegetationPaint from "./VegetationPaint";
@@ -16,6 +17,7 @@ export default class Toolset {
 
   onStart() {
     this.tools = {
+      camera_movement: new CameraMovement(this.smgr),
       terrain_edit_level: new TerrainEditLevel(this.smgr),
       vegetation_paint: new VegetationPaint(this.smgr),
     };
@@ -24,6 +26,7 @@ export default class Toolset {
   onUpdate() {
     this.tools[this.activeTool]?.onUpdate();
 
-    //TODO: camera movement free (always updated)
+    // persistent tools (always updated)
+    this.tools.camera_movement.onUpdate();
   }
 }
