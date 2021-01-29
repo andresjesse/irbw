@@ -109,13 +109,25 @@ export default class UniversalInputManager {
         return this.imgrMouse.state.x;
       case LogicalInputs.PointerY: // mouse y
         return this.imgrMouse.state.y;
-      case LogicalInputs.MainAxisX: // a d
-        let positiveX = this.imgrKeyboard.state["d"] || 0;
-        let negativeX = this.imgrKeyboard.state["a"] || 0;
+      case LogicalInputs.MainAxisX: // a|A d|D
+        let positiveX = Math.max(
+          this.imgrKeyboard.state["d"] || 0,
+          this.imgrKeyboard.state["D"] || 0
+        );
+        let negativeX = Math.max(
+          this.imgrKeyboard.state["a"] || 0,
+          this.imgrKeyboard.state["A"] || 0
+        );
         return positiveX - negativeX;
-      case LogicalInputs.MainAxisY: // s w
-        let positiveY = this.imgrKeyboard.state["w"] || 0;
-        let negativeY = this.imgrKeyboard.state["s"] || 0;
+      case LogicalInputs.MainAxisY: // s|S w|W
+        let positiveY = Math.max(
+          this.imgrKeyboard.state["w"] || 0,
+          this.imgrKeyboard.state["W"] || 0
+        );
+        let negativeY = Math.max(
+          this.imgrKeyboard.state["s"] || 0,
+          this.imgrKeyboard.state["S"] || 0
+        );
         return positiveY - negativeY;
     }
   }
