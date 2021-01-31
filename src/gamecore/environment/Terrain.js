@@ -53,9 +53,6 @@ export default class Terrain {
     );
 
     if (pickinfo.hit) {
-      console.log(pickinfo);
-      //return pickinfo.pickedPoint;
-
       //TODO: check distance to Segments (too far does not need to be trasformed, e.g. > 64 <<test>>?? )
 
       for (const key in this.segments) {

@@ -5,7 +5,7 @@ export default class TerrainEditLevel {
     this.smgr = smgr;
   }
 
-  onUpdate() {
+  onUpdate(options) {
     let factor = null;
 
     if (this.smgr.imgr.getInput(LogicalInputs.Action1)) {
@@ -24,7 +24,7 @@ export default class TerrainEditLevel {
       this.smgr.terrain.transform({
         x: this.smgr.imgr.getInput(LogicalInputs.PointerX),
         y: this.smgr.imgr.getInput(LogicalInputs.PointerY),
-        factor: factor, //TODO: multiply factor by Strength from UI (brush configs)
+        factor: factor * (options.brushStrength / 100),
       });
     }
   }

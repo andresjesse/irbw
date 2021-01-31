@@ -9,9 +9,11 @@ export default class Toolset {
     this.smgr = smgr;
 
     this.activeTool = store.getState().editor.ui.mainToolbar.activeTool;
+    this.activeToolOptions = store.getState().editor.ui.mainToolbar.activeToolOptions;
 
     store.subscribe(() => {
       this.activeTool = store.getState().editor.ui.mainToolbar.activeTool;
+      this.activeToolOptions = store.getState().editor.ui.mainToolbar.activeToolOptions;
     });
   }
 
@@ -24,7 +26,7 @@ export default class Toolset {
   }
 
   onUpdate() {
-    this.tools[this.activeTool]?.onUpdate();
+    this.tools[this.activeTool]?.onUpdate(this.activeToolOptions);
 
     // persistent tools (always updated)
     this.tools.camera_movement.onUpdate();

@@ -1,12 +1,31 @@
 import React from "react";
 import { Range } from "react-range";
+import { useSelector, useDispatch } from "react-redux";
+
+import { editorUiMainToolbarSetToolOptions } from "../../../../gamecore/ReduxStore";
 
 import lang from "../../../lang";
 import colors from "../../../colors";
 
 export default function () {
-  const [brushSize, setBrushSize] = React.useState([50]);
-  const [brushStrength, setBrushStrength] = React.useState([50]);
+  // configure options redux listener
+  const options = useSelector(
+    (state) => state.editor.ui.mainToolbar.activeToolOptions
+  );
+
+  const dispatch = useDispatch();
+
+  // set default options for current tool
+  if (options == null)
+    dispatch(
+      editorUiMainToolbarSetToolOptions({ brushSize: 50, brushStrength: 50 })
+    );
+
+  // Range values are stored in component's state
+  const [brushSize, setBrushSize] = React.useState([options?.brushSize || 50]);
+  const [brushStrength, setBrushStrength] = React.useState([
+    options?.brushStrength || 50,
+  ]);
 
   return (
     <div style={styles.contentBlock}>
@@ -21,7 +40,15 @@ export default function () {
             min={0}
             max={100}
             values={brushSize}
-            onChange={(values) => setBrushSize(values)}
+            onChange={(values) => {
+              setBrushSize(values);
+              dispatch(
+                editorUiMainToolbarSetToolOptions({
+                  brushSize: values[0],
+                  brushStrength: brushStrength,
+                })
+              );
+            }}
             renderTrack={({ props, children }) => (
               <div
                 {...props}
@@ -56,7 +83,15 @@ export default function () {
             min={0}
             max={100}
             values={brushStrength}
-            onChange={(values) => setBrushStrength(values)}
+            onChange={(values) => {
+              setBrushStrength(values);
+              dispatch(
+                editorUiMainToolbarSetToolOptions({
+                  brushSize: brushSize,
+                  brushStrength: values[0],
+                })
+              );
+            }}
             renderTrack={({ props, children }) => (
               <div
                 {...props}
