@@ -92,10 +92,10 @@ var shader = `
       normalizedNormal*=normalizedNormal;
       vec3 worldBinormal=normalize(xbin*normalizedNormal.x+ybin*normalizedNormal.y+zbin*normalizedNormal.z);
       vec3 worldTangent=normalize(xtan*normalizedNormal.x+ytan*normalizedNormal.y+ztan*normalizedNormal.z);
-      worldTangent=(world*vec4(worldTangent,1.0)).xyz;
-      worldBinormal=(world*vec4(worldBinormal,1.0)).xyz;
-      //vec3 worldNormal=(world*vec4(normalize(normal),1.0)).xyz;
-      vec3 worldNormal=(vec4(normalize(normal),1.0)).xyz; // for some reason worldNormal does not work when the mesh is not positioned on (0,0,0). removed world from calculation;
+      // triplanar translation fixed: https://github.com/BabylonJS/Babylon.js/pull/9867/commits/40bdfb62c5ebd480d748b56bc72a1e1f78adc50a
+      worldTangent=(world*vec4(worldTangent,0.0)).xyz;
+      worldBinormal=(world*vec4(worldBinormal,0.0)).xyz;
+      vec3 worldNormal=(world*vec4(normalize(normal),0.0)).xyz;
       tangentSpace[0]=worldTangent;
       tangentSpace[1]=worldBinormal;
       tangentSpace[2]=worldNormal;
