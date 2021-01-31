@@ -75,6 +75,7 @@ export const LogicalInputs = {
   PointerY: "PointerY",
   MainAxisX: "MainAxisX",
   MainAxisY: "MainAxisY",
+  EditorModifier1: "EditorModifier1",
 };
 
 /**
@@ -86,6 +87,7 @@ export const LogicalInputs = {
  *  - PointerY = Mouse Position Y
  *  - MainAxisX = Keyboard a|A <- -> d|D
  *  - MainAxisY = Keyboard s|S \/ /\ w|W
+ *  - EditorModifier1 = Shift
  *
  *  Note: alternate InputManagers can be created rewritting this class :)
  */
@@ -129,6 +131,8 @@ export default class UniversalInputManager {
           this.imgrKeyboard.state["S"] || 0
         );
         return positiveY - negativeY;
+      case LogicalInputs.EditorModifier1:
+        return this.imgrKeyboard.state["Shift"] || 0;
     }
   }
 

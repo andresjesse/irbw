@@ -6,23 +6,25 @@ export default class TerrainEditLevel {
   }
 
   onUpdate() {
+    let factor = null;
+
     if (this.smgr.imgr.getInput(LogicalInputs.Action1)) {
-      this.smgr.terrain.transform({
-        x: this.smgr.imgr.getInput(LogicalInputs.PointerX),
-        y: this.smgr.imgr.getInput(LogicalInputs.PointerY),
-        factor: 1, //TODO: get factor from UI (brush configs)
-      });
+      if (this.smgr.imgr.getInput(LogicalInputs.EditorModifier1)) {
+        factor = -1;
+      } else {
+        factor = 1;
+      }
     } else if (this.smgr.imgr.getInput(LogicalInputs.Action2)) {
-      this.smgr.terrain.transform({
-        x: this.smgr.imgr.getInput(LogicalInputs.PointerX),
-        y: this.smgr.imgr.getInput(LogicalInputs.PointerY),
-        factor: -1,
-      });
+      factor = -1;
     } else if (this.smgr.imgr.getInput(LogicalInputs.Action3)) {
+      factor = 0;
+    }
+
+    if (factor != null) {
       this.smgr.terrain.transform({
         x: this.smgr.imgr.getInput(LogicalInputs.PointerX),
         y: this.smgr.imgr.getInput(LogicalInputs.PointerY),
-        factor: 0,
+        factor: factor, //TODO: multiply factor by Strength from UI (brush configs)
       });
     }
   }
