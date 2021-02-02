@@ -118,9 +118,8 @@ export default class TerrainSegment {
 
       let dist = BABYLON.Vector3.Distance(o, options.pickedPoint);
 
-      if (dist <= options.brushRadius) {
-        let ratio =
-          Math.sin(1 - dist / options.brushRadius) * options.brushRadius;
+      if (dist <= options.brushSize) {
+        let ratio = Math.sin(1 - dist / options.brushSize) * options.brushSize;
 
         if (options.factor == 0) {
           //transform to zero
