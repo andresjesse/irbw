@@ -7,10 +7,7 @@ import lang from "../../lang";
 import colors from "../../colors";
 
 import { useSelector, useDispatch } from "react-redux";
-import {
-  editorUiMainToolbarSetTool,
-  editorUiMainToolbarSetToolOptions,
-} from "../../../gamecore/ReduxStore";
+import { editorUiMainToolbarSetTool } from "../../../gamecore/ReduxStore";
 
 import SvgButton from "./SvgButton";
 
@@ -51,7 +48,6 @@ export default function (props) {
             active={activeTool == "terrain_edit_level"}
             onClick={() => {
               dispatch(editorUiMainToolbarSetTool("terrain_edit_level"));
-              dispatch(editorUiMainToolbarSetToolOptions(null));
             }}
           />
 
@@ -62,7 +58,6 @@ export default function (props) {
             active={activeTool == "terrain_normalize_level"}
             onClick={() => {
               dispatch(editorUiMainToolbarSetTool("terrain_normalize_level"));
-              dispatch(editorUiMainToolbarSetToolOptions(null));
             }}
           />
 
@@ -73,7 +68,6 @@ export default function (props) {
             active={activeTool == "terrain_soften_level"}
             onClick={() => {
               dispatch(editorUiMainToolbarSetTool("terrain_soften_level"));
-              dispatch(editorUiMainToolbarSetToolOptions(null));
             }}
           />
         </div>
@@ -94,7 +88,6 @@ export default function (props) {
             active={activeTool == "vegetation_paint"}
             onClick={() => {
               dispatch(editorUiMainToolbarSetTool("vegetation_paint"));
-              dispatch(editorUiMainToolbarSetToolOptions(null));
             }}
           />
         </div>
@@ -115,7 +108,6 @@ export default function (props) {
             active={activeTool == "day_night_cycle"}
             onClick={() => {
               dispatch(editorUiMainToolbarSetTool("day_night_cycle"));
-              dispatch(editorUiMainToolbarSetToolOptions(null));
             }}
           />
 
@@ -126,7 +118,6 @@ export default function (props) {
             active={activeTool == "climate_tool"}
             onClick={() => {
               dispatch(editorUiMainToolbarSetTool("climate_tool"));
-              dispatch(editorUiMainToolbarSetToolOptions(null));
             }}
           />
         </div>

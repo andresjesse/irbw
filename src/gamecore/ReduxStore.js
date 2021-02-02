@@ -12,7 +12,10 @@ const appSlice = createSlice({
         mainToolbar: {
           activeTab: "environment",
           activeTool: "vegetation_paint",
-          activeToolOptions: null,
+          brushOptions: {
+            brushSize: 50,
+            brushStrength: 50,
+          },
         },
       },
     },
@@ -33,8 +36,8 @@ const appSlice = createSlice({
     editorUiMainToolbarSetTool: (state, action) => {
       state.editor.ui.mainToolbar.activeTool = action.payload;
     },
-    editorUiMainToolbarSetToolOptions: (state, action) => {
-      state.editor.ui.mainToolbar.activeToolOptions = action.payload;
+    editorUiMainToolbarSetBrushOptions: (state, action) => {
+      state.editor.ui.mainToolbar.brushOptions = action.payload;
     },
     //smgr
     smgrLightManagerSetTimeOfDay: (state, action) => {
@@ -52,7 +55,7 @@ const appSlice = createSlice({
 export const {
   editorUiMainToolbarSetTab,
   editorUiMainToolbarSetTool,
-  editorUiMainToolbarSetToolOptions,
+  editorUiMainToolbarSetBrushOptions,
   smgrLightManagerSetTimeOfDay,
   smgrLightManagerSetDynamic,
   smgrLightManagerSetCycleDurationSec,

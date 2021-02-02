@@ -2,7 +2,7 @@ import React from "react";
 import { Range } from "react-range";
 import { useSelector, useDispatch } from "react-redux";
 
-import { editorUiMainToolbarSetToolOptions } from "../../../../gamecore/ReduxStore";
+import { editorUiMainToolbarSetBrushOptions } from "../../../../gamecore/ReduxStore";
 
 import lang from "../../../lang";
 import colors from "../../../colors";
@@ -10,16 +10,10 @@ import colors from "../../../colors";
 export default function () {
   // configure options redux listener
   const options = useSelector(
-    (state) => state.editor.ui.mainToolbar.activeToolOptions
+    (state) => state.editor.ui.mainToolbar.brushOptions
   );
 
   const dispatch = useDispatch();
-
-  // set default options for current tool
-  if (options == null)
-    dispatch(
-      editorUiMainToolbarSetToolOptions({ brushSize: 50, brushStrength: 50 })
-    );
 
   // Range values are stored in component's state
   const [brushSize, setBrushSize] = React.useState([options?.brushSize || 50]);
@@ -43,7 +37,7 @@ export default function () {
             onChange={(values) => {
               setBrushSize(values);
               dispatch(
-                editorUiMainToolbarSetToolOptions({
+                editorUiMainToolbarSetBrushOptions({
                   brushSize: values[0],
                   brushStrength: brushStrength,
                 })
@@ -86,7 +80,7 @@ export default function () {
             onChange={(values) => {
               setBrushStrength(values);
               dispatch(
-                editorUiMainToolbarSetToolOptions({
+                editorUiMainToolbarSetBrushOptions({
                   brushSize: brushSize,
                   brushStrength: values[0],
                 })
