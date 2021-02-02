@@ -23,6 +23,8 @@ export default function (props) {
     switch (activeTool) {
       case "terrain_edit_level":
         return <BrushOptionsPanel />;
+      case "terrain_normalize_level":
+        return <BrushOptionsPanel />;
       case "day_night_cycle":
         return <DayNightCyclePanel />;
       default:

@@ -24,7 +24,8 @@ export default class TerrainEditLevel {
       this.smgr.terrain.transform({
         x: this.smgr.imgr.getInput(LogicalInputs.PointerX),
         y: this.smgr.imgr.getInput(LogicalInputs.PointerY),
-        factor: factor * (options.brushStrength / 100),
+        factor: factor,
+        brushStrength: options.brushStrength * 0.0008, //reduce strength (adjusted for 60fps editing)
       });
     }
   }

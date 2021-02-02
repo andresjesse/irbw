@@ -59,7 +59,7 @@ export default class Terrain {
         this.segments[key].transform({
           pickedPoint: pickinfo.pickedPoint,
           brushRadius: 5, //TODO: get options from UI
-          brushStrength: 0.05,
+          brushStrength: options.brushStrength,
           factor: options.factor,
         });
       }

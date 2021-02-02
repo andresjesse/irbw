@@ -11,6 +11,7 @@ export default class TerrainNormalizeLevel {
         x: this.smgr.imgr.getInput(LogicalInputs.PointerX),
         y: this.smgr.imgr.getInput(LogicalInputs.PointerY),
         factor: 0,
+        brushStrength: options.brushStrength * 0.0008, //reduce strength (adjusted for 60fps editing)
       });
     }
   }
