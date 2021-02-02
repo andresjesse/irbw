@@ -2,6 +2,7 @@ import store from "../ReduxStore";
 import CameraMovement from "./CameraMovement";
 
 import TerrainEditLevel from "./TerrainEditLevel";
+import TerrainNormalizeLevel from "./TerrainNormalizeLevel";
 import VegetationPaint from "./VegetationPaint";
 
 export default class Toolset {
@@ -21,6 +22,7 @@ export default class Toolset {
     this.tools = {
       camera_movement: new CameraMovement(this.smgr),
       terrain_edit_level: new TerrainEditLevel(this.smgr),
+      terrain_normalize_level: new TerrainNormalizeLevel(this.smgr),
       vegetation_paint: new VegetationPaint(this.smgr),
     };
   }
