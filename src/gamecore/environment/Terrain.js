@@ -46,8 +46,24 @@ export default class Terrain {
         console.log("creating valid seg ");
         this.segments[hitId] = new TerrainSegment(this.scene, hitId);
         this.segments[hitId].onStart();
+
+        // merge borders
+        this.segments[hitId].mergeToSegment(
+          this.segments[parseInt(tk[2]) - 1 + "_" + tk[3]]
+        );
+        this.segments[hitId].mergeToSegment(
+          this.segments[parseInt(tk[2]) + 1 + "_" + tk[3]]
+        );
+        this.segments[hitId].mergeToSegment(
+          this.segments[tk[2] + "_" + (parseInt(tk[3]) - 1)]
+        );
+        this.segments[hitId].mergeToSegment(
+          this.segments[tk[2] + "_" + (parseInt(tk[3]) + 1)]
+        );
       } else {
-        console.log("remove seg");
+        console.log(
+          "TODO: Remove segment (cascade to water, vegetation, entities, etc..)."
+        );
       }
 
       // TODO: trigger para junta das bordas

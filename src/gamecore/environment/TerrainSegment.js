@@ -98,19 +98,69 @@ export default class TerrainSegment {
     this.ground.receiveShadows = true;
   }
 
+  mergeToSegment(otherSeg) {
+    if (!otherSeg) return;
+
+    // collect self and otherSeg data
+    let positions = this.ground.getVerticesData(
+      BABYLON.VertexBuffer.PositionKind
+    );
+    let normals = this.ground.getVerticesData(BABYLON.VertexBuffer.NormalKind);
+
+    let otherPositions = otherSeg.ground.getVerticesData(
+      BABYLON.VertexBuffer.PositionKind
+    );
+
+    // iterate self vertices
+    let numberOfVertices = positions.length / 3;
+    for (let i = 0; i < numberOfVertices; i++) {
+      let selfVertex = new BABYLON.Vector3(
+        positions[i * 3] + this.ground.position.x,
+        positions[i * 3 + 1] + this.ground.position.y,
+        positions[i * 3 + 2] + this.ground.position.z
+      );
+
+      // iterate otherSeg vertices
+      for (let j = 0; j < numberOfVertices; j++) {
+        let otherVertex = new BABYLON.Vector3(
+          otherPositions[j * 3] + otherSeg.ground.position.x,
+          otherPositions[j * 3 + 1] + otherSeg.ground.position.y,
+          otherPositions[j * 3 + 2] + otherSeg.ground.position.z
+        );
+
+        if (selfVertex.x == otherVertex.x && selfVertex.z == otherVertex.z) {
+          positions[i * 3 + 1] = otherVertex.y;
+        }
+      }
+    }
+
+    // update mesh
+    this.ground.updateVerticesData(
+      BABYLON.VertexBuffer.PositionKind,
+      positions
+    );
+
+    // recalculate normals
+    BABYLON.VertexData.ComputeNormals(
+      positions,
+      this.ground.getIndices(),
+      normals
+    );
+  }
+
   paintVegetation(options) {
     this.vegetationSegment.paintVegetation(options);
   }
 
   transform(options) {
     /** ----------- Collect Positions and Normals ----------- */
-    var positions = this.ground.getVerticesData(
+    let positions = this.ground.getVerticesData(
       BABYLON.VertexBuffer.PositionKind
     );
-    var normals = this.ground.getVerticesData(BABYLON.VertexBuffer.NormalKind);
+    let normals = this.ground.getVerticesData(BABYLON.VertexBuffer.NormalKind);
 
     /** ----------- Iterate Mesh Verices ----------- */
-    var numberOfVertices = positions.length / 3;
+    let numberOfVertices = positions.length / 3;
     for (let i = 0; i < numberOfVertices; i++) {
       /** ----------- Collect Current Vertex as Vector3 ----------- */
       let o = new BABYLON.Vector3(
@@ -153,7 +203,7 @@ export default class TerrainSegment {
             positions[i * 3 + 1] += options.brushStrength * ratio;
           }
 
-          //guarantee zero if too near
+          // guarantee zero if too near
           if (Math.abs(positions[i * 3 + 1]) <= options.brushStrength)
             positions[i * 3 + 1] = 0;
         } else {
@@ -169,21 +219,19 @@ export default class TerrainSegment {
       }
     }
 
-    //update mesh
-
+    // update mesh
     this.ground.updateVerticesData(
       BABYLON.VertexBuffer.PositionKind,
       positions
     );
 
-    //update water mesh
+    // update water mesh
     this.waterSegment.updateVerticesData(
       BABYLON.VertexBuffer.PositionKind,
       positions
     );
 
-    //recalculate normals
-
+    // recalculate normals
     BABYLON.VertexData.ComputeNormals(
       positions,
       this.ground.getIndices(),

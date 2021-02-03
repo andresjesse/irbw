@@ -11,7 +11,7 @@ const appSlice = createSlice({
       ui: {
         mainToolbar: {
           activeTab: "environment",
-          activeTool: "terrain_soften_level",
+          activeTool: "terrain_segments_edit",
           brushOptions: {
             brushSize: 50,
             brushStrength: 50,
