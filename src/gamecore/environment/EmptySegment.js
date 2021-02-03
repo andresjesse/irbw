@@ -2,7 +2,7 @@ import * as BABYLON from "@babylonjs/core";
 
 import { TerrainSegmentConfig } from "./TerrainSegment";
 
-export default class TerrainEmptySegment {
+export default class EmptySegment {
   constructor(scene, id) {
     this.scene = scene;
     this.id = id;
@@ -22,7 +22,7 @@ export default class TerrainEmptySegment {
     //----- start self -----
 
     this.ground = BABYLON.MeshBuilder.CreateGround(
-      "ground_empty_" + this.id,
+      "empty_segment_" + this.id,
       {
         width: TerrainSegmentConfig.MESH_SIZE,
         height: TerrainSegmentConfig.MESH_SIZE,

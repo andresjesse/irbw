@@ -1,6 +1,6 @@
 import * as BABYLON from "@babylonjs/core";
 
-import TerrainEmptySegment from "./TerrainEmptySegment";
+import EmptySegment from "./EmptySegment";
 import TerrainSegment, { TerrainSegmentConfig } from "./TerrainSegment";
 
 export default class Terrain {
@@ -29,9 +29,12 @@ export default class Terrain {
   }
 
   checkForSegmentChange(options) {
-    let pickinfo = this.scene.pick(options.x, options.y, (mesh) =>
-      mesh.id.startsWith("ground_empty_")
-    );
+    let pickinfo = this.scene.pick(options.x, options.y, (mesh) => {
+      return (
+        mesh.id.startsWith("empty_segment_") ||
+        mesh.id.startsWith("terrain_segment_")
+      );
+    });
 
     if (pickinfo.hit) {
       // calculate picked id
@@ -43,6 +46,8 @@ export default class Terrain {
         console.log("creating valid seg ");
         this.segments[hitId] = new TerrainSegment(this.scene, hitId);
         this.segments[hitId].onStart();
+      } else {
+        console.log("remove seg");
       }
 
       // TODO: trigger para junta das bordas
@@ -74,7 +79,7 @@ export default class Terrain {
           let id = i + "_" + j;
 
           if (isNotSegment(id) && isNotEmptySegment(id)) {
-            this.emptySegments[id] = new TerrainEmptySegment(this.scene, id);
+            this.emptySegments[id] = new EmptySegment(this.scene, id);
 
             //trigger onStart when scene is already running (on the fly segment creation)
             if (sceneStarted) this.emptySegments[id].onStart();
@@ -85,17 +90,11 @@ export default class Terrain {
   }
 
   paintVegetation(options) {
-    var pickinfo = this.scene.pick(
-      options.x, //this.scene.pointerX
-      options.y
-      // function (mesh) { //TODO: predicate can be TERRAIN tag?
-      //   return mesh == ground;
-      // }
+    var pickinfo = this.scene.pick(options.x, options.y, (mesh) =>
+      mesh.id.startsWith("terrain_segment_")
     );
 
     if (pickinfo.hit) {
-      //return pickinfo.pickedPoint;
-
       //TODO: check distance to Segments (too far does not need to be trasformed, e.g. > 64 <<test>>?? )
 
       for (const key in this.segments) {
@@ -108,12 +107,8 @@ export default class Terrain {
   }
 
   transform(options) {
-    var pickinfo = this.scene.pick(
-      options.x, //this.scene.pointerX
-      options.y
-      // function (mesh) { //TODO: predicate can be TERRAIN tag?
-      //   return mesh == ground;
-      // }
+    var pickinfo = this.scene.pick(options.x, options.y, (mesh) =>
+      mesh.id.startsWith("terrain_segment_")
     );
 
     if (pickinfo.hit) {

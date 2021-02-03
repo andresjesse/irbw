@@ -24,7 +24,7 @@ export default class WaterSegment {
     //----- start self -----
 
     this.ground = BABYLON.MeshBuilder.CreateGround(
-      "water_" + this.id,
+      "water_segment_" + this.id,
       {
         width: TerrainSegmentConfig.MESH_SIZE,
         height: TerrainSegmentConfig.MESH_SIZE,

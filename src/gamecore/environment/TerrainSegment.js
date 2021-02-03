@@ -48,7 +48,7 @@ export default class TerrainSegment {
     //----- start self -----
 
     this.ground = BABYLON.MeshBuilder.CreateGround(
-      "ground_" + this.id,
+      "terrain_segment_" + this.id,
       {
         width: TerrainSegmentConfig.MESH_SIZE,
         height: TerrainSegmentConfig.MESH_SIZE,
