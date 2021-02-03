@@ -109,8 +109,6 @@ export default class TerrainSegment {
     );
     var normals = this.ground.getVerticesData(BABYLON.VertexBuffer.NormalKind);
 
-    let avgHeight = this.calculateAverageHeightInBrushRange(positions, options);
-
     /** ----------- Iterate Mesh Verices ----------- */
     var numberOfVertices = positions.length / 3;
     for (let i = 0; i < numberOfVertices; i++) {
@@ -131,21 +129,22 @@ export default class TerrainSegment {
 
         if (options.soften == true) {
           /** ----------- Perform Transformations to Level Soften (Average & Ratio based) ----------- */
-          let reducerFactor = 0.2;
+          let reducerFactor = 0.3;
 
-          if (positions[i * 3 + 1] > avgHeight) {
+          if (positions[i * 3 + 1] > options.heightAvg) {
             positions[i * 3 + 1] -=
               options.brushStrength * ratio * reducerFactor;
-          } else if (positions[i * 3 + 1] < avgHeight) {
+          } else if (positions[i * 3 + 1] < options.heightAvg) {
             positions[i * 3 + 1] +=
               options.brushStrength * ratio * reducerFactor;
           }
 
           // guarantee avg if too near
           if (
-            Math.abs(positions[i * 3 + 1] - avgHeight) <= options.brushStrength
+            Math.abs(positions[i * 3 + 1] - options.heightAvg) <=
+            options.brushStrength
           )
-            positions[i * 3 + 1] = avgHeight;
+            positions[i * 3 + 1] = options.heightAvg;
         } else if (options.factor == 0) {
           /** ----------- Perform Transformations to Level Zero (Normalize) ----------- */
           if (positions[i * 3 + 1] > 0) {
@@ -219,32 +218,5 @@ export default class TerrainSegment {
     }
 
     return nearest;
-  }
-
-  //TODO: must consider neighborhood! calculate average on parent?
-  calculateAverageHeightInBrushRange(positions, options) {
-    // calculate Vertex average position in Y axis (consider only vertices in brush range)
-    let avg = 0;
-    let vCount = 0;
-
-    var numberOfVertices = positions.length / 3;
-
-    for (let j = 0; j < numberOfVertices; j++) {
-      let vDist = BABYLON.Vector3.Distance(
-        new BABYLON.Vector3(
-          positions[j * 3] + this.ground.position.x,
-          positions[j * 3 + 1] + this.ground.position.y,
-          positions[j * 3 + 2] + this.ground.position.z
-        ),
-        options.pickedPoint
-      );
-
-      if (vDist <= options.brushSize) {
-        avg += positions[j * 3 + 1] + this.ground.position.y;
-        vCount += 1;
-      }
-    }
-
-    return avg / vCount;
   }
 }
