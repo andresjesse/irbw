@@ -11,7 +11,7 @@ const appSlice = createSlice({
       ui: {
         mainToolbar: {
           activeTab: "environment",
-          activeTool: "vegetation_paint",
+          activeTool: "terrain_soften_level",
           brushOptions: {
             brushSize: 50,
             brushStrength: 50,

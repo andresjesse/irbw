@@ -22,6 +22,8 @@ export default function (props) {
         return <BrushOptionsPanel />;
       case "terrain_normalize_level":
         return <BrushOptionsPanel />;
+      case "terrain_soften_level":
+        return <BrushOptionsPanel />;
       case "day_night_cycle":
         return <DayNightCyclePanel />;
       default:

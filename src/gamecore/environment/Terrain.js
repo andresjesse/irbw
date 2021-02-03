@@ -61,6 +61,7 @@ export default class Terrain {
           brushSize: options.brushSize,
           brushStrength: options.brushStrength,
           factor: options.factor,
+          soften: options.soften,
         });
       }
     }

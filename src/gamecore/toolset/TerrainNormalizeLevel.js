@@ -5,6 +5,8 @@ export default class TerrainNormalizeLevel {
   constructor(smgr) {
     this.smgr = smgr;
 
+    this.brushOptions = store.getState().editor.ui.mainToolbar.brushOptions;
+
     store.subscribe(() => {
       this.brushOptions = store.getState().editor.ui.mainToolbar.brushOptions;
     });
