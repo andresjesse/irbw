@@ -72,6 +72,16 @@ export default function (props) {
               dispatch(editorUiMainToolbarSetTool("terrain_soften_level"));
             }}
           />
+
+          <SvgButton
+            name="terrain_segments_edit"
+            tileX={3}
+            tileY={1}
+            active={activeTool == "terrain_segments_edit"}
+            onClick={() => {
+              dispatch(editorUiMainToolbarSetTool("terrain_segments_edit"));
+            }}
+          />
         </div>
 
         {/* --------------------------

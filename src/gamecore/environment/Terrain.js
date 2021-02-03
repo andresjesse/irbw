@@ -1,5 +1,6 @@
 import * as BABYLON from "@babylonjs/core";
 
+import TerrainEmptySegment from "./TerrainEmptySegment";
 import TerrainSegment, { TerrainSegmentConfig } from "./TerrainSegment";
 
 export default class Terrain {
@@ -11,13 +12,76 @@ export default class Terrain {
       "0_0": new TerrainSegment(this.scene, "0_0"),
       "1_0": new TerrainSegment(this.scene, "1_0"),
     };
+
+    this.emptySegments = {};
+
+    this.generateEmptySegments(false);
   }
 
   onStart() {
     //----- start children -----
     Object.keys(this.segments).forEach((k) => this.segments[k].onStart());
+    Object.keys(this.emptySegments).forEach((k) =>
+      this.emptySegments[k].onStart()
+    );
 
     //----- start self -----
+  }
+
+  checkForSegmentChange(options) {
+    let pickinfo = this.scene.pick(options.x, options.y, (mesh) =>
+      mesh.id.startsWith("ground_empty_")
+    );
+
+    if (pickinfo.hit) {
+      // calculate picked id
+      let tk = pickinfo.pickedMesh.id.split("_");
+      let hitId = tk[2] + "_" + tk[3];
+
+      // generate (or remove) a segment
+      if (!this.segments[hitId]) {
+        console.log("creating valid seg ");
+        this.segments[hitId] = new TerrainSegment(this.scene, hitId);
+        this.segments[hitId].onStart();
+      }
+
+      // TODO: trigger para junta das bordas
+
+      this.generateEmptySegments(true);
+    }
+  }
+
+  generateEmptySegments(sceneStarted) {
+    // helper functions (for semantic)
+    const isNotSegment = (id) => !(id in this.segments);
+    const isNotEmptySegment = (id) => !(id in this.emptySegments);
+
+    //remove all empty segments (if exists)
+    for (const key in this.emptySegments) {
+      this.emptySegments[key].dispose();
+    }
+
+    this.emptySegments = {};
+
+    //generate new empty segments where needed
+    for (const key in this.segments) {
+      let seg = this.segments[key];
+
+      let intPos = seg.id.split("_").map((v) => parseInt(v));
+
+      for (let i = intPos[0] - 1; i <= intPos[0] + 1; i++) {
+        for (let j = intPos[1] - 1; j <= intPos[1] + 1; j++) {
+          let id = i + "_" + j;
+
+          if (isNotSegment(id) && isNotEmptySegment(id)) {
+            this.emptySegments[id] = new TerrainEmptySegment(this.scene, id);
+
+            //trigger onStart when scene is already running (on the fly segment creation)
+            if (sceneStarted) this.emptySegments[id].onStart();
+          }
+        }
+      }
+    }
   }
 
   paintVegetation(options) {

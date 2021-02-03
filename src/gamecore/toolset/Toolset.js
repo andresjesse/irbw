@@ -4,6 +4,7 @@ import CameraMovement from "./CameraMovement";
 import TerrainEditLevel from "./TerrainEditLevel";
 import TerrainNormalizeLevel from "./TerrainNormalizeLevel";
 import TerrainSoftenLevel from "./TerrainSoftenLevel";
+import TerrainSegmentsEdit from "./TerrainSegmentsEdit";
 import VegetationPaint from "./VegetationPaint";
 
 export default class Toolset {
@@ -23,6 +24,7 @@ export default class Toolset {
       terrain_edit_level: new TerrainEditLevel(this.smgr),
       terrain_normalize_level: new TerrainNormalizeLevel(this.smgr),
       terrain_soften_level: new TerrainSoftenLevel(this.smgr),
+      terrain_segments_edit: new TerrainSegmentsEdit(this.smgr),
       vegetation_paint: new VegetationPaint(this.smgr),
     };
   }

@@ -23,9 +23,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="7.9195959"
-     inkscape:cx="88.76197"
-     inkscape:cy="215.68241"
+     inkscape:zoom="2.8"
+     inkscape:cx="177.80045"
+     inkscape:cy="132.93676"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      inkscape:document-rotation="0"
@@ -339,7 +339,7 @@
          inkscape:label="terrain"
          sodipodi:nodetypes="cccccssc" />
       <path
-         style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         style="fill:none;stroke:#000000;stroke-width:1.99937008;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
          d="M 158.90209,75.987499 V 116.71389"
          id="path1001" />
     </g>
@@ -398,6 +398,36 @@
          d="m 101.26723,238.68012 -4.604921,7.82333"
          id="path1098"
          sodipodi:nodetypes="cc" />
+    </g>
+    <g
+       id="g926"
+       transform="translate(5.4661778,1.4100538)"
+       style="stroke-width:2;stroke-miterlimit:4;stroke-dasharray:none">
+      <g
+         id="g912"
+         style="stroke-width:2;stroke-miterlimit:4;stroke-dasharray:none">
+        <path
+           style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none"
+           d="M 205.95915,74.561572 V 116.70404"
+           id="path906" />
+        <path
+           style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none"
+           d="M 228.8891,74.561572 V 116.70404"
+           id="path908" />
+      </g>
+      <g
+         id="g918"
+         transform="rotate(90,217.42412,95.632806)"
+         style="stroke-width:2;stroke-miterlimit:4;stroke-dasharray:none">
+        <path
+           style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none"
+           d="M 205.95915,74.561572 V 116.70404"
+           id="path914" />
+        <path
+           style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none"
+           d="M 228.8891,74.561572 V 116.70404"
+           id="path916" />
+      </g>
     </g>
   </g>
 </svg>
