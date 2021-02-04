@@ -118,10 +118,14 @@ const createCustomWaterMaterial = (scene) => {
   customWaterMaterial.setFloat("uWaveDistortion", 0.3);
   customWaterMaterial.setFloat("uWaveScale", 6.0);
 
-  let time = 0;
+  //register timer if not exists
+  if (scene.waterTimer == undefined) {
+    scene.customWaterMaterialTimer = 0;
+    scene.registerBeforeRender(() => (scene.customWaterMaterialTimer += 0.1));
+  }
+
   scene.registerBeforeRender(() => {
-    customWaterMaterial.setFloat("time", time);
-    time += 0.1;
+    customWaterMaterial.setFloat("time", scene.customWaterMaterialTimer);
 
     customWaterMaterial.setArray3(
       "uDiffuseLightColor",
