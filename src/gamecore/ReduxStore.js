@@ -11,10 +11,15 @@ const appSlice = createSlice({
       ui: {
         mainToolbar: {
           activeTab: "environment",
-          activeTool: "terrain_segments_edit",
+          activeTool: "vegetation_paint",
           brushOptions: {
             brushSize: 50,
             brushStrength: 50,
+          },
+          vegetationPaintOptions: {
+            brushSize: 50,
+            density: 50,
+            bioma: null,
           },
         },
       },
@@ -39,6 +44,9 @@ const appSlice = createSlice({
     editorUiMainToolbarSetBrushOptions: (state, action) => {
       state.editor.ui.mainToolbar.brushOptions = action.payload;
     },
+    editorUiMainToolbarSetVegetationPaintOptions: (state, action) => {
+      state.editor.ui.mainToolbar.vegetationPaintOptions = action.payload;
+    },
     //smgr
     smgrLightManagerSetTimeOfDay: (state, action) => {
       state.smgr.lightManager.timeOfDay = action.payload;
@@ -56,6 +64,7 @@ export const {
   editorUiMainToolbarSetTab,
   editorUiMainToolbarSetTool,
   editorUiMainToolbarSetBrushOptions,
+  editorUiMainToolbarSetVegetationPaintOptions,
   smgrLightManagerSetTimeOfDay,
   smgrLightManagerSetDynamic,
   smgrLightManagerSetCycleDurationSec,

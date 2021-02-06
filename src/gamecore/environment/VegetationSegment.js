@@ -3,6 +3,10 @@ import * as BABYLON from "@babylonjs/core";
 import { mulberry32 } from "../../helpers/DeterministicRandom";
 import { TerrainSegmentConfig } from "./TerrainSegment";
 
+export const VegetationSegmentConfig = {
+  biomas: ["Bioma 1", "Bioma 2", "Bioma 3"], //TODO: replace placeholders, set bioma names in LANG!
+};
+
 /**
  * Initial ideas:
  *  - Brush size set by UI

@@ -10,6 +10,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { editorUiMainToolbarSetTool } from "../../../gamecore/ReduxStore";
 
 import SvgButton from "./SvgButton";
+import VegetationPaintPanel from "./EnvironmentPanel/VegetationPaintPanel";
 
 export default function (props) {
   const activeTool = useSelector(
@@ -24,6 +25,8 @@ export default function (props) {
         return <BrushOptionsPanel />;
       case "terrain_soften_level":
         return <BrushOptionsPanel />;
+      case "vegetation_paint":
+        return <VegetationPaintPanel />;
       case "day_night_cycle":
         return <DayNightCyclePanel />;
       default:

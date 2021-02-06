@@ -2,7 +2,9 @@ import React from "react";
 import { Range } from "react-range";
 import { useSelector, useDispatch } from "react-redux";
 
-import { editorUiMainToolbarSetBrushOptions } from "../../../../gamecore/ReduxStore";
+import { editorUiMainToolbarSetVegetationPaintOptions } from "../../../../gamecore/ReduxStore";
+
+import { VegetationSegmentConfig } from "../../../../gamecore/environment/VegetationSegment";
 
 import lang from "../../../lang";
 import colors from "../../../colors";
@@ -10,24 +12,24 @@ import colors from "../../../colors";
 export default function () {
   // configure options redux listener
   const options = useSelector(
-    (state) => state.editor.ui.mainToolbar.brushOptions
+    (state) => state.editor.ui.mainToolbar.vegetationPaintOptions
   );
 
   const dispatch = useDispatch();
 
   // Range values are stored in component's state
   const [brushSize, setBrushSize] = React.useState([options?.brushSize || 50]);
-  const [brushStrength, setBrushStrength] = React.useState([
-    options?.brushStrength || 50,
-  ]);
+  const [density, setDensity] = React.useState([options?.density || 50]);
+
+  const [bioma, setBioma] = React.useState(VegetationSegmentConfig.biomas[0]);
 
   return (
     <div style={styles.contentBlock}>
       <div style={styles.brushConfigBlock}>
-        {lang.get("editor_ui_brush_config")}
+        {lang.get("editor_ui_vegetation_config")}
 
         <div style={styles.contentRow}>
-          {lang.get("editor_ui_brush_size")}
+          {lang.get("editor_ui_vegetation_brush_size")}
 
           <Range
             step={0.1}
@@ -37,9 +39,10 @@ export default function () {
             onChange={(values) => {
               setBrushSize(values);
               dispatch(
-                editorUiMainToolbarSetBrushOptions({
+                editorUiMainToolbarSetVegetationPaintOptions({
                   brushSize: values[0],
-                  brushStrength: brushStrength[0],
+                  density: density[0],
+                  bioma: bioma,
                 })
               );
             }}
@@ -70,19 +73,20 @@ export default function () {
           />
         </div>
         <div style={styles.contentRow}>
-          {lang.get("editor_ui_brush_strength")}
+          {lang.get("editor_ui_vegetation_density")}
 
           <Range
             step={0.1}
             min={0}
             max={100}
-            values={brushStrength}
+            values={density}
             onChange={(values) => {
-              setBrushStrength(values);
+              setDensity(values);
               dispatch(
-                editorUiMainToolbarSetBrushOptions({
+                editorUiMainToolbarSetVegetationPaintOptions({
                   brushSize: brushSize[0],
-                  brushStrength: values[0],
+                  density: values[0],
+                  bioma: bioma,
                 })
               );
             }}
@@ -111,6 +115,35 @@ export default function () {
               />
             )}
           />
+        </div>
+
+        <div style={styles.contentRow}>
+          {lang.get("editor_ui_vegetation_bioma")}
+
+          <select
+            name="bioma"
+            value={bioma}
+            style={styles.select}
+            onChange={(e) => {
+              setBioma(e.currentTarget.value);
+
+              dispatch(
+                editorUiMainToolbarSetVegetationPaintOptions({
+                  brushSize: brushSize[0],
+                  density: density[0],
+                  bioma: e.currentTarget.value,
+                })
+              );
+            }}
+          >
+            {VegetationSegmentConfig.biomas.map((value, index) => {
+              return (
+                <option key={index} value={value}>
+                  {value}
+                </option>
+              );
+            })}
+          </select>
         </div>
       </div>
     </div>
@@ -136,5 +169,13 @@ const styles = {
     flexDirection: "column",
     height: "100%",
     justifyContent: "space-between",
+  },
+  select: {
+    marginRight: "2pt",
+    border: 0,
+    color: colors("foreground"),
+    background: colors("panelBackground"),
+    fontSize: "10pt",
+    cursor: "pointer",
   },
 };
