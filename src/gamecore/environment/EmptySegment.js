@@ -42,6 +42,8 @@ export default class EmptySegment {
       "assets/terrain/empty_segment.png"
     );
     mat.alpha = 0.3;
+    mat.emissiveColor = new BABYLON.Color3(1, 1, 1);
+    mat.disableLighting = true;
 
     this.ground.material = mat;
   }
