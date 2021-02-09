@@ -21,7 +21,9 @@ export default function () {
   const [brushSize, setBrushSize] = React.useState([options?.brushSize || 50]);
   const [density, setDensity] = React.useState([options?.density || 50]);
 
-  const [bioma, setBioma] = React.useState(VegetationSegmentConfig.biomas[0]);
+  const [bioma, setBioma] = React.useState(
+    options?.bioma || VegetationSegmentConfig.biomas[0]
+  );
 
   return (
     <div style={styles.contentBlock}>

@@ -20,7 +20,7 @@ const appSlice = createSlice({
           vegetationPaintOptions: {
             brushSize: 50,
             density: 50,
-            bioma: null,
+            bioma: "Bioma 2",
           },
         },
       },

@@ -19,6 +19,12 @@ export default class TerrainSegment {
     this.scene = scene;
     this.id = id;
 
+    this.position = new BABYLON.Vector3(
+      parseInt(this.id.split("_")[0]) * TerrainSegmentConfig.MESH_SIZE,
+      0,
+      parseInt(this.id.split("_")[1]) * TerrainSegmentConfig.MESH_SIZE
+    );
+
     //----- create children -----
 
     this.waterSegment = new WaterSegment(this.scene, this.id);
@@ -58,11 +64,7 @@ export default class TerrainSegment {
       this.scene
     );
 
-    this.ground.position = new BABYLON.Vector3(
-      parseInt(this.id.split("_")[0]) * TerrainSegmentConfig.MESH_SIZE,
-      0,
-      parseInt(this.id.split("_")[1]) * TerrainSegmentConfig.MESH_SIZE
-    );
+    this.ground.position = this.position;
 
     let triPlanarMaterial = new TriPlanarMaterial("triplanar", this.scene);
 

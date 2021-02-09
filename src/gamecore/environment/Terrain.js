@@ -116,7 +116,7 @@ export default class Terrain {
       for (const key in this.segments) {
         this.segments[key].paintVegetation({
           pickedPoint: pickinfo.pickedPoint,
-          brushRadius: 5, //TODO: get from UI
+          ...options,
         });
       }
     }

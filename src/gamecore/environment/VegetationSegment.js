@@ -40,16 +40,23 @@ export default class VegetationSegment {
   }
 
   onStart() {
-    for (let i = -10; i < 10; i += 5) {
-      for (let j = -10; j < 10; j += 5) {
-        this.instantiate(i, j);
-      }
-    }
+    // for (let i = -10; i < 10; i += 5) {
+    //   for (let j = -10; j < 10; j += 5) {
+    //     this.instantiate(i, j);
+    //   }
+    // }
   }
 
   paintVegetation(options) {
     console.log(options);
-    let nearestVertex = this.parent.findNearestVertex(options.pickedPoint); // TODO: check if its transformed to LOCAL POSITION! (otherwise multiple segments can break!)
+    let nearestVertex = this.parent.findNearestVertex(
+      // new BABYLON.Vector3(
+      //   options.pickedPoint.x - this.parent.position.x,
+      //   options.pickedPoint.y - this.parent.position.y,
+      //   options.pickedPoint.z - this.parent.position.z
+      // )
+      options.pickedPoint
+    );
 
     console.log(nearestVertex);
   }
