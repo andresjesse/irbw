@@ -22,7 +22,7 @@ export default class TerrainSegment {
     //----- create children -----
 
     this.waterSegment = new WaterSegment(this.scene, this.id);
-    //this.vegetationSegment = new VegetationSegment(this.scene, this.id, this);
+    this.vegetationSegment = new VegetationSegment(this.scene, this.id, this);
 
     //----- preload self assets -----
 

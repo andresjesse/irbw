@@ -21,7 +21,7 @@ const colors = {
 };
 
 //theme management (requires page reload)
-let theme = localStorage.getItem("theme") || "light";
+let theme = localStorage.getItem("theme") || "dark";
 
 const setTheme = function (newTheme) {
   localStorage.setItem("theme", newTheme);
