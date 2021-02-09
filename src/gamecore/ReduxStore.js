@@ -9,6 +9,7 @@ const appSlice = createSlice({
   initialState: {
     editor: {
       ui: {
+        fps: 0,
         mainToolbar: {
           activeTab: "environment",
           activeTool: "vegetation_paint",
@@ -34,6 +35,9 @@ const appSlice = createSlice({
   },
   reducers: {
     //editor
+    editorUiSetFPS: (state, action) => {
+      state.editor.ui.fps = action.payload;
+    },
     editorUiMainToolbarSetTab: (state, action) => {
       state.editor.ui.mainToolbar.activeTab = action.payload;
       state.editor.ui.mainToolbar.activeTool = null;
@@ -61,6 +65,7 @@ const appSlice = createSlice({
 });
 
 export const {
+  editorUiSetFPS,
   editorUiMainToolbarSetTab,
   editorUiMainToolbarSetTool,
   editorUiMainToolbarSetBrushOptions,

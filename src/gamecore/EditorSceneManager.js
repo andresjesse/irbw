@@ -1,3 +1,5 @@
+import store, { editorUiSetFPS } from "./ReduxStore";
+
 import { FreeCamera, Vector3, HemisphericLight } from "@babylonjs/core";
 
 import * as BABYLON from "@babylonjs/core";
@@ -61,6 +63,8 @@ export default class EditorSceneManager {
      * according to React UI actions & Redux State.
      */
     this.toolset?.onUpdate();
+
+    store.dispatch(editorUiSetFPS(this.scene.getEngine().getFps()));
   }
 
   createEditorCamera(type) {

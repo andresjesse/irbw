@@ -1,16 +1,18 @@
 import React from "react";
 import ReactDOM from "react-dom";
 
-import MainToolbar from "./MainToolbar";
-
 import { Provider } from "react-redux";
 import store from "../../gamecore/ReduxStore";
+
+import MainToolbar from "./MainToolbar";
+import StatusBar from "./StatusBar";
 
 const EditorUI = function () {
   return (
     <>
       <Provider store={store}>
         <MainToolbar />
+        <StatusBar />
       </Provider>
     </>
   );
