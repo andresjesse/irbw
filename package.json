@@ -7,8 +7,10 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "watch": "npx webpack --watch",
     "build": "npx webpack",
+    "build-production": "npx webpack --mode=production",
     "start": "webpack serve",
-    "start2": "webpack serve --open"
+    "start2": "webpack serve --open",
+    "deploy": "git subtree push --prefix dist origin gh-pages"
   },
   "keywords": [],
   "author": "",
