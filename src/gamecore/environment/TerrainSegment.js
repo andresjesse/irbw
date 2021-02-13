@@ -11,7 +11,7 @@ export const TerrainSegmentConfig = {
   MIN_HEIGHT: -4,
 
   MESH_SIZE: 50,
-  MESH_RESOLUTION: 64,
+  MESH_RESOLUTION: 32,
 };
 
 export default class TerrainSegment {

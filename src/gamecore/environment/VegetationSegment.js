@@ -33,9 +33,10 @@ export default class VegetationSegment {
 
     this.scene.assetPreloader.preloadContainer("assets/nature/tree1.babylon");
 
-    // create a square matrix of dimension TerrainSegmentConfig.MESH_RESOLUTION
-    this.vegetationLayer = Array(TerrainSegmentConfig.MESH_RESOLUTION).fill(
-      Array(TerrainSegmentConfig.MESH_RESOLUTION)
+    // create a square matrix of dimension TerrainSegmentConfig.MESH_SIZE +1 (to enclose borders)
+    this.vegetationLayer = Array.from(
+      Array(TerrainSegmentConfig.MESH_SIZE + 1),
+      () => new Array(TerrainSegmentConfig.MESH_SIZE + 1)
     );
   }
 
@@ -48,7 +49,7 @@ export default class VegetationSegment {
   }
 
   paintVegetation(options) {
-    console.log(options);
+    //console.log(options);
     let nearestVertex = this.parent.findNearestVertex(
       // new BABYLON.Vector3(
       //   options.pickedPoint.x - this.parent.position.x,
@@ -58,10 +59,51 @@ export default class VegetationSegment {
       options.pickedPoint
     );
 
-    console.log(nearestVertex);
+    this.instantiate(nearestVertex.x, nearestVertex.z, options);
+
+    //console.log(nearestVertex);
   }
 
-  instantiate(x, z) {
+  instantiate(x, z, options) {
+    let matrixX = Math.round(x + TerrainSegmentConfig.MESH_SIZE / 2);
+    let matrixY = Math.round(z + TerrainSegmentConfig.MESH_SIZE / 2);
+
+    console.log(matrixX, matrixY);
+
+    if (this.vegetationLayer[matrixX][matrixY] != true) {
+      let vegetationMesh;
+
+      switch (options.bioma) {
+        case "Bioma 1":
+          vegetationMesh = BABYLON.MeshBuilder.CreateTorus(
+            "torus",
+            {},
+            this.scene
+          );
+          break;
+        case "Bioma 2":
+          vegetationMesh = BABYLON.MeshBuilder.CreateBox("box", {}, this.scene);
+          break;
+        case "Bioma 3":
+          vegetationMesh = BABYLON.MeshBuilder.CreateCylinder(
+            "cyl",
+            {},
+            this.scene
+          );
+          break;
+      }
+
+      vegetationMesh.position.x = x;
+      vegetationMesh.position.z = z;
+      this.vegetationLayer[matrixX][matrixY] = true;
+
+      console.log("created");
+    } else {
+      console.log("Inogred: ");
+    }
+
+    return;
+
     //generate a random generator based on instance coordinates
     let rand = mulberry32(x + 10 * z);
 
@@ -76,8 +118,8 @@ export default class VegetationSegment {
     //console.log(offset);
 
     for (var node of entries.rootNodes) {
-      node.position.x += x + offset[0];
-      node.position.z += z + offset[1];
+      node.position.x += x; // + offset[0];
+      node.position.z += z; // + offset[1];
 
       node.rotation.y = rot;
 

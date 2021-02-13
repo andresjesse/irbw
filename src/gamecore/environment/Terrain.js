@@ -10,7 +10,7 @@ export default class Terrain {
     //----- create children -----
     this.segments = {
       "0_0": new TerrainSegment(this.scene, "0_0"),
-      "1_0": new TerrainSegment(this.scene, "1_0"),
+      //"1_0": new TerrainSegment(this.scene, "1_0"),
     };
 
     this.emptySegments = {};
