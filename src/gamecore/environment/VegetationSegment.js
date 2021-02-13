@@ -22,6 +22,7 @@ export const VegetationSegmentConfig = {
  *        density,
  *        //age, -> can be handled in biomas config!
  *        randomSeed: automatically calculated from bioma + density + vertexXZPosition (change one of these and placement will be changed, but still deterministic)
+ *        liveInstances: [instantiated meshs] (this param does not need to be saved! can be recreated from deterministic randomSeed!)
  *      }
  *    - option 2: save as an vec2 matrix: [[bioma, density], [,], ...]
  */
@@ -59,72 +60,96 @@ export default class VegetationSegment {
       options.pickedPoint
     );
 
-    this.instantiate(nearestVertex.x, nearestVertex.z, options);
+    if (options.clear)
+      this.clearInstances(nearestVertex.x, nearestVertex.z, options);
+    else this.instantiate(nearestVertex.x, nearestVertex.z, options);
 
     //console.log(nearestVertex);
   }
 
   instantiate(x, z, options) {
+    //calculate matrix position based on nearest vertex position
     let matrixX = Math.round(x + TerrainSegmentConfig.MESH_SIZE / 2);
     let matrixY = Math.round(z + TerrainSegmentConfig.MESH_SIZE / 2);
 
+    //generate a (deterministic) random generator based on instance coordinates
+    let randomSeed = x + 10 * z;
+    let rand = mulberry32(randomSeed);
+
     console.log(matrixX, matrixY);
 
-    if (this.vegetationLayer[matrixX][matrixY] != true) {
-      let vegetationMesh;
-
-      switch (options.bioma) {
-        case "Bioma 1":
-          vegetationMesh = BABYLON.MeshBuilder.CreateTorus(
-            "torus",
-            {},
-            this.scene
-          );
-          break;
-        case "Bioma 2":
-          vegetationMesh = BABYLON.MeshBuilder.CreateBox("box", {}, this.scene);
-          break;
-        case "Bioma 3":
-          vegetationMesh = BABYLON.MeshBuilder.CreateCylinder(
-            "cyl",
-            {},
-            this.scene
-          );
-          break;
-      }
-
-      vegetationMesh.position.x = x;
-      vegetationMesh.position.z = z;
-      this.vegetationLayer[matrixX][matrixY] = true;
-
-      console.log("created");
-    } else {
-      console.log("Inogred: ");
+    // clear vegetation if present
+    if (this.vegetationLayer[matrixX][matrixY] != undefined) {
+      this.clearInstances(x, z);
     }
 
-    return;
+    // generate & instantiate new meshes
+    let vegetationMesh;
 
-    //generate a random generator based on instance coordinates
-    let rand = mulberry32(x + 10 * z);
+    switch (options.bioma) {
+      case "Bioma 1":
+        vegetationMesh = BABYLON.MeshBuilder.CreateTorus(
+          "torus",
+          {},
+          this.scene
+        );
+        break;
+      case "Bioma 2":
+        vegetationMesh = BABYLON.MeshBuilder.CreateBox("box", {}, this.scene);
+        break;
+      case "Bioma 3":
+        vegetationMesh = BABYLON.MeshBuilder.CreateCylinder(
+          "cyl",
+          {},
+          this.scene
+        );
+        break;
+    }
 
-    let entries = this.scene.assetPreloader
-      .getContainer("assets/nature/tree1.babylon")
-      .instantiateModelsToScene();
+    vegetationMesh.position.x = x;
+    vegetationMesh.position.z = z;
 
-    let factor = 5;
-    let offset = [rand() * factor - factor / 2, rand() * factor - factor / 2];
-    let rot = rand() * 360 * (Math.PI / 180);
+    this.vegetationLayer[matrixX][matrixY] = {
+      bioma: options.bioma,
+      density: options.density,
+      randomSeed: randomSeed,
+      liveInstances: [vegetationMesh],
+    };
 
-    //console.log(offset);
+    // let entries = this.scene.assetPreloader
+    //   .getContainer("assets/nature/tree1.babylon")
+    //   .instantiateModelsToScene();
 
-    for (var node of entries.rootNodes) {
-      node.position.x += x; // + offset[0];
-      node.position.z += z; // + offset[1];
+    // let factor = 5;
+    // let offset = [rand() * factor - factor / 2, rand() * factor - factor / 2];
+    // let rot = rand() * 360 * (Math.PI / 180);
 
-      node.rotation.y = rot;
+    // //console.log(offset);
 
-      this.scene.smgr.lightManager.addShadowsTo(node);
-      node.receiveShadows = true;
+    // for (var node of entries.rootNodes) {
+    //   node.position.x += x; // + offset[0];
+    //   node.position.z += z; // + offset[1];
+
+    //   node.rotation.y = rot;
+
+    //   this.scene.smgr.lightManager.addShadowsTo(node);
+    //   node.receiveShadows = true;
+    // }
+  }
+
+  clearInstances(x, z, options) {
+    //calculate matrix position based on nearest vertex position
+    let matrixX = Math.round(x + TerrainSegmentConfig.MESH_SIZE / 2);
+    let matrixY = Math.round(z + TerrainSegmentConfig.MESH_SIZE / 2);
+
+    if (this.vegetationLayer[matrixX][matrixY] != undefined) {
+      this.vegetationLayer[matrixX][matrixY].liveInstances.forEach(
+        (instance) => {
+          instance.dispose();
+        }
+      );
+
+      this.vegetationLayer[matrixX][matrixY] = undefined;
     }
   }
 }
