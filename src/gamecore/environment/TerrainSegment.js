@@ -273,8 +273,8 @@ export default class TerrainSegment {
 
   getHeightAtPosition(x, z) {
     const ray = BABYLON.Ray.CreateNewFromTo(
-      new Vector3(x, 100, z),
-      new Vector3(x, -100, z)
+      new Vector3(x, TerrainSegmentConfig.MAX_HEIGHT + 1, z),
+      new Vector3(x, TerrainSegmentConfig.MIN_HEIGHT - 1, z)
     );
 
     const pick = this.scene.pickWithRay(
