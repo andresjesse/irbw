@@ -271,7 +271,13 @@ export default class TerrainSegment {
     return nearest;
   }
 
-  getHeightAtPosition(x, z) {
+  /**
+   * @return {
+   *  pickedPoint,
+   *  faceNormal
+   * }
+   */
+  pickPointAtPosition(x, z) {
     const ray = BABYLON.Ray.CreateNewFromTo(
       new Vector3(x, TerrainSegmentConfig.MAX_HEIGHT + 1, z),
       new Vector3(x, TerrainSegmentConfig.MIN_HEIGHT - 1, z)
@@ -283,6 +289,11 @@ export default class TerrainSegment {
       true
     );
 
-    if (pick) return pick.pickedPoint.y;
+    if (pick) {
+      return {
+        pickedPoint: pick.pickedPoint,
+        faceNormal: pick.pickedMesh.getFacetLocalNormals()[pick.faceId],
+      };
+    }
   }
 }

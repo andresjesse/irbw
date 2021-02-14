@@ -79,9 +79,19 @@ export default class VegetationSegment {
       options.brushSize +
       (VegetationSegmentConfig.biomas.indexOf(options.bioma) || 0);
 
+    console.log(this.vegetationLayer[matrixX][matrixY]);
+
     let rand = mulberry32(randomSeed);
 
     console.log(matrixX, matrixY, "randomSeed:", randomSeed);
+
+    // raycast and pick the terrain point at (x,z)
+    let terrainPick = this.parent.pickPointAtPosition(x, z);
+
+    let pickedFaceAngle = BABYLON.Vector3.Dot(
+      terrainPick.faceNormal,
+      BABYLON.Vector3.Up()
+    );
 
     // clear vegetation if present
     if (this.vegetationLayer[matrixX][matrixY] != undefined) {
@@ -122,7 +132,7 @@ export default class VegetationSegment {
     let scale = 1 + rand() * scaleVariation - scaleVariation / 2;
 
     vegetationMesh.position.x = x + offset[0];
-    vegetationMesh.position.y = this.parent.getHeightAtPosition(x, z);
+    vegetationMesh.position.y = terrainPick.pickedPoint.y;
     vegetationMesh.position.z = z + offset[1];
 
     vegetationMesh.rotation.y = rot;
