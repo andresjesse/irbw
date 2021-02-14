@@ -242,6 +242,13 @@ export default class TerrainSegment {
     );
 
     this.ground.updateVerticesData(BABYLON.VertexBuffer.NormalKind, normals);
+
+    // recalculate vegetation placement
+    this.vegetationSegment.recalculateInstancesHeight(
+      options.pickedPoint.x,
+      options.pickedPoint.z,
+      options.brushSize
+    );
   }
 
   findNearestVertex(refPoint) {
@@ -289,10 +296,10 @@ export default class TerrainSegment {
       true
     );
 
-    if (pick) {
+    if (pick?.pickedMesh) {
       return {
         pickedPoint: pick.pickedPoint,
-        faceNormal: pick.pickedMesh.getFacetLocalNormals()[pick.faceId],
+        faceNormal: pick.getNormal(),
       };
     }
   }

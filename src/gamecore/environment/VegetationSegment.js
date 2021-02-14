@@ -7,6 +7,9 @@ export const VegetationSegmentConfig = {
   biomas: ["Bioma 1", "Bioma 2", "Bioma 3"], //TODO: replace placeholders, set bioma names in LANG!
 };
 
+// Tip: increase CLIFF_THRESHOLD to reduce vegetation on cliffs
+const CLIFF_THRESHOLD = 0.7;
+
 /**
  * Initial ideas:
  *  - Brush size set by UI
@@ -68,9 +71,8 @@ export default class VegetationSegment {
   }
 
   instantiate(x, z, options) {
-    // calculate matrix position based on nearest vertex position
-    let matrixX = Math.round(x + TerrainSegmentConfig.MESH_SIZE / 2);
-    let matrixY = Math.round(z + TerrainSegmentConfig.MESH_SIZE / 2);
+    // calculate matrix position based on nearest position
+    let matrixCoordinates = this.pointToMatrixCoordinates(x, z);
 
     // generate a (deterministic) random generator based on instance coordinates
     let randomSeed =
@@ -80,7 +82,10 @@ export default class VegetationSegment {
       (VegetationSegmentConfig.biomas.indexOf(options.bioma) || 0);
 
     // ignore placement if randomSeed is the same
-    if (this.vegetationLayer[matrixX][matrixY]?.randomSeed == randomSeed) {
+    if (
+      this.vegetationLayer[matrixCoordinates.i][matrixCoordinates.j]
+        ?.randomSeed == randomSeed
+    ) {
       return;
     }
 
@@ -102,17 +107,23 @@ export default class VegetationSegment {
       z + positionOffset[1]
     );
 
+    // ignore placemente when pick is not returned (e.g. position+offset is outside terrain mesh)
+    if (!terrainPick) return;
+
     // calculate face angle to avoid placing vegetation on cliffs (1 is flat, 0 is 100% vertical)
     let pickedFaceAngle = BABYLON.Vector3.Dot(
       terrainPick.faceNormal,
       BABYLON.Vector3.Up()
     );
 
-    // ignore cliffs (increase value to reduce vegetation on cliffs)
-    if (pickedFaceAngle < 0.7) return;
+    // ignore cliffs
+    if (pickedFaceAngle < CLIFF_THRESHOLD) return;
 
     // clear vegetation if present
-    if (this.vegetationLayer[matrixX][matrixY] != undefined) {
+    if (
+      this.vegetationLayer[matrixCoordinates.i][matrixCoordinates.j] !=
+      undefined
+    ) {
       this.clearInstances(x, z);
     }
 
@@ -152,7 +163,7 @@ export default class VegetationSegment {
 
     vegetationMesh.scaling = new BABYLON.Vector3(scale, scale, scale);
 
-    this.vegetationLayer[matrixX][matrixY] = {
+    this.vegetationLayer[matrixCoordinates.i][matrixCoordinates.j] = {
       bioma: options.bioma,
       density: options.density,
       randomSeed: randomSeed,
@@ -181,18 +192,87 @@ export default class VegetationSegment {
   }
 
   clearInstances(x, z, options) {
-    //calculate matrix position based on nearest vertex position
-    let matrixX = Math.round(x + TerrainSegmentConfig.MESH_SIZE / 2);
-    let matrixY = Math.round(z + TerrainSegmentConfig.MESH_SIZE / 2);
+    //calculate matrix position based on nearest position
+    let matrixCoordinates = this.pointToMatrixCoordinates(x, z);
 
-    if (this.vegetationLayer[matrixX][matrixY] != undefined) {
-      this.vegetationLayer[matrixX][matrixY].liveInstances.forEach(
-        (instance) => {
-          instance.dispose();
-        }
-      );
+    if (
+      this.vegetationLayer[matrixCoordinates.i][matrixCoordinates.j] !=
+      undefined
+    ) {
+      this.vegetationLayer[matrixCoordinates.i][
+        matrixCoordinates.j
+      ].liveInstances.forEach((instance) => {
+        instance.dispose();
+      });
 
-      this.vegetationLayer[matrixX][matrixY] = undefined;
+      this.vegetationLayer[matrixCoordinates.i][
+        matrixCoordinates.j
+      ] = undefined;
     }
+  }
+
+  recalculateInstancesHeight(x, z, brushSize) {
+    //calculate matrix position based on nearest position
+    let matrixCoordinates = this.pointToMatrixCoordinates(x, z);
+
+    //iterate over brush size, [x][z] is considered origin (this avoids to iterate entire matrix)
+    for (let i = -brushSize; i < brushSize; i++) {
+      for (let j = -brushSize; j < brushSize; j++) {
+        //check if exist any vegetation info on current coordinate
+        let cCoord = this.vegetationLayer[matrixCoordinates.i + i]?.[
+          matrixCoordinates.j + j
+        ];
+
+        if (cCoord) {
+          // initialize a control variable to check if vegetation became positioned on cliff
+          let disposeThisCoordinate = false;
+
+          // iterate liveInstances in current coordinate
+          cCoord.liveInstances.forEach((liveInstance) => {
+            // raycast and pick the terrain point at (x,z) considering current liveInstance
+            let terrainPick = this.parent.pickPointAtPosition(
+              liveInstance.position.x,
+              liveInstance.position.z
+            );
+
+            // calculate face angle to avoid placing vegetation on cliffs (1 is flat, 0 is 100% vertical)
+            let pickedFaceAngle = BABYLON.Vector3.Dot(
+              terrainPick.faceNormal,
+              BABYLON.Vector3.Up()
+            );
+
+            // remove vegetation if it is on cliffs
+            if (pickedFaceAngle < CLIFF_THRESHOLD) {
+              disposeThisCoordinate = true;
+            } else {
+              // update liveInstance position Y
+              liveInstance.position.y = terrainPick.pickedPoint.y;
+            }
+          });
+
+          // dispose coordinat if needed...
+          if (disposeThisCoordinate) {
+            cCoord.liveInstances.forEach((instance) => {
+              instance.dispose();
+            });
+
+            this.vegetationLayer[matrixCoordinates.i + i][
+              matrixCoordinates.j + j
+            ] = undefined;
+          }
+        }
+      }
+    }
+  }
+
+  pointToMatrixCoordinates(x, z) {
+    // calculate matrix position based on nearest position
+    let i = Math.round(x + TerrainSegmentConfig.MESH_SIZE / 2);
+    let j = Math.round(z + TerrainSegmentConfig.MESH_SIZE / 2);
+
+    return {
+      i,
+      j,
+    };
   }
 }
