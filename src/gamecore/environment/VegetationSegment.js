@@ -68,35 +68,57 @@ export default class VegetationSegment {
   }
 
   instantiate(x, z, options) {
-    //calculate matrix position based on nearest vertex position
+    // calculate matrix position based on nearest vertex position
     let matrixX = Math.round(x + TerrainSegmentConfig.MESH_SIZE / 2);
     let matrixY = Math.round(z + TerrainSegmentConfig.MESH_SIZE / 2);
 
-    //generate a (deterministic) random generator based on instance coordinates
+    // generate a (deterministic) random generator based on instance coordinates
     let randomSeed =
       x * z +
       options.density +
       options.brushSize +
       (VegetationSegmentConfig.biomas.indexOf(options.bioma) || 0);
 
-    console.log(this.vegetationLayer[matrixX][matrixY]);
+    // ignore placement if randomSeed is the same
+    if (this.vegetationLayer[matrixX][matrixY]?.randomSeed == randomSeed) {
+      return;
+    }
 
     let rand = mulberry32(randomSeed);
 
-    console.log(matrixX, matrixY, "randomSeed:", randomSeed);
+    // randomize vegetation placement params (deterministic position, rotation, scale)
+    let maxPositionOffset = 1;
+    let positionOffset = [
+      rand() * maxPositionOffset - maxPositionOffset / 2,
+      rand() * maxPositionOffset - maxPositionOffset / 2,
+    ];
+    let rotation = rand() * 360 * (Math.PI / 180);
+    let scaleVariation = 0.4;
+    let scale = 1 + rand() * scaleVariation - scaleVariation / 2;
 
-    // raycast and pick the terrain point at (x,z)
-    let terrainPick = this.parent.pickPointAtPosition(x, z);
+    // raycast and pick the terrain point at (x,z) considering offset
+    let terrainPick = this.parent.pickPointAtPosition(
+      x + positionOffset[0],
+      z + positionOffset[1]
+    );
 
+    // calculate face angle to avoid placing vegetation on cliffs (1 is flat, 0 is 100% vertical)
     let pickedFaceAngle = BABYLON.Vector3.Dot(
       terrainPick.faceNormal,
       BABYLON.Vector3.Up()
     );
 
+    // ignore cliffs (increase value to reduce vegetation on cliffs)
+    if (pickedFaceAngle < 0.7) return;
+
     // clear vegetation if present
     if (this.vegetationLayer[matrixX][matrixY] != undefined) {
       this.clearInstances(x, z);
     }
+
+    // calculate density probabilistically: higher density increases chances of placement
+    let placementeProbability = rand() * 10;
+    if (placementeProbability >= options.density) return;
 
     // generate & instantiate new meshes
     let vegetationMesh;
@@ -121,21 +143,12 @@ export default class VegetationSegment {
         break;
     }
 
-    // randomize vegetation placement (deterministic)
-    let maxOffset = 1;
-    let offset = [
-      rand() * maxOffset - maxOffset / 2,
-      rand() * maxOffset - maxOffset / 2,
-    ];
-    let rot = rand() * 360 * (Math.PI / 180);
-    let scaleVariation = 0.4;
-    let scale = 1 + rand() * scaleVariation - scaleVariation / 2;
-
-    vegetationMesh.position.x = x + offset[0];
+    // transform mesh according to previously calculated params
+    vegetationMesh.position.x = x + positionOffset[0];
     vegetationMesh.position.y = terrainPick.pickedPoint.y;
-    vegetationMesh.position.z = z + offset[1];
+    vegetationMesh.position.z = z + positionOffset[1];
 
-    vegetationMesh.rotation.y = rot;
+    vegetationMesh.rotation.y = rotation;
 
     vegetationMesh.scaling = new BABYLON.Vector3(scale, scale, scale);
 
