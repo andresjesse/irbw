@@ -122,8 +122,11 @@ export default class VegetationSegment {
     let scale = 1 + rand() * scaleVariation - scaleVariation / 2;
 
     vegetationMesh.position.x = x + offset[0];
+    vegetationMesh.position.y = this.parent.getHeightAtPosition(x, z);
     vegetationMesh.position.z = z + offset[1];
+
     vegetationMesh.rotation.y = rot;
+
     vegetationMesh.scaling = new BABYLON.Vector3(scale, scale, scale);
 
     this.vegetationLayer[matrixX][matrixY] = {

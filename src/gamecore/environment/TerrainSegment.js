@@ -5,6 +5,7 @@ import Texture2DArrayHelper from "../../helpers/Texture2DArrayHelper";
 
 import WaterSegment from "./WaterSegment";
 import VegetationSegment from "./VegetationSegment";
+import { Vector3 } from "@babylonjs/core";
 
 export const TerrainSegmentConfig = {
   MAX_HEIGHT: 20,
@@ -268,5 +269,20 @@ export default class TerrainSegment {
     }
 
     return nearest;
+  }
+
+  getHeightAtPosition(x, z) {
+    const ray = BABYLON.Ray.CreateNewFromTo(
+      new Vector3(x, 100, z),
+      new Vector3(x, -100, z)
+    );
+
+    const pick = this.scene.pickWithRay(
+      ray,
+      (mesh) => mesh.id.startsWith("terrain_segment_"),
+      true
+    );
+
+    if (pick) return pick.pickedPoint.y;
   }
 }
