@@ -13,6 +13,7 @@ IrrRPG Builder 2.0 - WebGL
 # Deploy (gh-pages)
 
 `$ yarn build-production`
+`git add & commit`
 `$ yarn deploy`
 
 # Technical Preview
