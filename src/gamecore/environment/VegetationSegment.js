@@ -73,10 +73,15 @@ export default class VegetationSegment {
     let matrixY = Math.round(z + TerrainSegmentConfig.MESH_SIZE / 2);
 
     //generate a (deterministic) random generator based on instance coordinates
-    let randomSeed = x + 10 * z;
+    let randomSeed =
+      x * z +
+      options.density +
+      options.brushSize +
+      (VegetationSegmentConfig.biomas.indexOf(options.bioma) || 0);
+
     let rand = mulberry32(randomSeed);
 
-    console.log(matrixX, matrixY);
+    console.log(matrixX, matrixY, "randomSeed:", randomSeed);
 
     // clear vegetation if present
     if (this.vegetationLayer[matrixX][matrixY] != undefined) {
@@ -87,17 +92,17 @@ export default class VegetationSegment {
     let vegetationMesh;
 
     switch (options.bioma) {
-      case "Bioma 1":
+      case VegetationSegmentConfig.biomas[0]: //"Bioma 1"
         vegetationMesh = BABYLON.MeshBuilder.CreateTorus(
           "torus",
           {},
           this.scene
         );
         break;
-      case "Bioma 2":
+      case VegetationSegmentConfig.biomas[1]: //"Bioma 2"
         vegetationMesh = BABYLON.MeshBuilder.CreateBox("box", {}, this.scene);
         break;
-      case "Bioma 3":
+      case VegetationSegmentConfig.biomas[2]: //"Bioma 3"
         vegetationMesh = BABYLON.MeshBuilder.CreateCylinder(
           "cyl",
           {},
@@ -106,8 +111,20 @@ export default class VegetationSegment {
         break;
     }
 
-    vegetationMesh.position.x = x;
-    vegetationMesh.position.z = z;
+    // randomize vegetation placement (deterministic)
+    let maxOffset = 1;
+    let offset = [
+      rand() * maxOffset - maxOffset / 2,
+      rand() * maxOffset - maxOffset / 2,
+    ];
+    let rot = rand() * 360 * (Math.PI / 180);
+    let scaleVariation = 0.4;
+    let scale = 1 + rand() * scaleVariation - scaleVariation / 2;
+
+    vegetationMesh.position.x = x + offset[0];
+    vegetationMesh.position.z = z + offset[1];
+    vegetationMesh.rotation.y = rot;
+    vegetationMesh.scaling = new BABYLON.Vector3(scale, scale, scale);
 
     this.vegetationLayer[matrixX][matrixY] = {
       bioma: options.bioma,
