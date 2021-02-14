@@ -19,3 +19,8 @@ IrrRPG Builder 2.0 - WebGL
 # Technical Preview
 
 https://andresjesse.github.io/irbw/index.html
+
+# Immediate TODO:List
+
+- Apply brushSize in vegetationPaint
+- Update vegetationPaint to be compatible with multiple terrain segments (works only on "0_0" due to local position calculation)
