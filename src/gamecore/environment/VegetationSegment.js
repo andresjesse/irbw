@@ -44,28 +44,19 @@ export default class VegetationSegment {
     );
   }
 
-  onStart() {
-    // for (let i = -10; i < 10; i += 5) {
-    //   for (let j = -10; j < 10; j += 5) {
-    //     this.instantiate(i, j);
-    //   }
-    // }
-  }
+  onStart() {}
 
   paintVegetation(options) {
-    //console.log(options);
-    let nearestVertex = this.parent.findNearestVertex(
-      // new BABYLON.Vector3(
-      //   options.pickedPoint.x - this.parent.position.x,
-      //   options.pickedPoint.y - this.parent.position.y,
-      //   options.pickedPoint.z - this.parent.position.z
-      // )
-      options.pickedPoint
-    );
+    let nearestVertex = this.parent.findNearestVertex(options.pickedPoint);
 
-    if (options.clear)
-      this.clearInstances(nearestVertex.x, nearestVertex.z, options);
-    else this.instantiate(nearestVertex.x, nearestVertex.z, options);
+    if (
+      BABYLON.Vector3.Distance(nearestVertex, options.pickedPoint) <=
+      options.brushSize
+    ) {
+      if (options.clear)
+        this.clearInstances(nearestVertex.x, nearestVertex.z, options);
+      else this.instantiate(nearestVertex.x, nearestVertex.z, options);
+    }
 
     //console.log(nearestVertex);
   }
@@ -266,9 +257,13 @@ export default class VegetationSegment {
   }
 
   pointToMatrixCoordinates(x, z) {
+    // calculate local positions
+    let localX = x - this.parent.position.x;
+    let localZ = z - this.parent.position.z;
+
     // calculate matrix position based on nearest position
-    let i = Math.round(x + TerrainSegmentConfig.MESH_SIZE / 2);
-    let j = Math.round(z + TerrainSegmentConfig.MESH_SIZE / 2);
+    let i = Math.round(localX + TerrainSegmentConfig.MESH_SIZE / 2);
+    let j = Math.round(localZ + TerrainSegmentConfig.MESH_SIZE / 2);
 
     return {
       i,

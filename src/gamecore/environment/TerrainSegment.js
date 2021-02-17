@@ -251,6 +251,7 @@ export default class TerrainSegment {
     );
   }
 
+  /** refPoint must consider global vertex position! */
   findNearestVertex(refPoint) {
     let positions = this.ground.getVerticesData(
       BABYLON.VertexBuffer.PositionKind
@@ -262,9 +263,9 @@ export default class TerrainSegment {
     var numberOfVertices = positions.length / 3;
     for (let i = 0; i < numberOfVertices; i++) {
       let o = new BABYLON.Vector3(
-        positions[i * 3],
-        positions[i * 3 + 1],
-        positions[i * 3 + 2]
+        positions[i * 3] + this.position.x,
+        positions[i * 3 + 1] + this.position.y,
+        positions[i * 3 + 2] + this.position.z
       );
 
       let dist = BABYLON.Vector3.Distance(o, refPoint);
