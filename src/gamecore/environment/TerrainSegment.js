@@ -280,6 +280,8 @@ export default class TerrainSegment {
   }
 
   /**
+   * Raycast from up to down in a given (x,z) coordinate to locate height at that position.
+   *
    * @return {
    *  pickedPoint,
    *  faceNormal

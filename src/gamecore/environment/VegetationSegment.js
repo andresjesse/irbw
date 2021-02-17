@@ -47,18 +47,38 @@ export default class VegetationSegment {
   onStart() {}
 
   paintVegetation(options) {
-    let nearestVertex = this.parent.findNearestVertex(options.pickedPoint);
+    // iterate through brushSize (pickedPoint + offset)
+    for (let i = -options.brushSize; i < options.brushSize; i++) {
+      for (let j = -options.brushSize; j < options.brushSize; j++) {
+        // locate height at offset position (can be different from pickedPoint height)
+        let heightAtOffset = this.parent.pickPointAtPosition(
+          options.pickedPoint.x + i,
+          options.pickedPoint.z + j
+        )?.pickedPoint.y;
 
-    if (
-      BABYLON.Vector3.Distance(nearestVertex, options.pickedPoint) <=
-      options.brushSize
-    ) {
-      if (options.clear)
-        this.clearInstances(nearestVertex.x, nearestVertex.z, options);
-      else this.instantiate(nearestVertex.x, nearestVertex.z, options);
+        // generate a Vector3 with pickedPoint + offset considering correct height
+        let pointToCheck = new BABYLON.Vector3(
+          options.pickedPoint.x + i,
+          heightAtOffset,
+          options.pickedPoint.z + j
+        );
+
+        // locate nearest vertex (picked point is unpredictable, neareset vertex is deterministic)
+        let nearestVertex = this.parent.findNearestVertex(pointToCheck);
+
+        // check distance from nearestVertex to picked point to ensure painting on brushSize
+        if (
+          BABYLON.Vector3.Distance(nearestVertex, options.pickedPoint) <=
+          options.brushSize
+        ) {
+          // is this a call to clear vegetation?
+          if (options.clear)
+            this.clearInstances(nearestVertex.x, nearestVertex.z, options);
+          // or to paint instances?
+          else this.instantiate(nearestVertex.x, nearestVertex.z, options);
+        }
+      }
     }
-
-    //console.log(nearestVertex);
   }
 
   instantiate(x, z, options) {
