@@ -22,5 +22,6 @@ https://andresjesse.github.io/irbw/index.html
 
 # Immediate TODO:List
 
-- Apply brushSize in vegetationPaint
-- Update vegetationPaint to be compatible with multiple terrain segments (works only on "0_0" due to local position calculation)
+- VegetationPaint:
+  - isolate instance selection logic (switch-case) from instantiate method;
+  - avoid to create new meshes: use hardware instancing or even thin instances
