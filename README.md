@@ -35,3 +35,4 @@ https://andresjesse.github.io/irbw/index.html
   - thin não!
     - problema da thin é que a adição/remoção é mais lenta que instancedMesh. Pode ser idal para gameplay, mas no editor talvez não.
     - trabalha com matrix, pode ser mais complexo de implementar.
+    - TODO: fix shadowmap translation (neighbor segments aren't affected)

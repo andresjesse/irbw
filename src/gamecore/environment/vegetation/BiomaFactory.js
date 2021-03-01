@@ -1,7 +1,23 @@
+import Bioma1 from "./Bioma1";
+
+const biomas = {
+  Bioma1,
+};
+
 export default class BiomaFactory {
-  constructor(scene, id, parent) {}
+  constructor(scene) {
+    this.scene = scene;
+
+    for (let k in biomas) {
+      biomas[k].onPreload(scene);
+    }
+  }
+
+  instantiate(bioma) {
+    return biomas[bioma].instantiate(this.scene);
+  }
 
   static asList() {
-    return ["Bioma 1", "Bioma 2", "Bioma 3"];
+    return Object.keys(biomas);
   }
 }

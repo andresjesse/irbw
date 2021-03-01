@@ -4,10 +4,6 @@ import { mulberry32 } from "../../../helpers/DeterministicRandom";
 import { TerrainSegmentConfig } from "./../TerrainSegment";
 import BiomaFactory from "./BiomaFactory";
 
-// export const VegetationSegmentConfig = {
-//   biomas: BiomaFactory.asList(),
-// };
-
 // Tip: increase CLIFF_THRESHOLD to reduce vegetation on cliffs
 const CLIFF_THRESHOLD = 0.7;
 
@@ -37,7 +33,9 @@ export default class VegetationSegment {
     this.parent = parent;
 
     //this.scene.assetPreloader.preloadContainer("assets/nature/tree1.babylon");
-    this.scene.assetPreloader.preloadMeshes("assets/nature/tree1.babylon");
+    //this.scene.assetPreloader.preloadMeshes("assets/nature/tree1.babylon");
+
+    this.biomaFactory = new BiomaFactory(this.scene);
 
     // create a square matrix of dimension TerrainSegmentConfig.MESH_SIZE +1 (to enclose borders)
     this.vegetationLayer = Array.from(
@@ -145,89 +143,37 @@ export default class VegetationSegment {
     if (placementeProbability >= options.density) return;
 
     // generate & instantiate new meshes
-    let vegetationMesh;
-
-    switch (options.bioma) {
-      case BiomaFactory.asList()[0]: //"Bioma 1"
-        // vegetationMesh = BABYLON.MeshBuilder.CreateTorus(
-        //   "torus",
-        //   {},
-        //   this.scene
-        // );
-
-        // console.log(
-        //   this.scene.assetPreloader.getContainer("assets/nature/tree1.babylon")
-        // );
-
-        //mudar assetPreloader para importacao de Meshs! deixar container para uso futuro, usar MeshTask
-
-        // USING MESHES
-        vegetationMesh = this.scene.assetPreloader
-          .getMeshes("assets/nature/tree1.babylon")[0]
-          .createInstance("tree1-instance");
-
-        console.log(vegetationMesh);
-
-        // USING CONTAINER -> MESHES
-        // vegetationMesh = this.scene.assetPreloader
-        //   .getContainer("assets/nature/tree1.babylon")
-        //   .meshes[0].createInstance("tree1-instance");
-
-        // INSTANTIATING ONLY MESHES
-        // vegetationMesh = this.scene.assetPreloader
-        //   .getContainer("assets/nature/tree1.babylon")
-        //   .instantiateModelsToScene(); // ALWAYS CLONING! Discussion here: https://forum.babylonjs.com/t/assetcontainer-instantiatemodelstoscene/6388/12
-        // console.log(vegetationMesh);
-        // vegetationMesh = vegetationMesh.rootNodes[0];
-
-        break;
-      case BiomaFactory.asList()[1]: //"Bioma 2"
-        vegetationMesh = BABYLON.MeshBuilder.CreateBox("box", {}, this.scene);
-        break;
-      case BiomaFactory.asList()[2]: //"Bioma 3"
-        vegetationMesh = BABYLON.MeshBuilder.CreateCylinder(
-          "cyl",
-          {},
-          this.scene
-        );
-        break;
-    }
+    let liveInstances = this.biomaFactory.instantiate(options.bioma);
 
     // transform mesh according to previously calculated params
-    vegetationMesh.position.x = x + positionOffset[0];
-    vegetationMesh.position.y = terrainPick.pickedPoint.y;
-    vegetationMesh.position.z = z + positionOffset[1];
+    liveInstances.forEach((liveInstance) => {
+      // update position
+      liveInstance.position.x = liveInstance.position.x + x + positionOffset[0];
+      liveInstance.position.y =
+        liveInstance.position.y + terrainPick.pickedPoint.y;
+      liveInstance.position.z = liveInstance.position.z + z + positionOffset[1];
 
-    vegetationMesh.rotation.y = rotation;
+      // override rotation Y
+      liveInstance.rotation.y = rotation;
 
-    vegetationMesh.scaling = new BABYLON.Vector3(scale, scale, scale);
+      // update scale
+      liveInstance.scaling = new BABYLON.Vector3(
+        liveInstance.scaling.x * scale,
+        liveInstance.scaling.y * scale,
+        liveInstance.scaling.z * scale
+      );
+
+      // add shadows
+      this.scene.smgr.lightManager.addShadowsTo(liveInstance);
+      //liveInstance.receiveShadows = true; //TODO: must be set on sourceMesh?
+    });
 
     this.vegetationLayer[matrixCoordinates.i][matrixCoordinates.j] = {
       bioma: options.bioma,
       density: options.density,
       randomSeed: randomSeed,
-      liveInstances: [vegetationMesh],
+      liveInstances: liveInstances,
     };
-
-    // let entries = this.scene.assetPreloader
-    //   .getContainer("assets/nature/tree1.babylon")
-    //   .instantiateModelsToScene();
-
-    // let factor = 5;
-    // let offset = [rand() * factor - factor / 2, rand() * factor - factor / 2];
-    // let rot = rand() * 360 * (Math.PI / 180);
-
-    // //console.log(offset);
-
-    // for (var node of entries.rootNodes) {
-    //   node.position.x += x; // + offset[0];
-    //   node.position.z += z; // + offset[1];
-
-    //   node.rotation.y = rot;
-
-    //   this.scene.smgr.lightManager.addShadowsTo(node);
-    //   node.receiveShadows = true;
-    // }
   }
 
   clearInstances(x, z, options) {
@@ -285,7 +231,8 @@ export default class VegetationSegment {
               disposeThisCoordinate = true;
             } else {
               // update liveInstance position Y
-              liveInstance.position.y = terrainPick.pickedPoint.y;
+              liveInstance.position.y =
+                liveInstance.sourceMesh.position.y + terrainPick.pickedPoint.y;
             }
           });
 
