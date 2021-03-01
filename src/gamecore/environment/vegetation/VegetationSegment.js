@@ -1,11 +1,12 @@
 import * as BABYLON from "@babylonjs/core";
 
-import { mulberry32 } from "../../helpers/DeterministicRandom";
-import { TerrainSegmentConfig } from "./TerrainSegment";
+import { mulberry32 } from "../../../helpers/DeterministicRandom";
+import { TerrainSegmentConfig } from "./../TerrainSegment";
+import BiomaFactory from "./BiomaFactory";
 
-export const VegetationSegmentConfig = {
-  biomas: ["Bioma 1", "Bioma 2", "Bioma 3"], //TODO: replace placeholders, set bioma names in LANG!
-};
+// export const VegetationSegmentConfig = {
+//   biomas: BiomaFactory.asList(),
+// };
 
 // Tip: increase CLIFF_THRESHOLD to reduce vegetation on cliffs
 const CLIFF_THRESHOLD = 0.7;
@@ -91,7 +92,7 @@ export default class VegetationSegment {
       x * z +
       options.density +
       options.brushSize +
-      (VegetationSegmentConfig.biomas.indexOf(options.bioma) || 0);
+      (BiomaFactory.asList().indexOf(options.bioma) || 0);
 
     // ignore placement if randomSeed is the same
     if (
@@ -147,7 +148,7 @@ export default class VegetationSegment {
     let vegetationMesh;
 
     switch (options.bioma) {
-      case VegetationSegmentConfig.biomas[0]: //"Bioma 1"
+      case BiomaFactory.asList()[0]: //"Bioma 1"
         // vegetationMesh = BABYLON.MeshBuilder.CreateTorus(
         //   "torus",
         //   {},
@@ -180,10 +181,10 @@ export default class VegetationSegment {
         // vegetationMesh = vegetationMesh.rootNodes[0];
 
         break;
-      case VegetationSegmentConfig.biomas[1]: //"Bioma 2"
+      case BiomaFactory.asList()[1]: //"Bioma 2"
         vegetationMesh = BABYLON.MeshBuilder.CreateBox("box", {}, this.scene);
         break;
-      case VegetationSegmentConfig.biomas[2]: //"Bioma 3"
+      case BiomaFactory.asList()[2]: //"Bioma 3"
         vegetationMesh = BABYLON.MeshBuilder.CreateCylinder(
           "cyl",
           {},

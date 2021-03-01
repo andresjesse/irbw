@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 
 import { editorUiMainToolbarSetVegetationPaintOptions } from "../../../../gamecore/ReduxStore";
 
-import { VegetationSegmentConfig } from "../../../../gamecore/environment/VegetationSegment";
+import BiomaFactory from "../../../../gamecore/environment/vegetation/BiomaFactory";
 
 import lang from "../../../lang";
 import colors from "../../../colors";
@@ -22,7 +22,7 @@ export default function () {
   const [density, setDensity] = React.useState([options?.density || 50]);
 
   const [bioma, setBioma] = React.useState(
-    options?.bioma || VegetationSegmentConfig.biomas[0]
+    options?.bioma || BiomaFactory.asList()[0]
   );
 
   return (
@@ -138,7 +138,7 @@ export default function () {
               );
             }}
           >
-            {VegetationSegmentConfig.biomas.map((value, index) => {
+            {BiomaFactory.asList().map((value, index) => {
               return (
                 <option key={index} value={value}>
                   {value}

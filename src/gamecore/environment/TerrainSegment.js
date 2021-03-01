@@ -4,7 +4,7 @@ import { TriPlanarMaterial } from "../../materials/customTriPlanar";
 import Texture2DArrayHelper from "../../helpers/Texture2DArrayHelper";
 
 import WaterSegment from "./WaterSegment";
-import VegetationSegment from "./VegetationSegment";
+import VegetationSegment from "./vegetation/VegetationSegment";
 import { Vector3 } from "@babylonjs/core";
 
 export const TerrainSegmentConfig = {
