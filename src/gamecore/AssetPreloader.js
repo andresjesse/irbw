@@ -2,8 +2,9 @@ export default class AssetPreloader {
   constructor(scene) {
     this.scene = scene;
 
-    this.textures = {};
     this.containers = {};
+    this.meshes = {};
+    this.textures = {};
   }
 
   preloadContainer(cFile) {
@@ -20,7 +21,29 @@ export default class AssetPreloader {
         rootUrl,
         sceneFilename
       ).onSuccess = (task) => {
+        // containers are loaded and stored for future use (not immediately attached to scene)
         this.containers[cFile] = task.loadedContainer;
+      };
+    }
+  }
+
+  preloadMeshes(mFile) {
+    if (!this.textures[mFile]) {
+      // reserve slot to prevent duplicated tasks (results are async)
+      this.textures[mFile] = "loading...";
+
+      let meshFilename = mFile.split("/").pop();
+      let rootUrl = mFile.substring(0, mFile.length - meshFilename.length);
+
+      this.scene.assetsManager.addMeshTask(
+        mFile,
+        "",
+        rootUrl,
+        meshFilename
+      ).onSuccess = (task) => {
+        // original meshes are disabled. new Instances will be enabled and visible.
+        task.loadedMeshes.forEach((lm) => lm.setEnabled(false));
+        this.meshes[mFile] = task.loadedMeshes;
       };
     }
   }
@@ -33,6 +56,7 @@ export default class AssetPreloader {
       this.scene.assetsManager.addTextureTask(txFile, txFile).onSuccess = (
         task
       ) => {
+        // texture is stored for future use
         this.textures[txFile] = task.texture;
       };
     }
@@ -43,6 +67,12 @@ export default class AssetPreloader {
       throw new Error("Container not Preloaded: " + cFile);
 
     return this.containers[cFile];
+  }
+
+  getMeshes(mFile) {
+    if (!this.meshes[mFile]) throw new Error("Meshes not Preloaded: " + mFile);
+
+    return this.meshes[mFile];
   }
 
   getTexture(txFile) {
