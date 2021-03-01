@@ -35,8 +35,8 @@ export default class VegetationSegment {
     this.id = id;
     this.parent = parent;
 
-    this.scene.assetPreloader.preloadContainer("assets/nature/tree1.babylon");
-    //this.scene.assetPreloader.preloadMeshes("assets/nature/tree1.babylon");
+    //this.scene.assetPreloader.preloadContainer("assets/nature/tree1.babylon");
+    this.scene.assetPreloader.preloadMeshes("assets/nature/tree1.babylon");
 
     // create a square matrix of dimension TerrainSegmentConfig.MESH_SIZE +1 (to enclose borders)
     this.vegetationLayer = Array.from(
@@ -161,9 +161,11 @@ export default class VegetationSegment {
         //mudar assetPreloader para importacao de Meshs! deixar container para uso futuro, usar MeshTask
 
         // USING MESHES
-        // vegetationMesh = this.scene.assetPreloader
-        //   .getMeshes("assets/nature/tree1.babylon")[0]
-        //   .createInstance("tree1-instance");
+        vegetationMesh = this.scene.assetPreloader
+          .getMeshes("assets/nature/tree1.babylon")[0]
+          .createInstance("tree1-instance");
+
+        console.log(vegetationMesh);
 
         // USING CONTAINER -> MESHES
         // vegetationMesh = this.scene.assetPreloader
@@ -171,13 +173,11 @@ export default class VegetationSegment {
         //   .meshes[0].createInstance("tree1-instance");
 
         // INSTANTIATING ONLY MESHES
-        vegetationMesh = this.scene.assetPreloader
-          .getContainer("assets/nature/tree1.babylon")
-          .instantiateModelsToScene(); // ALWAYS CLONING! Discussion here: https://forum.babylonjs.com/t/assetcontainer-instantiatemodelstoscene/6388/12
-
-        console.log(vegetationMesh);
-
-        vegetationMesh = vegetationMesh.rootNodes[0];
+        // vegetationMesh = this.scene.assetPreloader
+        //   .getContainer("assets/nature/tree1.babylon")
+        //   .instantiateModelsToScene(); // ALWAYS CLONING! Discussion here: https://forum.babylonjs.com/t/assetcontainer-instantiatemodelstoscene/6388/12
+        // console.log(vegetationMesh);
+        // vegetationMesh = vegetationMesh.rootNodes[0];
 
         break;
       case VegetationSegmentConfig.biomas[1]: //"Bioma 2"
