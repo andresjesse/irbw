@@ -32,6 +32,7 @@ https://andresjesse.github.io/irbw/index.html
 
 - explorar exporter blender;
   - poucas configs. desabilitei material PBR
+  - todas as transformações do objeto devem ser aplicadas antes de exportar!
 - trabalhar na escala dos objetos, considerar humano com altura max 2.
 
 - alterei a posicao da camera, agora distante em 20 unidades. ajustar escalas do shader!
