@@ -153,8 +153,8 @@ export default class VegetationSegment {
         liveInstance.position.y + terrainPick.pickedPoint.y;
       liveInstance.position.z = liveInstance.position.z + z + positionOffset[1];
 
-      // override rotation Y
-      liveInstance.rotation.y = rotation;
+      // update rotation Y
+      liveInstance.rotation.y = liveInstance.rotation.y + rotation;
 
       // update scale
       liveInstance.scaling = new BABYLON.Vector3(
