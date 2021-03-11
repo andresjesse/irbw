@@ -7,7 +7,7 @@ import BiomaFactory from "./BiomaFactory";
 // Tip: increase CLIFF_THRESHOLD to reduce vegetation on cliffs
 const CLIFF_THRESHOLD = 0.7;
 
-const VEGETATION_SCALE_VARIATION = 0.5;
+const VEGETATION_SCALE_VARIATION = 0.8;
 
 /**
  * Initial ideas:
@@ -112,7 +112,7 @@ export default class VegetationSegment {
     ];
     let rotation = rand() * 360 * (Math.PI / 180);
     let scaleVariation = VEGETATION_SCALE_VARIATION;
-    let scale = 1 + rand() * scaleVariation - scaleVariation / 2;
+    let scale = 1 + rand() * scaleVariation;
 
     // raycast and pick the terrain point at (x,z) considering offset
     let terrainPick = this.parent.pickPointAtPosition(

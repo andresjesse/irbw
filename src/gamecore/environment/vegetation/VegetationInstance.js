@@ -1,3 +1,5 @@
+import * as BABYLON from "@babylonjs/core";
+
 let id = 100;
 
 export default class VegetationInstance {
@@ -9,26 +11,36 @@ export default class VegetationInstance {
   }
 
   dispose() {
-    this.isThin ? {} : this._instancedMeshDispose();
+    this.isThin ? this._thinInstanceDispose() : this._instancedMeshDispose();
   }
 
   enableShadows() {
-    this.isThin ? {} : this._instancedMeshEnableShadows();
+    if (!this.data.castShadows) return;
+
+    this.isThin
+      ? this._thinInstanceEnableShadows()
+      : this._instancedMeshEnableShadows();
   }
 
   setPosition(pos) {
     this.position = pos;
-    this.isThin ? {} : this._instancedMeshSetPosition(pos);
+    this.isThin
+      ? this._thinInstanceSetPosition(pos)
+      : this._instancedMeshSetPosition(pos);
   }
 
   setRotation(rot) {
     this.rotation = rot;
-    this.isThin ? {} : this._instancedMeshSetRotation(rot);
+    this.isThin
+      ? this._thinInstanceSetRotation(rot)
+      : this._instancedMeshSetRotation(rot);
   }
 
   setScale(scl) {
     this.scale = scl;
-    this.isThin ? {} : this._instancedMeshSetScale(scl);
+    this.isThin
+      ? this._thinInstanceSetScale(scl)
+      : this._instancedMeshSetScale(scl);
   }
 
   // ------------------------------------------------------------ InstancedMesh Stuff
@@ -81,15 +93,139 @@ export default class VegetationInstance {
 
   // ------------------------------------------------------------ ThinInstances Stuff
 
+  _thinInstanceFindBufferIndexById(innerInstance) {
+    return innerInstance.mesh._userThinInstanceBuffersStorage.data[
+      "id"
+    ].indexOf(innerInstance.id);
+  }
+
   _thinInstanceCreate() {
     this.innerInstances = [];
 
-    this.data.meshes.forEach((mesh) => {
-      if (!ids[mesh.name]) ids[mesh.name] = 100;
+    this.position = new BABYLON.Vector3(0, 0, 0);
+    this.rotation = new BABYLON.Vector3(0, 0, 0);
+    this.scale = new BABYLON.Vector3(1, 1, 1);
 
-      this.innerInstances.push(
-        mesh.createInstance(
-          "VegetationInstance-" + mesh.name + "-" + ids[mesh.name]++
+    this.data.meshes.forEach((mesh) => {
+      // ThinInstance first execution setup
+      if (mesh.thinInstancesInitialized != true) {
+        mesh.thinInstanceRegisterAttribute("id", 1);
+        mesh.thinInstancesInitialized = true;
+      }
+
+      // create instance at origin with default scale and rot
+      const matrix = BABYLON.Matrix.Compose(
+        this.scale,
+        BABYLON.Quaternion.FromEulerVector(this.rotation),
+        this.position
+      );
+
+      let thinInstanceIndex = mesh.thinInstanceAdd(matrix);
+      mesh.thinInstanceSetAttributeAt("id", thinInstanceIndex, [id]);
+
+      this.innerInstances.push({ mesh, id });
+
+      id++;
+
+      // meshes are loaded in AssetPreloader and remain disabled until thinInstances are created.
+      mesh.setEnabled(true);
+    });
+  }
+
+  _thinInstanceDispose() {
+    this.innerInstances.forEach((innerInstance) => {
+      let blackListedId = innerInstance.id;
+
+      let bfSize =
+        innerInstance.mesh._userThinInstanceBuffersStorage.data["id"].length -
+        2;
+
+      let newMatrixBuffer = new Float32Array(16 * bfSize);
+      let newIdBuffer = new Float32Array(bfSize);
+
+      let bfIndex = 0;
+
+      innerInstance.mesh._userThinInstanceBuffersStorage.data["id"].forEach(
+        (id, index) => {
+          if (id != blackListedId && id > 0) {
+            newIdBuffer[bfIndex] = id;
+            innerInstance.mesh
+              .thinInstanceGetWorldMatrices()
+              [index].copyToArray(newMatrixBuffer, bfIndex * 16);
+            bfIndex++;
+          }
+        }
+      );
+
+      if (newIdBuffer.length > 0) {
+        // replace thinInstances buffer
+        innerInstance.mesh.thinInstanceSetBuffer("matrix", newMatrixBuffer, 16);
+        innerInstance.mesh.thinInstanceSetBuffer("id", newIdBuffer, 1);
+      } else {
+        // disable original mesh when no instances are drawn
+        innerInstance.mesh.thinInstanceCount = 0;
+        innerInstance.mesh.setEnabled(false);
+      }
+    });
+  }
+
+  _thinInstanceEnableShadows() {
+    this.data.meshes.forEach((mesh) => {
+      this.data.scene.smgr.lightManager.addShadowsTo(mesh);
+    });
+  }
+
+  _thinInstanceSetPosition(pos) {
+    this.innerInstances.forEach((innerInstance) => {
+      let instanceIndexOnBuffer = this._thinInstanceFindBufferIndexById(
+        innerInstance
+      );
+
+      let thinInstanceMatrix = innerInstance.mesh.thinInstanceGetWorldMatrices()[
+        instanceIndexOnBuffer
+      ];
+
+      // update position (I ask me, why there's no setRotation and setScale?)
+      thinInstanceMatrix.setTranslation(pos);
+
+      innerInstance.mesh.thinInstanceSetMatrixAt(
+        instanceIndexOnBuffer,
+        thinInstanceMatrix
+      );
+    });
+  }
+
+  _thinInstanceSetRotation(rot) {
+    this.innerInstances.forEach((innerInstance) => {
+      let instanceIndexOnBuffer = this._thinInstanceFindBufferIndexById(
+        innerInstance
+      );
+
+      // generate a new matrix updating rotation as quaternion
+      innerInstance.mesh.thinInstanceSetMatrixAt(
+        instanceIndexOnBuffer,
+        BABYLON.Matrix.Compose(
+          this.scale,
+          BABYLON.Quaternion.FromEulerVector(rot),
+          this.position
+        )
+      );
+    });
+  }
+
+  _thinInstanceSetScale(scl) {
+    this.innerInstances.forEach((innerInstance) => {
+      let instanceIndexOnBuffer = this._thinInstanceFindBufferIndexById(
+        innerInstance
+      );
+
+      // generate a new matrix updating scale
+      innerInstance.mesh.thinInstanceSetMatrixAt(
+        instanceIndexOnBuffer,
+        BABYLON.Matrix.Compose(
+          scl,
+          BABYLON.Quaternion.FromEulerVector(this.rotation),
+          this.position
         )
       );
     });
