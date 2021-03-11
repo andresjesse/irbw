@@ -1,14 +1,11 @@
-let ids = {};
+let id = 100;
 
 export default class VegetationInstance {
   constructor(data, isThin) {
     this.isThin = isThin;
     this.data = data;
 
-    if (isThin) {
-    } else {
-      this._instancedMeshCreate();
-    }
+    isThin ? this._thinInstanceCreate() : this._instancedMeshCreate();
   }
 
   dispose() {
@@ -40,12 +37,8 @@ export default class VegetationInstance {
     this.innerInstances = [];
 
     this.data.meshes.forEach((mesh) => {
-      if (!ids[mesh.name]) ids[mesh.name] = 100;
-
       this.innerInstances.push(
-        mesh.createInstance(
-          "VegetationInstance-" + mesh.name + "-" + ids[mesh.name]++
-        )
+        mesh.createInstance("VegetationInstance-" + mesh.name + "-" + id++)
       );
     });
   }
@@ -83,6 +76,22 @@ export default class VegetationInstance {
       innerInstance.scaling.x = innerInstance.sourceMesh.scaling.x * scl.x;
       innerInstance.scaling.y = innerInstance.sourceMesh.scaling.y * scl.y;
       innerInstance.scaling.z = innerInstance.sourceMesh.scaling.z * scl.z;
+    });
+  }
+
+  // ------------------------------------------------------------ ThinInstances Stuff
+
+  _thinInstanceCreate() {
+    this.innerInstances = [];
+
+    this.data.meshes.forEach((mesh) => {
+      if (!ids[mesh.name]) ids[mesh.name] = 100;
+
+      this.innerInstances.push(
+        mesh.createInstance(
+          "VegetationInstance-" + mesh.name + "-" + ids[mesh.name]++
+        )
+      );
     });
   }
 }
