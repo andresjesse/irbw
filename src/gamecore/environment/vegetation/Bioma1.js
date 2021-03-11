@@ -1,17 +1,20 @@
+import VegetationInstance from "./VegetationInstance";
+
 export default class Bioma1 {
   static onPreload(scene) {
     scene.assetPreloader.preloadMeshes("assets/nature/tree1.babylon");
   }
 
   static instantiate(scene) {
-    let instantiatedMeshes = [];
+    let vegetationInstances = [];
 
-    scene.assetPreloader
-      .getMeshes("assets/nature/tree1.babylon")
-      .forEach((mesh) => {
-        instantiatedMeshes.push(mesh.createInstance("tree1-instance"));
-      });
+    let tree1Data = {
+      meshes: scene.assetPreloader.getMeshes("assets/nature/tree1.babylon"),
+      scene: scene,
+    };
 
-    return instantiatedMeshes;
+    vegetationInstances.push(new VegetationInstance(tree1Data, false));
+
+    return vegetationInstances;
   }
 }

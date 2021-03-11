@@ -147,25 +147,23 @@ export default class VegetationSegment {
 
     // transform mesh according to previously calculated params
     liveInstances.forEach((liveInstance) => {
-      // update position
-      liveInstance.position.x = liveInstance.position.x + x + positionOffset[0];
-      liveInstance.position.y =
-        liveInstance.position.y + terrainPick.pickedPoint.y;
-      liveInstance.position.z = liveInstance.position.z + z + positionOffset[1];
-
-      // override rotation Y
-      liveInstance.rotation.y = rotation;
-
-      // update scale
-      liveInstance.scaling = new BABYLON.Vector3(
-        liveInstance.scaling.x * scale,
-        liveInstance.scaling.y * scale,
-        liveInstance.scaling.z * scale
+      // position
+      liveInstance.setPosition(
+        new BABYLON.Vector3(
+          x + positionOffset[0],
+          terrainPick.pickedPoint.y,
+          z + positionOffset[1]
+        )
       );
 
-      // add shadows
-      this.scene.smgr.lightManager.addShadowsTo(liveInstance);
-      //liveInstance.receiveShadows = true; //TODO: must be set on sourceMesh?
+      // rotation
+      liveInstance.setRotation(new BABYLON.Vector3(0, rotation, 0));
+
+      // scale
+      liveInstance.setScale(new BABYLON.Vector3(scale, scale, scale));
+
+      // enable shadows
+      liveInstance.enableShadows();
     });
 
     this.vegetationLayer[matrixCoordinates.i][matrixCoordinates.j] = {
