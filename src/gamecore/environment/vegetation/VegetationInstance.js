@@ -20,14 +20,17 @@ export default class VegetationInstance {
   }
 
   setPosition(pos) {
+    this.position = pos;
     this.isThin ? {} : this._instancedMeshSetPosition(pos);
   }
 
   setRotation(rot) {
+    this.rotation = rot;
     this.isThin ? {} : this._instancedMeshSetRotation(rot);
   }
 
   setScale(scl) {
+    this.scale = scl;
     this.isThin ? {} : this._instancedMeshSetScale(scl);
   }
 
@@ -61,25 +64,25 @@ export default class VegetationInstance {
 
   _instancedMeshSetPosition(pos) {
     this.innerInstances.forEach((innerInstance) => {
-      innerInstance.position.x = innerInstance.position.x + pos.x;
-      innerInstance.position.y = innerInstance.position.y + pos.y;
-      innerInstance.position.z = innerInstance.position.z + pos.z;
+      innerInstance.position.x = innerInstance.sourceMesh.position.x + pos.x;
+      innerInstance.position.y = innerInstance.sourceMesh.position.y + pos.y;
+      innerInstance.position.z = innerInstance.sourceMesh.position.z + pos.z;
     });
   }
 
   _instancedMeshSetRotation(rot) {
     this.innerInstances.forEach((innerInstance) => {
-      innerInstance.rotation.x = innerInstance.rotation.x + rot.x;
-      innerInstance.rotation.y = innerInstance.rotation.y + rot.y;
-      innerInstance.rotation.z = innerInstance.rotation.z + rot.z;
+      innerInstance.rotation.x = innerInstance.sourceMesh.rotation.x + rot.x;
+      innerInstance.rotation.y = innerInstance.sourceMesh.rotation.y + rot.y;
+      innerInstance.rotation.z = innerInstance.sourceMesh.rotation.z + rot.z;
     });
   }
 
   _instancedMeshSetScale(scl) {
     this.innerInstances.forEach((innerInstance) => {
-      innerInstance.scaling.x = innerInstance.scaling.x * scl.x;
-      innerInstance.scaling.y = innerInstance.scaling.y * scl.y;
-      innerInstance.scaling.z = innerInstance.scaling.z * scl.z;
+      innerInstance.scaling.x = innerInstance.sourceMesh.scaling.x * scl.x;
+      innerInstance.scaling.y = innerInstance.sourceMesh.scaling.y * scl.y;
+      innerInstance.scaling.z = innerInstance.sourceMesh.scaling.z * scl.z;
     });
   }
 }

@@ -7,6 +7,8 @@ import BiomaFactory from "./BiomaFactory";
 // Tip: increase CLIFF_THRESHOLD to reduce vegetation on cliffs
 const CLIFF_THRESHOLD = 0.7;
 
+const VEGETATION_SCALE_VARIATION = 0.5;
+
 /**
  * Initial ideas:
  *  - Brush size set by UI
@@ -109,7 +111,7 @@ export default class VegetationSegment {
       rand() * maxPositionOffset - maxPositionOffset / 2,
     ];
     let rotation = rand() * 360 * (Math.PI / 180);
-    let scaleVariation = 0.4;
+    let scaleVariation = VEGETATION_SCALE_VARIATION;
     let scale = 1 + rand() * scaleVariation - scaleVariation / 2;
 
     // raycast and pick the terrain point at (x,z) considering offset
@@ -228,9 +230,13 @@ export default class VegetationSegment {
             if (pickedFaceAngle < CLIFF_THRESHOLD) {
               disposeThisCoordinate = true;
             } else {
-              // update liveInstance position Y
-              liveInstance.position.y =
-                liveInstance.sourceMesh.position.y + terrainPick.pickedPoint.y;
+              liveInstance.setPosition(
+                new BABYLON.Vector3(
+                  liveInstance.position.x,
+                  terrainPick.pickedPoint.y,
+                  liveInstance.position.z
+                )
+              );
             }
           });
 

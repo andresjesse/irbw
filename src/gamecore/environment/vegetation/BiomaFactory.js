@@ -1,7 +1,9 @@
 import Bioma1 from "./Bioma1";
+import Bioma2 from "./Bioma2";
 
 const biomas = {
   Bioma1,
+  Bioma2,
 };
 
 export default class BiomaFactory {
