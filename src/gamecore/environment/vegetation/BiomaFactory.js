@@ -13,11 +13,8 @@ export default class BiomaFactory {
     }
   }
 
-  instantiate(options) {
-    return biomas[options.bioma].instantiate({
-      scene: this.scene,
-      ...options,
-    });
+  instantiate(bioma) {
+    return biomas[bioma].instantiate(this.scene);
   }
 
   static asList() {

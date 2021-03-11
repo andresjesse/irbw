@@ -70,8 +70,7 @@ export default class EditorSceneManager {
   createEditorCamera(type) {
     this.camera = new FreeCamera(
       "EDITOR_CAMERA",
-      //new Vector3(0, 32, -32),
-      new Vector3(0, 20, -20),
+      new Vector3(0, 32, -32),
       this.scene
     );
 

@@ -143,18 +143,29 @@ export default class VegetationSegment {
     if (placementeProbability >= options.density) return;
 
     // generate & instantiate new meshes
-    let liveInstances = this.biomaFactory.instantiate({
-      bioma: options.bioma,
-      //position Vector
-      position: new BABYLON.Vector3(
-        x + positionOffset[0],
-        terrainPick.pickedPoint.y,
-        z + positionOffset[1]
-      ),
-      //rotation in Y axis
-      rotation: rotation,
-      //scale (same for all axis)
-      scale: scale,
+    let liveInstances = this.biomaFactory.instantiate(options.bioma);
+
+    // transform mesh according to previously calculated params
+    liveInstances.forEach((liveInstance) => {
+      // update position
+      liveInstance.position.x = liveInstance.position.x + x + positionOffset[0];
+      liveInstance.position.y =
+        liveInstance.position.y + terrainPick.pickedPoint.y;
+      liveInstance.position.z = liveInstance.position.z + z + positionOffset[1];
+
+      // override rotation Y
+      liveInstance.rotation.y = rotation;
+
+      // update scale
+      liveInstance.scaling = new BABYLON.Vector3(
+        liveInstance.scaling.x * scale,
+        liveInstance.scaling.y * scale,
+        liveInstance.scaling.z * scale
+      );
+
+      // add shadows
+      this.scene.smgr.lightManager.addShadowsTo(liveInstance);
+      //liveInstance.receiveShadows = true; //TODO: must be set on sourceMesh?
     });
 
     this.vegetationLayer[matrixCoordinates.i][matrixCoordinates.j] = {
@@ -173,14 +184,6 @@ export default class VegetationSegment {
       this.vegetationLayer[matrixCoordinates.i][matrixCoordinates.j] !=
       undefined
     ) {
-      console.log(
-        this.vegetationLayer[matrixCoordinates.i][matrixCoordinates.j]
-      );
-
-      throw new Error(
-        "REFACTOR TO THIN INSTANCES! REQUIRES MANUAL BUFFER EDIT!"
-      );
-
       this.vegetationLayer[matrixCoordinates.i][
         matrixCoordinates.j
       ].liveInstances.forEach((instance) => {
