@@ -1,6 +1,8 @@
 import * as BABYLON from "@babylonjs/core";
 
+// thinInstances are globally stored for buffers re-creation
 let id = 100;
+let matrixBuffers = {};
 
 export default class VegetationInstance {
   constructor(data, isThin) {
@@ -123,7 +125,13 @@ export default class VegetationInstance {
       let thinInstanceIndex = mesh.thinInstanceAdd(matrix);
       mesh.thinInstanceSetAttributeAt("id", thinInstanceIndex, [id]);
 
-      this.innerInstances.push({ mesh, id });
+      this.innerInstances.push({ mesh, id, matrix });
+
+      //register instance on matrix buffer
+      if (matrixBuffers[mesh.name] == undefined) {
+        matrixBuffers[mesh.name] = {};
+      }
+      matrixBuffers[mesh.name][id] = matrix;
 
       id++;
 
@@ -132,40 +140,33 @@ export default class VegetationInstance {
     });
   }
 
+  /**
+   * This method re-generates the entire thinInstances buffer based on the global variable "matrixBuffers"
+   * I didn't figured ou how to manage cpu<->gpu buffers for adding/removing thinInstances on the fly without losing sync.
+   */
   _thinInstanceDispose() {
     this.innerInstances.forEach((innerInstance) => {
-      let blackListedId = innerInstance.id;
+      const { mesh } = innerInstance;
 
-      let bfSize =
-        innerInstance.mesh._userThinInstanceBuffersStorage.data["id"].length -
-        2;
+      //clear thin instances buffer
+      mesh.thinInstanceCount = 0;
 
-      let newMatrixBuffer = new Float32Array(16 * bfSize);
-      let newIdBuffer = new Float32Array(bfSize);
-
-      let bfIndex = 0;
-
-      innerInstance.mesh._userThinInstanceBuffersStorage.data["id"].forEach(
-        (id, index) => {
-          if (id != blackListedId && id > 0) {
-            newIdBuffer[bfIndex] = id;
-            innerInstance.mesh
-              .thinInstanceGetWorldMatrices()
-              [index].copyToArray(newMatrixBuffer, bfIndex * 16);
-            bfIndex++;
-          }
+      //read matrixBuffers global var and re-add everything, except current instance
+      Object.keys(matrixBuffers[mesh.name]).forEach((id) => {
+        //skip & delete (from matrixBuffers) the unwanted instance
+        if (innerInstance.id == id) {
+          delete matrixBuffers[mesh.name][id];
+        } else {
+          //re-add wanted instance to buffer
+          let matrix = matrixBuffers[mesh.name][id];
+          let thinInstanceIndex = mesh.thinInstanceAdd(matrix);
+          mesh.thinInstanceSetAttributeAt("id", thinInstanceIndex, [id]);
         }
-      );
+      });
 
-      if (newIdBuffer.length > 0) {
-        // replace thinInstances buffer
-        innerInstance.mesh.thinInstanceSetBuffer("matrix", newMatrixBuffer, 16);
-        innerInstance.mesh.thinInstanceSetBuffer("id", newIdBuffer, 1);
-      } else {
-        // disable original mesh when no instances are drawn
-        innerInstance.mesh.thinInstanceCount = 0;
+      //disable mesh if no instance is present
+      if (innerInstance.mesh.thinInstanceCount == 0)
         innerInstance.mesh.setEnabled(false);
-      }
     });
   }
 
@@ -192,6 +193,11 @@ export default class VegetationInstance {
         instanceIndexOnBuffer,
         thinInstanceMatrix
       );
+
+      // update global var matrixBuffers
+      matrixBuffers[innerInstance.mesh.name][
+        innerInstance.id
+      ] = thinInstanceMatrix;
     });
   }
 
@@ -201,15 +207,22 @@ export default class VegetationInstance {
         innerInstance
       );
 
+      let thinInstanceMatrix = BABYLON.Matrix.Compose(
+        this.scale,
+        BABYLON.Quaternion.FromEulerVector(rot),
+        this.position
+      );
+
       // generate a new matrix updating rotation as quaternion
       innerInstance.mesh.thinInstanceSetMatrixAt(
         instanceIndexOnBuffer,
-        BABYLON.Matrix.Compose(
-          this.scale,
-          BABYLON.Quaternion.FromEulerVector(rot),
-          this.position
-        )
+        thinInstanceMatrix
       );
+
+      // update global var matrixBuffers
+      matrixBuffers[innerInstance.mesh.name][
+        innerInstance.id
+      ] = thinInstanceMatrix;
     });
   }
 
@@ -219,15 +232,22 @@ export default class VegetationInstance {
         innerInstance
       );
 
+      let thinInstanceMatrix = BABYLON.Matrix.Compose(
+        scl,
+        BABYLON.Quaternion.FromEulerVector(this.rotation),
+        this.position
+      );
+
       // generate a new matrix updating scale
       innerInstance.mesh.thinInstanceSetMatrixAt(
         instanceIndexOnBuffer,
-        BABYLON.Matrix.Compose(
-          scl,
-          BABYLON.Quaternion.FromEulerVector(this.rotation),
-          this.position
-        )
+        thinInstanceMatrix
       );
+
+      // update global var matrixBuffers
+      matrixBuffers[innerInstance.mesh.name][
+        innerInstance.id
+      ] = thinInstanceMatrix;
     });
   }
 }
