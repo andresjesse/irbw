@@ -43,14 +43,14 @@ export default class EditorSceneManager {
     this.createEditorCamera();
 
     //----------------------------- temp stuff -----------------------
-    // this.box = BABYLON.MeshBuilder.CreateBox(
-    //   "playerRef",
-    //   { height: 2, width: 1, depth: 1 },
-    //   this.scene
-    // );
-    // this.box.position = new BABYLON.Vector3(0, 1, 0);
-    // this.box.receiveShadows = true;
-    // this.lightManager.addShadowsTo(this.box);
+    this.box = BABYLON.MeshBuilder.CreateBox(
+      "playerRef",
+      { height: 2, width: 1, depth: 1 },
+      this.scene
+    );
+    this.box.position = new BABYLON.Vector3(0, 1, 0);
+    this.box.receiveShadows = true;
+    this.lightManager.addShadowsTo(this.box);
     // // Torus
     // var torus = BABYLON.Mesh.CreateTorus("torus", 4, 2, 30, this.scene, false);
     // torus.position = new BABYLON.Vector3(4, 3, 0);
@@ -68,9 +68,13 @@ export default class EditorSceneManager {
   }
 
   createEditorCamera(type) {
+    this.CAMERA_DEFAULT_POSITION = new Vector3(0, 32, -32);
+    this.CAMERA_MIN_ZOOM = 10;
+    this.CAMERA_MAX_ZOOM = 60;
+
     this.camera = new FreeCamera(
       "EDITOR_CAMERA",
-      new Vector3(0, 32, -32),
+      this.CAMERA_DEFAULT_POSITION,
       this.scene
     );
 
