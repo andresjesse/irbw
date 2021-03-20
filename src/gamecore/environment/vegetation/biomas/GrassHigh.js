@@ -1,15 +1,15 @@
-import VegetationInstance from "./VegetationInstance";
+import VegetationInstance from "../VegetationInstance";
 
-export default class Bioma2 {
+export default class GrassHigh {
   static onPreload(scene) {
-    scene.assetPreloader.preloadMeshes("assets/nature/bush1.babylon");
+    scene.assetPreloader.preloadMeshes("assets/nature/GrassHigh.babylon");
   }
 
   static instantiate(scene) {
     let vegetationInstances = [];
 
     let i1 = {
-      meshes: scene.assetPreloader.getMeshes("assets/nature/bush1.babylon"),
+      meshes: scene.assetPreloader.getMeshes("assets/nature/GrassHigh.babylon"),
       scene: scene,
       castShadows: false,
     };

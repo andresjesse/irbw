@@ -1,9 +1,13 @@
-import Bioma1 from "./Bioma1";
-import Bioma2 from "./Bioma2";
+import BushDense from "./biomas/BushDense";
+import GrassHigh from "./biomas/GrassHigh";
+import Tree1 from "./biomas/Tree1";
+import Tree2 from "./biomas/Tree2";
 
 const biomas = {
-  Bioma1,
-  Bioma2,
+  BushDense,
+  GrassHigh,
+  Tree1,
+  Tree2,
 };
 
 export default class BiomaFactory {

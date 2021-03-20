@@ -29,9 +29,9 @@ export default class CameraMovement {
     // Zoom
     let newY =
       this.smgr.camera.position.y +
-      this.smgr.imgr.getInput(LogicalInputs.MainTrigger) *
+      this.smgr.imgr.getInput(LogicalInputs.EditorCameraZoom) *
         this.cameraSpeed *
-        0.5;
+        -0.5;
 
     // Guarantee new zoom will be in acceptable range
     if (
@@ -42,8 +42,8 @@ export default class CameraMovement {
 
       // fix Z for smooth zoom
       this.smgr.camera.position.z +=
-        this.smgr.imgr.getInput(LogicalInputs.MainTrigger) *
-        -0.5 *
+        this.smgr.imgr.getInput(LogicalInputs.EditorCameraZoom) *
+        0.5 *
         this.cameraSpeed;
     }
   }

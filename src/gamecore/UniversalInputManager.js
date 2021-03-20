@@ -75,9 +75,9 @@ export const LogicalInputs = {
   PointerY: "PointerY",
   MainAxisX: "MainAxisX",
   MainAxisY: "MainAxisY",
-  MainTrigger: "MainTrigger",
   SecondaryAxisX: "SecondaryAxisX",
   SecondaryAxisY: "SecondaryAxisY",
+  EditorCameraZoom: "EditorCameraZoom",
   EditorModifier1: "EditorModifier1",
 };
 
@@ -144,17 +144,6 @@ export default class UniversalInputManager {
         );
         return positiveY - negativeY;
 
-      case LogicalInputs.MainTrigger: // q|Q e|E
-        let mTrigPositive = Math.max(
-          this.imgrKeyboard.state["e"] || 0,
-          this.imgrKeyboard.state["E"] || 0
-        );
-        let mTrigNegative = Math.max(
-          this.imgrKeyboard.state["q"] || 0,
-          this.imgrKeyboard.state["Q"] || 0
-        );
-        return mTrigPositive - mTrigNegative;
-
       case LogicalInputs.SecondaryAxisX: // horizontal arrows
         let secPositiveX = Math.max(this.imgrKeyboard.state["ArrowRight"] || 0);
         let secNegativeX = Math.max(this.imgrKeyboard.state["ArrowLeft"] || 0);
@@ -164,6 +153,17 @@ export default class UniversalInputManager {
         let secPositiveY = Math.max(this.imgrKeyboard.state["ArrowUp"] || 0);
         let secNegativeY = Math.max(this.imgrKeyboard.state["ArrowDown"] || 0);
         return secPositiveY - secNegativeY;
+
+      case LogicalInputs.EditorCameraZoom: // x|X z|Z
+        let eCZoomPositive = Math.max(
+          this.imgrKeyboard.state["x"] || 0,
+          this.imgrKeyboard.state["X"] || 0
+        );
+        let eCZoomNegative = Math.max(
+          this.imgrKeyboard.state["z"] || 0,
+          this.imgrKeyboard.state["Z"] || 0
+        );
+        return eCZoomPositive - eCZoomNegative;
 
       case LogicalInputs.EditorModifier1:
         return this.imgrKeyboard.state["Shift"] || 0;
