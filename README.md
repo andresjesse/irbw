@@ -22,5 +22,4 @@ https://andresjesse.github.io/irbw/index.html
 
 # Immediate TODO:List
 
-- Add one more bioma for testing purpose.
-- fix shadowmap translation (neighbor segments aren't affected when time of day changes)
+- fix timeOfDay update: redux dispatch is slow, dynamic timeOfDay must be managed internally in LightManager (UI Updates can be async and frameskipped)
