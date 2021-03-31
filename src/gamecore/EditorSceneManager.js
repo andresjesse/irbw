@@ -76,7 +76,7 @@ export default class EditorSceneManager {
 
     this.camera = new FreeCamera(
       "EDITOR_CAMERA",
-      this.CAMERA_DEFAULT_POSITION,
+      this.CAMERA_DEFAULT_POSITION.clone(),
       this.scene
     );
 

@@ -109,7 +109,7 @@ export default class LightManager {
     //TODO: This shadow technique (PCF) is showing glitches on the "first" day/night cycle when running Chrome/Ubuntu. Does not happen on Chrome/Mac.
     //  Option to fix: provide alternative shadow method in IRB Config (user can change)
     this.shadowGenerator = new BABYLON.ShadowGenerator(
-      1024,
+      2048,
       this.directionalLight
     );
     this.shadowGenerator.usePercentageCloserFiltering = true;
@@ -119,7 +119,8 @@ export default class LightManager {
     this.shadowGenerator.useKernelBlur = true;
     this.shadowGenerator.blurKernel = 8;
 
-    this.directionalLight.shadowFrustumSize = 30;
+    this.SHADOW_FRUSTUM_SIZE_DEFAULT = 100;
+    this.directionalLight.shadowFrustumSize = this.SHADOW_FRUSTUM_SIZE_DEFAULT;
 
     //this.shadowGenerator.enableSoftTransparentShadow = true;
     this.shadowGenerator.transparencyShadow = true;
@@ -195,6 +196,16 @@ export default class LightManager {
       camPos.x - Math.sin(normTimeNoon * Math.PI) * 100;
     this.directionalLight.position.z =
       camPos.z + Math.cos(normTimeNoon * Math.PI) * 30 + 20;
+
+    // update frustum size according to zoom level
+    if (this.scene.smgr.camera != undefined) {
+      let newFrustum =
+        this.scene.smgr.camera.position.y -
+        this.scene.smgr.CAMERA_DEFAULT_POSITION.y;
+
+      this.directionalLight.shadowFrustumSize =
+        this.SHADOW_FRUSTUM_SIZE_DEFAULT + newFrustum * 2;
+    }
 
     //update shadow blur
     //  normalized time is clamped between 2 and 16 (no negative blurKernel)
