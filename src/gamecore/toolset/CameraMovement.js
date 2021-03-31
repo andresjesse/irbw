@@ -15,13 +15,13 @@ export default class CameraMovement {
     );
 
     // X movement
-    this.smgr.camera.position.x +=
+    this.smgr.cameraTransform.position.x +=
       this.smgr.imgr.getInput(LogicalInputs.MainAxisX) *
       this.cameraSpeed *
       zoomSpeedFactor;
 
     // Z movement
-    this.smgr.camera.position.z +=
+    this.smgr.cameraTransform.position.z +=
       this.smgr.imgr.getInput(LogicalInputs.MainAxisY) *
       this.cameraSpeed *
       zoomSpeedFactor;

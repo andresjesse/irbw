@@ -119,6 +119,8 @@ export default class LightManager {
     this.shadowGenerator.useKernelBlur = true;
     this.shadowGenerator.blurKernel = 8;
 
+    this.directionalLight.shadowFrustumSize = 30;
+
     //this.shadowGenerator.enableSoftTransparentShadow = true;
     this.shadowGenerator.transparencyShadow = true;
 
@@ -184,13 +186,15 @@ export default class LightManager {
     let normTimeNoon = (12 - timeIn24Hours) / 12;
 
     //update sun direction
-    this.directionalLight.setDirectionToTarget(
-      new BABYLON.Vector3(
-        Math.sin(normTimeNoon * Math.PI) * 100,
-        -1,
-        -Math.cos(normTimeNoon * Math.PI) * 30 + 20
-      )
-    );
+    let camPos =
+      this.scene.smgr.cameraTransform?.position || BABYLON.Vector3.Zero();
+
+    this.directionalLight.setDirectionToTarget(camPos);
+
+    this.directionalLight.position.x =
+      camPos.x - Math.sin(normTimeNoon * Math.PI) * 100;
+    this.directionalLight.position.z =
+      camPos.z + Math.cos(normTimeNoon * Math.PI) * 30 + 20;
 
     //update shadow blur
     //  normalized time is clamped between 2 and 16 (no negative blurKernel)

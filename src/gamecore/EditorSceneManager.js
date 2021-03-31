@@ -72,13 +72,27 @@ export default class EditorSceneManager {
     this.CAMERA_MIN_ZOOM = 10;
     this.CAMERA_MAX_ZOOM = 60;
 
+    this.cameraTransform = new BABYLON.TransformNode("cameraTransform");
+
     this.camera = new FreeCamera(
       "EDITOR_CAMERA",
       this.CAMERA_DEFAULT_POSITION,
       this.scene
     );
 
-    this.camera.setTarget(Vector3.Zero());
+    this.camera.parent = this.cameraTransform;
+
+    /* REMOVE */
+    var sphere = BABYLON.MeshBuilder.CreateSphere(
+      "Sphere",
+      { diameter: 0.5 },
+      this.scene,
+      true
+    );
+    sphere.parent = this.cameraTransform;
+    /* REMOVE */
+
+    this.camera.setTarget(this.cameraTransform.position);
 
     const canvas = this.scene.getEngine().getRenderingCanvas();
 
@@ -87,7 +101,5 @@ export default class EditorSceneManager {
     this.camera.inputs.clear();
 
     this.camera.maxZ = 500;
-
-    //TODO: get inputs from "UniversalInputManager" (subclasses for PC/Mobile/etc..)
   }
 }
