@@ -82,16 +82,6 @@ export default class EditorSceneManager {
 
     this.camera.parent = this.cameraTransform;
 
-    /* REMOVE */
-    var sphere = BABYLON.MeshBuilder.CreateSphere(
-      "Sphere",
-      { diameter: 0.5 },
-      this.scene,
-      true
-    );
-    sphere.parent = this.cameraTransform;
-    /* REMOVE */
-
     this.camera.setTarget(this.cameraTransform.position);
 
     const canvas = this.scene.getEngine().getRenderingCanvas();
