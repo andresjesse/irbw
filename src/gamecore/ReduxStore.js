@@ -32,6 +32,10 @@ const appSlice = createSlice({
         cycleDurationSec: 360,
       },
     },
+    irbConfig: {
+      shadowDynamicKernelBlur: false,
+      shadowMapSize: 2048,
+    },
   },
   reducers: {
     //editor

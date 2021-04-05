@@ -9,6 +9,7 @@ import colors from "../../colors";
 import { useSelector, useDispatch } from "react-redux";
 import { editorUiMainToolbarSetTool } from "../../../gamecore/ReduxStore";
 
+import Separator from "./GenericComponents/Separator";
 import SvgButton from "./SvgButton";
 import VegetationPaintPanel from "./EnvironmentPanel/VegetationPaintPanel";
 
@@ -87,13 +88,13 @@ export default function (props) {
           />
         </div>
 
+        <Separator />
+
         {/* --------------------------
         
         Vegetation Paint Related Tools 
         
         -------------------------- */}
-
-        <div style={styles.separator} />
 
         <div style={styles.contentGrid}>
           <SvgButton
@@ -107,7 +108,7 @@ export default function (props) {
           />
         </div>
 
-        <div style={styles.separator} />
+        <Separator />
 
         {/* --------------------------
         
@@ -137,7 +138,7 @@ export default function (props) {
           />
         </div>
 
-        <div style={styles.separator} />
+        <Separator />
       </div>
 
       {renderToolPanel()}
@@ -165,11 +166,5 @@ const styles = {
     padding: "4pt",
     color: colors("foreground"),
     fontSize: "10pt",
-  },
-  separator: {
-    width: "2px",
-    height: "98%",
-    background: colors("background"),
-    alignSelf: "center",
   },
 };

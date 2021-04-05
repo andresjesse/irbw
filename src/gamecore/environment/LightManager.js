@@ -16,11 +16,18 @@ export default class LightManager {
     this.timeOfDay = store.getState().smgr.lightManager.timeOfDay;
     this.dynamic = store.getState().smgr.lightManager.dynamic;
     this.cycleDurationSec = store.getState().smgr.lightManager.cycleDurationSec;
+    //config
+    this.shadowDynamicKernelBlur = store.getState().irbConfig.shadowDynamicKernelBlur;
+    this.shadowMapSize = store.getState().irbConfig.shadowMapSize; //not updatable on runtime!
 
     store.subscribe(() => {
       this.timeOfDay = store.getState().smgr.lightManager.timeOfDay;
       this.dynamic = store.getState().smgr.lightManager.dynamic;
       this.cycleDurationSec = store.getState().smgr.lightManager.cycleDurationSec;
+
+      //config
+      this.shadowDynamicKernelBlur = store.getState().irbConfig.shadowDynamicKernelBlur;
+      //this.shadowMapSize is not updatable on runtime!
     });
   }
 
@@ -109,7 +116,7 @@ export default class LightManager {
     //TODO: This shadow technique (PCF) is showing glitches on the "first" day/night cycle when running Chrome/Ubuntu. Does not happen on Chrome/Mac.
     //  Option to fix: provide alternative shadow method in IRB Config (user can change)
     this.shadowGenerator = new BABYLON.ShadowGenerator(
-      2048,
+      this.shadowMapSize,
       this.directionalLight
     );
     this.shadowGenerator.usePercentageCloserFiltering = true;
@@ -209,7 +216,11 @@ export default class LightManager {
 
     //update shadow blur
     //  normalized time is clamped between 2 and 16 (no negative blurKernel)
-    this.shadowGenerator.blurKernel = Math.max(16 * Math.abs(normTimeNoon), 2);
+    if (this.shadowDynamicKernelBlur)
+      this.shadowGenerator.blurKernel = Math.max(
+        16 * Math.abs(normTimeNoon),
+        2
+      );
   }
 
   //TODO: create a method "freezeTime(true/false) to pause day/night cycle"

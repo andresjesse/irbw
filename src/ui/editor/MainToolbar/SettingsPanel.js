@@ -4,6 +4,7 @@ import lang, { getAvailableLangs, getLangCode, setLangCode } from "../../lang";
 import colors, { getAvailableThemes, getTheme, setTheme } from "../../colors";
 
 import { useSelector, useDispatch } from "react-redux";
+import Separator from "./GenericComponents/Separator";
 
 export default function (props) {
   const dispatch = useDispatch();
@@ -20,48 +21,66 @@ export default function (props) {
 
   return (
     <div style={styles.container}>
-      <div style={styles.contentBlock}>
-        <div style={styles.contentRow}>
-          {lang.get("editor_ui_language")}
+      <div style={styles.leftContent}>
+        {/* --------------------------
+        
+        Lang & Theme
+        
+        -------------------------- */}
 
-          <select
-            name="lang"
-            value={langValue}
-            style={styles.select}
-            onChange={(e) => {
-              setLangValue(e.currentTarget.value);
-            }}
-          >
-            {getAvailableLangs().map((lang, index) => {
-              return (
-                <option key={index} value={lang}>
-                  {lang}
-                </option>
-              );
-            })}
-          </select>
+        <div style={styles.contentBlock}>
+          <div style={styles.contentRow}>
+            {lang.get("editor_ui_language")}
+
+            <select
+              name="lang"
+              value={langValue}
+              style={styles.select}
+              onChange={(e) => {
+                setLangValue(e.currentTarget.value);
+              }}
+            >
+              {getAvailableLangs().map((lang, index) => {
+                return (
+                  <option key={index} value={lang}>
+                    {lang}
+                  </option>
+                );
+              })}
+            </select>
+          </div>
+
+          <div style={styles.contentRow}>
+            {lang.get("editor_ui_theme")}
+
+            <select
+              name="theme"
+              value={themeValue}
+              style={styles.select}
+              onChange={(e) => {
+                setThemeValue(e.currentTarget.value);
+              }}
+            >
+              {getAvailableThemes().map((theme, index) => {
+                return (
+                  <option key={index} value={theme}>
+                    {theme}
+                  </option>
+                );
+              })}
+            </select>
+          </div>
         </div>
 
-        <div style={styles.contentRow}>
-          {lang.get("editor_ui_theme")}
+        <Separator />
 
-          <select
-            name="theme"
-            value={themeValue}
-            style={styles.select}
-            onChange={(e) => {
-              setThemeValue(e.currentTarget.value);
-            }}
-          >
-            {getAvailableThemes().map((theme, index) => {
-              return (
-                <option key={index} value={theme}>
-                  {theme}
-                </option>
-              );
-            })}
-          </select>
-        </div>
+        {/* --------------------------
+        
+        Graphics Config 
+        
+        -------------------------- */}
+
+        <Separator />
       </div>
 
       <button style={styles.saveButton} onClick={() => saveAndReload()}>
@@ -78,6 +97,10 @@ const styles = {
     backgroundColor: colors("panelBackground"),
     padding: 4,
     justifyContent: "space-between",
+  },
+  leftContent: {
+    display: "flex",
+    flexDirection: "row",
   },
   contentBlock: {
     display: "flex",
