@@ -34,8 +34,8 @@ const appSlice = createSlice({
       },
     },
     irbConfig: {
-      shadowDynamicKernelBlur: false,
-      shadowMapSize: 2048,
+      shadowDynamicKernelBlur: localDb.get("shadowDynamicKernelBlur") || false,
+      shadowMapSize: localDb.get("shadowMapSize") || 2048,
     },
   },
   reducers: {
