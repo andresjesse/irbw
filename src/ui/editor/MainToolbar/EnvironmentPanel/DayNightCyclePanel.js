@@ -27,7 +27,7 @@ export default function () {
           <Range
             step={0.01}
             min={0}
-            max={24}
+            max={23.99}
             values={[timeOfDay]}
             onChange={(values) =>
               dispatch(smgrLightManagerSetTimeOfDay(values[0]))
