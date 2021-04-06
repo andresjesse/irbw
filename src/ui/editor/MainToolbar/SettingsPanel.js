@@ -5,20 +5,36 @@ import colors, { getAvailableThemes, getTheme, setTheme } from "../../colors";
 
 import { useSelector, useDispatch } from "react-redux";
 import Separator from "./GenericComponents/Separator";
+import LabeledSelect from "./GenericComponents/LabeledSelect";
+import localDb from "../../../services/localDb";
 
 export default function (props) {
   const dispatch = useDispatch();
 
+  //---------------------------------- Panel State
   const [langValue, setLangValue] = React.useState(getLangCode());
   const [themeValue, setThemeValue] = React.useState(getTheme());
 
+  const [shadowDynamicKernelBlur, setShadowDynamicKernelBlur] = React.useState(
+    localDb.get("shadowDynamicKernelBlur").toString() || "false"
+  );
+
+  const [shadowMapSize, setShadowMapSize] = React.useState(
+    localDb.get("shadowMapSize") || 2048
+  );
+
+  //--------------------------------- Save Event
   const saveAndReload = () => {
     setLangCode(langValue);
     setTheme(themeValue);
 
+    localDb.set("shadowDynamicKernelBlur", shadowDynamicKernelBlur == "true");
+    localDb.set("shadowMapSize", parseInt(shadowMapSize));
+
     location.reload();
   };
 
+  //--------------------------------- Panel render
   return (
     <div style={styles.container}>
       <div style={styles.leftContent}>
@@ -29,47 +45,19 @@ export default function (props) {
         -------------------------- */}
 
         <div style={styles.contentBlock}>
-          <div style={styles.contentRow}>
-            {lang.get("editor_ui_language")}
+          <LabeledSelect
+            label={lang.get("editor_ui_language")}
+            options={getAvailableLangs()}
+            onChange={setLangValue}
+            value={langValue}
+          />
 
-            <select
-              name="lang"
-              value={langValue}
-              style={styles.select}
-              onChange={(e) => {
-                setLangValue(e.currentTarget.value);
-              }}
-            >
-              {getAvailableLangs().map((lang, index) => {
-                return (
-                  <option key={index} value={lang}>
-                    {lang}
-                  </option>
-                );
-              })}
-            </select>
-          </div>
-
-          <div style={styles.contentRow}>
-            {lang.get("editor_ui_theme")}
-
-            <select
-              name="theme"
-              value={themeValue}
-              style={styles.select}
-              onChange={(e) => {
-                setThemeValue(e.currentTarget.value);
-              }}
-            >
-              {getAvailableThemes().map((theme, index) => {
-                return (
-                  <option key={index} value={theme}>
-                    {theme}
-                  </option>
-                );
-              })}
-            </select>
-          </div>
+          <LabeledSelect
+            label={lang.get("editor_ui_theme")}
+            options={getAvailableThemes()}
+            onChange={setThemeValue}
+            value={themeValue}
+          />
         </div>
 
         <Separator />
@@ -79,6 +67,22 @@ export default function (props) {
         Graphics Config 
         
         -------------------------- */}
+
+        <div style={styles.contentBlock}>
+          <LabeledSelect
+            label={"shadowDynamicKernelBlur"}
+            options={["true", "false"]}
+            onChange={setShadowDynamicKernelBlur}
+            value={shadowDynamicKernelBlur}
+          />
+
+          <LabeledSelect
+            label={"shadowMapSize"}
+            options={[512, 1024, 2048, 4096]}
+            onChange={setShadowMapSize}
+            value={shadowMapSize}
+          />
+        </div>
 
         <Separator />
       </div>
@@ -108,20 +112,6 @@ const styles = {
     padding: "4pt",
     color: colors("foreground"),
     fontSize: "10pt",
-  },
-  contentRow: {
-    display: "flex",
-    flexDirection: "row",
-    marginTop: "4pt",
-    marginBottom: "4pt",
-  },
-  select: {
-    marginRight: "2pt",
-    border: 0,
-    color: colors("foreground"),
-    background: colors("panelBackground"),
-    fontSize: "10pt",
-    cursor: "pointer",
   },
   saveButton: {
     border: 0,
