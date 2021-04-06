@@ -1,3 +1,5 @@
+import localDb from "../services/localDb";
+
 const colors = {
   dark: {
     background: "#28272a",
@@ -21,10 +23,10 @@ const colors = {
 };
 
 //theme management (requires page reload)
-let theme = localStorage.getItem("theme") || "dark";
+let theme = localDb.get("theme") || "dark";
 
 const setTheme = function (newTheme) {
-  localStorage.setItem("theme", newTheme);
+  localDb.set("theme", newTheme);
 };
 
 const getTheme = function () {

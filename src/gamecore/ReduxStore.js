@@ -3,6 +3,7 @@
  */
 
 import { createSlice, configureStore } from "@reduxjs/toolkit";
+import localDb from "../services/localDb";
 
 const appSlice = createSlice({
   name: "appWebGL",

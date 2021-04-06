@@ -1,3 +1,5 @@
+import localDb from "../services/localDb";
+
 //TODO: migrate to separated files
 const langData = {
   "en-US": {
@@ -39,10 +41,10 @@ const langData = {
 };
 
 //lang management (requires page reload)
-let currentLang = localStorage.getItem("lang") || "en-US";
+let currentLang = localDb.get("lang") || "en-US";
 
 const setLangCode = function (newLang) {
-  localStorage.setItem("lang", newLang);
+  localDb.set("lang", newLang);
 };
 
 const getLangCode = function () {

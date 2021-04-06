@@ -22,4 +22,4 @@ https://andresjesse.github.io/irbw/index.html
 
 # Immediate TODO:List
 
-- fix timeOfDay update: redux dispatch is slow, dynamic timeOfDay must be managed internally in LightManager (UI Updates can be async and frameskipped)
+- store shadow configs in localDb
