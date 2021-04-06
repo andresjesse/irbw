@@ -204,9 +204,9 @@ export default class VegetationSegment {
     for (let i = -brushSize; i < brushSize; i++) {
       for (let j = -brushSize; j < brushSize; j++) {
         //check if exist any vegetation info on current coordinate
-        let cCoord = this.vegetationLayer[matrixCoordinates.i + i]?.[
-          matrixCoordinates.j + j
-        ];
+        let cCoord = this.vegetationLayer[
+          matrixCoordinates.i + Math.round(i)
+        ]?.[matrixCoordinates.j + Math.round(j)];
 
         if (cCoord) {
           // initialize a control variable to check if vegetation became positioned on cliff
@@ -246,8 +246,8 @@ export default class VegetationSegment {
               instance.dispose();
             });
 
-            this.vegetationLayer[matrixCoordinates.i + i][
-              matrixCoordinates.j + j
+            this.vegetationLayer[matrixCoordinates.i + Math.round(i)][
+              matrixCoordinates.j + Math.round(j)
             ] = undefined;
           }
         }

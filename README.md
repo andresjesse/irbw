@@ -21,5 +21,3 @@ IrrRPG Builder 2.0 - WebGL
 https://andresjesse.github.io/irbw/index.html
 
 # Immediate TODO:List
-
-- store shadow configs in localDb
