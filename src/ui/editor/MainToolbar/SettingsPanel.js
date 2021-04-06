@@ -16,7 +16,7 @@ export default function (props) {
   const [themeValue, setThemeValue] = React.useState(getTheme());
 
   const [shadowDynamicKernelBlur, setShadowDynamicKernelBlur] = React.useState(
-    localDb.get("shadowDynamicKernelBlur").toString() || "false"
+    localDb.get("shadowDynamicKernelBlur")?.toString() || "false"
   );
 
   const [shadowMapSize, setShadowMapSize] = React.useState(
