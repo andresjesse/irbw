@@ -1,0 +1,12 @@
+.toolbar-separator {
+  width: 1px;
+  height: 98%;
+  background: var(--foregroundShaded);
+  background: linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0) 00%,
+    var(--foregroundShaded) 50%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  align-self: center;
+}

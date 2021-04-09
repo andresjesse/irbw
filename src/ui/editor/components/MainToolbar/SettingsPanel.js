@@ -6,23 +6,19 @@ import lang, {
   setLangCode,
 } from "~src/ui/lang";
 
-import colors, {
-  getAvailableThemes,
-  getTheme,
-  setTheme,
-} from "~src/ui/editor/colors";
-
 import { useSelector, useDispatch } from "react-redux";
-import Separator from "./GenericComponents/Separator";
-import LabeledSelect from "./GenericComponents/LabeledSelect";
+
+import Separator from "~/src/ui/editor/components/Separator";
+import LabeledSelect from "~/src/ui/editor/components/LabeledSelect";
 import localDb from "~/src/services/localDb";
+
+import "./styles.css";
 
 export default function (props) {
   const dispatch = useDispatch();
 
   //---------------------------------- Panel State
   const [langValue, setLangValue] = React.useState(getLangCode());
-  const [themeValue, setThemeValue] = React.useState(getTheme());
 
   const [shadowDynamicKernelBlur, setShadowDynamicKernelBlur] = React.useState(
     localDb.get("shadowDynamicKernelBlur")?.toString() || "false"
@@ -35,7 +31,6 @@ export default function (props) {
   //--------------------------------- Save Event
   const saveAndReload = () => {
     setLangCode(langValue);
-    setTheme(themeValue);
 
     localDb.set("shadowDynamicKernelBlur", shadowDynamicKernelBlur == "true");
     localDb.set("shadowMapSize", parseInt(shadowMapSize));
@@ -45,27 +40,20 @@ export default function (props) {
 
   //--------------------------------- Panel render
   return (
-    <div style={styles.container}>
-      <div style={styles.leftContent}>
+    <div className="toolbar-container">
+      <div className="toolbar-leftContent">
         {/* --------------------------
         
-        Lang & Theme
+        Lang
         
         -------------------------- */}
 
-        <div style={styles.contentBlock}>
+        <div className="toolbar-contentBlock">
           <LabeledSelect
             label={lang.get("editor_ui_language")}
             options={getAvailableLangs()}
             onChange={setLangValue}
             value={langValue}
-          />
-
-          <LabeledSelect
-            label={lang.get("editor_ui_theme")}
-            options={getAvailableThemes()}
-            onChange={setThemeValue}
-            value={themeValue}
           />
         </div>
 
@@ -77,7 +65,7 @@ export default function (props) {
         
         -------------------------- */}
 
-        <div style={styles.contentBlock}>
+        <div className="toolbar-contentBlock">
           <LabeledSelect
             label={"shadowDynamicKernelBlur"}
             options={["true", "false"]}
@@ -96,37 +84,9 @@ export default function (props) {
         <Separator />
       </div>
 
-      <button style={styles.saveButton} onClick={() => saveAndReload()}>
+      <button className="button" onClick={() => saveAndReload()}>
         {lang.get("editor_ui_save_and_reload")}
       </button>
     </div>
   );
 }
-
-const styles = {
-  container: {
-    display: "flex",
-    flexDirection: "row",
-    backgroundColor: colors("panelBackground"),
-    padding: 4,
-    justifyContent: "space-between",
-  },
-  leftContent: {
-    display: "flex",
-    flexDirection: "row",
-  },
-  contentBlock: {
-    display: "flex",
-    flexDirection: "column",
-    padding: "4pt",
-    color: colors("foreground"),
-    fontSize: "10pt",
-  },
-  saveButton: {
-    border: 0,
-    color: colors("highlight"),
-    background: colors("panelBackground"),
-    fontWeight: "bold",
-    cursor: "pointer",
-  },
-};

@@ -2,15 +2,15 @@ import React from "react";
 
 import BrushOptionsPanel from "./EnvironmentPanel/BrushOptionsPanel";
 import DayNightCyclePanel from "./EnvironmentPanel/DayNightCyclePanel";
-
-import colors from "~/src/ui/editor/colors";
+import VegetationPaintPanel from "./EnvironmentPanel/VegetationPaintPanel";
 
 import { useSelector, useDispatch } from "react-redux";
 import { editorUiMainToolbarSetTool } from "~/src/gamecore/ReduxStore";
 
-import Separator from "./GenericComponents/Separator";
+import Separator from "~/src/ui/editor/components/Separator";
 import SvgButton from "~/src/ui/editor/components/SvgButton";
-import VegetationPaintPanel from "./EnvironmentPanel/VegetationPaintPanel";
+
+import "./styles.css";
 
 export default function (props) {
   const activeTool = useSelector(
@@ -37,15 +37,15 @@ export default function (props) {
   const dispatch = useDispatch();
 
   return (
-    <div style={styles.container}>
-      <div style={styles.buttonsDiv}>
+    <div className="toolbar-container">
+      <div className="toolbar-leftContent ">
         {/* --------------------------
         
         Terrain Related Tools 
         
         -------------------------- */}
 
-        <div style={styles.contentGrid}>
+        <div className="toolbar-contentBlock">
           <SvgButton
             name="terrain_edit_level"
             tileX={0}
@@ -95,7 +95,7 @@ export default function (props) {
         
         -------------------------- */}
 
-        <div style={styles.contentGrid}>
+        <div className="toolbar-contentBlock">
           <SvgButton
             name="vegetation_paint"
             tileX={0}
@@ -115,7 +115,7 @@ export default function (props) {
         
         -------------------------- */}
 
-        <div style={styles.contentGrid}>
+        <div className="toolbar-contentBlock">
           <SvgButton
             name="day_night_cycle"
             tileX={0}
@@ -144,26 +144,3 @@ export default function (props) {
     </div>
   );
 }
-
-const styles = {
-  container: {
-    display: "flex",
-    flexDirection: "row",
-    backgroundColor: colors("panelBackground"),
-    padding: 4,
-    justifyContent: "space-between",
-  },
-  buttonsDiv: {
-    display: "flex",
-    flexDirection: "row",
-  },
-  contentGrid: {
-    height: "fit-content",
-    display: "inline-grid",
-    gridTemplateRows: "repeat(2, auto)",
-    gridAutoFlow: "column",
-    padding: "4pt",
-    color: colors("foreground"),
-    fontSize: "10pt",
-  },
-};

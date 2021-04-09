@@ -1,6 +1,5 @@
 import React from "react";
 
-import colors from "~/src/ui/editor/colors";
 import lang from "~/src/ui/lang";
 
 import ProjectPanel from "./ProjectPanel";
@@ -30,25 +29,29 @@ export default function (props) {
     }
   };
 
+  const getTabClass = (tabName) => {
+    return `toolbar-tab ${activeTab == tabName ? "toolbar-tab-active" : ""}`;
+  };
+
   return (
-    <div style={styles.container}>
-      <div style={styles.horizontalBar}>
+    <div className="toolbar-rootContainer">
+      <div className="toolbar-tabsContainer">
         <button
-          style={activeTab == "project" ? styles.activeTab : styles.tab}
+          className={getTabClass("project")}
           onClick={() => dispatch(editorUiMainToolbarSetTab("project"))}
         >
           {lang.get("editor_ui_project")}
         </button>
 
         <button
-          style={activeTab == "environment" ? styles.activeTab : styles.tab}
+          className={getTabClass("environment")}
           onClick={() => dispatch(editorUiMainToolbarSetTab("environment"))}
         >
           {lang.get("editor_ui_environment")}
         </button>
 
         <button
-          style={activeTab == "settings" ? styles.activeTab : styles.tab}
+          className={getTabClass("settings")}
           onClick={() => dispatch(editorUiMainToolbarSetTab("settings"))}
         >
           {lang.get("editor_ui_settings")}
@@ -59,33 +62,3 @@ export default function (props) {
     </div>
   );
 }
-
-const styles = {
-  container: {
-    display: "flex",
-    flexDirection: "column",
-    backgroundColor: colors("background"),
-    padding: 4,
-  },
-  horizontalBar: {
-    display: "flex",
-    flexDirection: "row",
-  },
-  tab: {
-    borderWidth: 0,
-    background: colors("background"),
-    color: colors("foreground"),
-    height: "24pt",
-    marginRight: "2pt",
-    cursor: "pointer",
-  },
-  activeTab: {
-    borderWidth: 0,
-    background: colors("panelBackground"),
-    color: colors("foreground"),
-    height: "24pt",
-    fontWeight: "bold",
-    marginRight: "2pt",
-    cursor: "pointer",
-  },
-};

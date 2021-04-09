@@ -1,24 +1,15 @@
 import React from "react";
 
-import colors from "../../colors";
-
 import { useSelector, useDispatch } from "react-redux";
+
+import "./styles.css";
 
 export default function (props) {
   const dispatch = useDispatch();
 
   return (
-    <div style={styles.container}>
+    <div className="toolbar-container">
       <h1>Project Panel Placeholder</h1>
     </div>
   );
 }
-
-const styles = {
-  container: {
-    display: "flex",
-    flexDirection: "row",
-    backgroundColor: colors("panelBackground"),
-    padding: 4,
-  },
-};

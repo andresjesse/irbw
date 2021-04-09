@@ -1,0 +1,55 @@
+.toolbar-rootContainer {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--background);
+  -webkit-box-shadow: 0px 0px 8px 5px rgba(0, 0, 0, 0.6);
+  box-shadow: 0px 0px 8px 5px rgba(0, 0, 0, 0.6);
+}
+
+.toolbar-tabsContainer {
+  display: flex;
+  flex-direction: row;
+}
+
+.toolbar-tab {
+  border-width: 0;
+  background: var(--background);
+  color: var(--foreground);
+  height: 24pt;
+  margin-top: 2pt;
+  margin-right: 2pt;
+  border-top-right-radius: 8pt;
+  border-top-left-radius: 8pt;
+  padding-left: 8pt;
+  padding-right: 8pt;
+  cursor: pointer;
+}
+
+.toolbar-tab-active {
+  background: var(--panelBackground);
+  color: var(--highlight);
+  font-weight: bold;
+}
+
+.toolbar-container {
+  display: flex;
+  flex-direction: row;
+  background-color: var(--panelBackground);
+  padding: 4;
+  justify-content: space-between;
+}
+
+.toolbar-leftContent {
+  display: flex;
+  flex-direction: row;
+}
+
+.toolbar-contentBlock {
+  height: fit-content;
+  display: inline-grid;
+  grid-template-rows: repeat(2, auto);
+  grid-auto-flow: column;
+  padding: 4pt;
+  color: var(--foreground);
+  font-size: 10pt;
+}

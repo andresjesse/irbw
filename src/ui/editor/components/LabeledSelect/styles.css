@@ -1,0 +1,15 @@
+.labeledSelect-container {
+  display: flex;
+  flex-direction: row;
+  margin-top: 4pt;
+  margin-bottom: 4pt;
+}
+
+.labeledSelect-select {
+  margin-right: 2pt;
+  border: 0;
+  color: var(--foreground);
+  background: var(--panelBackground);
+  font-size: 10pt;
+  cursor: pointer;
+}

@@ -1,11 +1,12 @@
-import colors from "~/src/ui/editor/colors";
 import EditorIcons from "./EditorIcons.svg";
+
+import "./styles.css";
 
 const SvgButton = (props) => {
   return (
-    <button style={styles.svgButton} onClick={props.onClick}>
+    <button className="svgButton" onClick={props.onClick}>
       <EditorIcons
-        stroke={props.active ? colors("highlight") : colors("foreground")}
+        stroke={props.active ? "var(--highlight)" : "var(--foreground)"}
         strokeWidth={props.active ? 4 : 3}
         viewBox={`${props.tileX * 64} ${props.tileY * 64}  64 64`}
         width="32"
@@ -15,15 +16,4 @@ const SvgButton = (props) => {
   );
 };
 
-const styles = {
-  svgButton: {
-    width: "48px",
-    height: "48px",
-    borderWidth: 0,
-    background: colors("panelBackground"),
-    color: colors("foreground"),
-    cursor: "pointer",
-    padding: "4px",
-  },
-};
 export default SvgButton;

@@ -1,0 +1,16 @@
+.svgButton {
+  width: 48px;
+  height: 48px;
+  border-width: 0;
+  background: var(--panelBackgroundLight);
+  border-radius: 8pt;
+  color: var(--foreground);
+  cursor: pointer;
+  padding: 4pt;
+  margin: 4pt;
+  transition: 0.5s;
+}
+
+.svgButton:hover {
+  background: var(--highlight);
+}

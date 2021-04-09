@@ -1,10 +1,15 @@
 :root {
   --background: #28272a;
-  --panelBackground: #474747;
+  --panelBackground: #5c5c5c;
+  --panelBackgroundLight: #797979;
+
   --foreground: #f8f8f8;
   --foregroundShaded: #acacac;
+
   --highlight: #59e888;
+  --highlightShaded: #4ccc77;
   --highlightAlternate: #46d7fa;
+
   --danger: #ff5a5a;
 }
 
@@ -47,4 +52,24 @@ canvas {
 
 *:focus {
   outline: 0;
+}
+
+/**     GENERIC COMPONENT STYLES      **/
+
+.button {
+  margin: 8pt;
+  padding: 8pt 8pt;
+  text-align: center;
+  font-weight: bold;
+  border-width: 0;
+  background: var(--panelBackgroundLight);
+  border-radius: 8pt;
+  color: var(--foreground);
+  cursor: pointer;
+  transition: 0.5s;
+}
+
+.button:hover {
+  background: var(--highlight);
+  color: var(--background);
 }
