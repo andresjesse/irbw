@@ -40,7 +40,7 @@ const getAvailableThemes = function () {
 
 // external color getter
 const get = function (colorKey) {
-  return colors[theme][colorKey];
+  return "purple"; //colors[theme][colorKey];
 };
 
 export { setTheme, getTheme, getAvailableThemes };

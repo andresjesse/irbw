@@ -7,6 +7,8 @@ import store from "../../gamecore/ReduxStore";
 import MainToolbar from "./MainToolbar";
 import StatusBar from "./StatusBar";
 
+import "./editor-global.css";
+
 const EditorUI = function () {
   return (
     <>
