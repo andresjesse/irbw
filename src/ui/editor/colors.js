@@ -1,4 +1,4 @@
-import localDb from "../services/localDb";
+import localDb from "~/src/services/localDb";
 
 const colors = {
   dark: {

@@ -17,6 +17,7 @@ module.exports = {
           options: {
             presets: ["@babel/preset-react", "@babel/preset-env"],
             plugins: [
+              "babel-plugin-root-import",
               [
                 "inline-react-svg",
                 {

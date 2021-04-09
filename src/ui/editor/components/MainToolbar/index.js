@@ -1,14 +1,14 @@
 import React from "react";
 
-import colors from "../../colors";
-import lang from "../../lang";
+import colors from "~/src/ui/editor/colors";
+import lang from "~/src/ui/lang";
 
 import ProjectPanel from "./ProjectPanel";
 import EnvironmentPanel from "./EnvironmentPanel";
 import SettingsPanel from "./SettingsPanel";
 
 import { useSelector, useDispatch } from "react-redux";
-import { editorUiMainToolbarSetTab } from "../../../gamecore/ReduxStore";
+import { editorUiMainToolbarSetTab } from "~/src/gamecore/ReduxStore";
 
 export default function (props) {
   const activeTab = useSelector(

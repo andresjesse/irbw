@@ -2,13 +2,15 @@ import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Range } from "react-range";
 
-import lang from "../../../lang";
-import colors from "../../../colors";
+import lang from "~/src/ui/lang";
+
+import colors from "~/src/ui/editor/colors";
+
 import {
   smgrLightManagerSetTimeOfDay,
   smgrLightManagerSetDynamic,
   smgrLightManagerSetCycleDurationSec,
-} from "../../../../gamecore/ReduxStore";
+} from "~/src/gamecore/ReduxStore";
 
 export default function () {
   const timeOfDay = useSelector((state) => state.smgr.lightManager.timeOfDay);

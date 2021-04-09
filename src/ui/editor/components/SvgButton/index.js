@@ -1,5 +1,5 @@
-import colors from "../../colors";
-import EditorIcons from "../EditorIcons.svg";
+import colors from "~/src/ui/editor/colors";
+import EditorIcons from "./EditorIcons.svg";
 
 const SvgButton = (props) => {
   return (

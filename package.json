@@ -21,6 +21,7 @@
     "@babel/preset-react": "^7.12.10",
     "babel-loader": "^8.2.2",
     "babel-plugin-inline-react-svg": "^1.1.2",
+    "babel-plugin-root-import": "^6.6.0",
     "css-loader": "^5.2.0",
     "webpack": "^5.11.1",
     "webpack-cli": "^4.3.0",

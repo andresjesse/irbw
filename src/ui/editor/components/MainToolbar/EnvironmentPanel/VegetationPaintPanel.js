@@ -2,12 +2,12 @@ import React from "react";
 import { Range } from "react-range";
 import { useSelector, useDispatch } from "react-redux";
 
-import { editorUiMainToolbarSetVegetationPaintOptions } from "../../../../gamecore/ReduxStore";
+import { editorUiMainToolbarSetVegetationPaintOptions } from "~/src/gamecore/ReduxStore";
 
-import BiomaFactory from "../../../../gamecore/environment/vegetation/BiomaFactory";
+import BiomaFactory from "~/src/gamecore/environment/vegetation/BiomaFactory";
 
-import lang from "../../../lang";
-import colors from "../../../colors";
+import lang from "~/src/ui/lang";
+import colors from "~src/ui/editor/colors";
 
 export default function () {
   // configure options redux listener

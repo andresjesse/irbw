@@ -3,14 +3,13 @@ import React from "react";
 import BrushOptionsPanel from "./EnvironmentPanel/BrushOptionsPanel";
 import DayNightCyclePanel from "./EnvironmentPanel/DayNightCyclePanel";
 
-import lang from "../../lang";
-import colors from "../../colors";
+import colors from "~/src/ui/editor/colors";
 
 import { useSelector, useDispatch } from "react-redux";
-import { editorUiMainToolbarSetTool } from "../../../gamecore/ReduxStore";
+import { editorUiMainToolbarSetTool } from "~/src/gamecore/ReduxStore";
 
 import Separator from "./GenericComponents/Separator";
-import SvgButton from "./SvgButton";
+import SvgButton from "~/src/ui/editor/components/SvgButton";
 import VegetationPaintPanel from "./EnvironmentPanel/VegetationPaintPanel";
 
 export default function (props) {

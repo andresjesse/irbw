@@ -2,10 +2,10 @@ import React from "react";
 import ReactDOM from "react-dom";
 
 import { Provider } from "react-redux";
-import store from "../../gamecore/ReduxStore";
+import store from "~/src/gamecore/ReduxStore";
 
-import MainToolbar from "./MainToolbar";
-import StatusBar from "./StatusBar";
+import MainToolbar from "./components/MainToolbar";
+import StatusBar from "./components/StatusBar";
 
 import "./editor-global.css";
 

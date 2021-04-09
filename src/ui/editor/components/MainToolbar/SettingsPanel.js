@@ -1,12 +1,21 @@
 import React from "react";
 
-import lang, { getAvailableLangs, getLangCode, setLangCode } from "../../lang";
-import colors, { getAvailableThemes, getTheme, setTheme } from "../../colors";
+import lang, {
+  getAvailableLangs,
+  getLangCode,
+  setLangCode,
+} from "~src/ui/lang";
+
+import colors, {
+  getAvailableThemes,
+  getTheme,
+  setTheme,
+} from "~src/ui/editor/colors";
 
 import { useSelector, useDispatch } from "react-redux";
 import Separator from "./GenericComponents/Separator";
 import LabeledSelect from "./GenericComponents/LabeledSelect";
-import localDb from "../../../services/localDb";
+import localDb from "~/src/services/localDb";
 
 export default function (props) {
   const dispatch = useDispatch();
