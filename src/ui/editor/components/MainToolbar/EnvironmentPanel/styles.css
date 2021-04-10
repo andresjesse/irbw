@@ -1,0 +1,29 @@
+.brushConfigBlock {
+  width: 200pt;
+  padding-top: 4pt;
+  padding-bottom: 4pt;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: space-between;
+}
+
+.brushConfigBlock-contentRow {
+  margin-top: 8pt;
+}
+
+.brushConfigBlock-select {
+  margin-right: 2pt;
+  border: 0;
+  color: var(--foreground);
+  background: var(--panelBackground);
+  font-size: 10pt;
+  cursor: pointer;
+}
+
+.brushconfigblock-input {
+  background: var(--background);
+  color: var(--foreground);
+  border: 0;
+  margin-left: 4px;
+}

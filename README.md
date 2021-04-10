@@ -21,3 +21,9 @@ IrrRPG Builder 2.0 - WebGL
 https://andresjesse.github.io/irbw/index.html
 
 # Immediate TODO:List
+
+- refatorar classes css dos OptionsPanels:
+  -- usar sempre um container (toolbar-contentBlock);
+  -- brushConfigBlock -> optionsPanelBlock
+  -- .brushConfigBlock-contentRow -> optionsPanelRow
+  -- renomear também input e select

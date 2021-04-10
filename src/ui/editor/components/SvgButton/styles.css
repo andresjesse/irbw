@@ -3,7 +3,7 @@
   height: 48px;
   border-width: 0;
   background: var(--panelBackgroundLight);
-  border-radius: 8pt;
+  border-radius: 4pt;
   color: var(--foreground);
   cursor: pointer;
   padding: 4pt;

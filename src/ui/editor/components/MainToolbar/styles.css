@@ -18,10 +18,11 @@
   height: 24pt;
   margin-top: 2pt;
   margin-right: 2pt;
-  border-top-right-radius: 8pt;
-  border-top-left-radius: 8pt;
+  border-top-right-radius: 4pt;
+  border-top-left-radius: 4pt;
   padding-left: 8pt;
   padding-right: 8pt;
+  height: 18pt;
   cursor: pointer;
 }
 

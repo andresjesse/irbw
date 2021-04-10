@@ -57,13 +57,13 @@ canvas {
 /**     GENERIC COMPONENT STYLES      **/
 
 .button {
-  margin: 8pt;
-  padding: 8pt 8pt;
+  margin: 4pt;
+  padding: 4pt 4pt;
   text-align: center;
   font-weight: bold;
   border-width: 0;
   background: var(--panelBackgroundLight);
-  border-radius: 8pt;
+  border-radius: 4pt;
   color: var(--foreground);
   cursor: pointer;
   transition: 0.5s;

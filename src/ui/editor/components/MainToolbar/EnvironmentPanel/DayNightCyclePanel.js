@@ -4,7 +4,7 @@ import { Range } from "react-range";
 
 import lang from "~/src/ui/lang";
 
-import colors from "~/src/ui/editor/colors";
+import "./styles.css";
 
 import {
   smgrLightManagerSetTimeOfDay,
@@ -22,10 +22,10 @@ export default function () {
   const dispatch = useDispatch();
 
   return (
-    <div style={styles.contentBlock}>
-      <div style={styles.brushConfigBlock}>
+    <div className="toolbar-contentBlock">
+      <div className="brushConfigBlock">
         {lang.get("editor_ui_day_night_cycle_config")}: {timeOfDay.toFixed(0)}
-        <div style={styles.contentRow}>
+        <div className="brushConfigBlock-contentRow">
           <Range
             step={0.01}
             min={0}
@@ -41,7 +41,7 @@ export default function () {
                   ...props.style,
                   height: "2pt",
                   width: "100%",
-                  backgroundColor: colors("foregroundShaded"),
+                  backgroundColor: "var(--foregroundShaded)",
                 }}
               >
                 {children}
@@ -54,13 +54,13 @@ export default function () {
                   ...props.style,
                   height: "12pt",
                   width: "12pt",
-                  backgroundColor: colors("foreground"),
+                  backgroundColor: "var(--foreground)",
                 }}
               />
             )}
           />
         </div>
-        <div style={styles.contentRow}>
+        <div className="brushConfigBlock-contentRow">
           {lang.get("editor_ui_day_night_cycle_dynamic")}
           <input
             name="dynamic"
@@ -73,12 +73,12 @@ export default function () {
           />
         </div>
         {dynamic && (
-          <div style={styles.contentRow}>
+          <div className="brushConfigBlock-contentRow">
             {lang.get("editor_ui_day_night_cycle_duration")}
 
             {/* float input from: https://stackoverflow.com/questions/43687964/only-numbers-input-number-in-react */}
             <input
-              style={styles.input}
+              className="brushconfigblock-input"
               type="tel"
               value={cycleDurationSec}
               onChange={(e) => {
@@ -98,32 +98,32 @@ export default function () {
   );
 }
 
-const styles = {
-  contentBlock: {
-    display: "flex",
-    flexDirection: "column",
-    padding: "4pt",
-    color: colors("foreground"),
-    fontSize: "10pt",
-  },
-  contentRow: {
-    marginTop: "8pt",
-    display: "flex",
-    justifyContent: "space-between",
-  },
-  brushConfigBlock: {
-    width: "200pt",
-    paddingTop: "4pt",
-    paddingBottom: "4pt",
-    display: "flex",
-    flexDirection: "column",
-    height: "100%",
-    justifyContent: "space-between",
-  },
-  input: {
-    background: colors("background"),
-    color: colors("foreground"),
-    border: 0,
-    marginLeft: "4px",
-  },
-};
+// const styles = {
+//   contentBlock: {
+//     display: "flex",
+//     flexDirection: "column",
+//     padding: "4pt",
+//     color: colors("foreground"),
+//     fontSize: "10pt",
+//   },
+//   contentRow: {
+//     marginTop: "8pt",
+//     display: "flex",
+//     justifyContent: "space-between",
+//   },
+//   brushConfigBlock: {
+//     width: "200pt",
+//     paddingTop: "4pt",
+//     paddingBottom: "4pt",
+//     display: "flex",
+//     flexDirection: "column",
+//     height: "100%",
+//     justifyContent: "space-between",
+//   },
+//   input: {
+//     background: colors("background"),
+//     color: colors("foreground"),
+//     border: 0,
+//     marginLeft: "4px",
+//   },
+// };

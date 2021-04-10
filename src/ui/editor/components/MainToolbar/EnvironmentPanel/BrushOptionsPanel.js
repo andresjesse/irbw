@@ -5,7 +5,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { editorUiMainToolbarSetBrushOptions } from "~/src/gamecore/ReduxStore";
 
 import lang from "~/src/ui/lang";
-import colors from "~/src/ui/editor/colors";
+
+import "./styles.css";
 
 export default function () {
   // configure options redux listener
@@ -22,11 +23,11 @@ export default function () {
   ]);
 
   return (
-    <div style={styles.contentBlock}>
-      <div style={styles.brushConfigBlock}>
+    <div className="toolbar-contentBlock">
+      <div className="brushConfigBlock">
         {lang.get("editor_ui_brush_config")}
 
-        <div style={styles.contentRow}>
+        <div className="brushConfigBlock-contentRow">
           {lang.get("editor_ui_brush_size")}
 
           <Range
@@ -50,7 +51,7 @@ export default function () {
                   ...props.style,
                   height: "2pt",
                   width: "100%",
-                  backgroundColor: colors("foregroundShaded"),
+                  backgroundColor: "var(--foregroundShaded)",
                 }}
               >
                 {children}
@@ -63,13 +64,13 @@ export default function () {
                   ...props.style,
                   height: "12pt",
                   width: "12pt",
-                  backgroundColor: colors("foreground"),
+                  backgroundColor: "var(--foreground)",
                 }}
               />
             )}
           />
         </div>
-        <div style={styles.contentRow}>
+        <div className="brushConfigBlock-contentRow">
           {lang.get("editor_ui_brush_strength")}
 
           <Range
@@ -93,7 +94,7 @@ export default function () {
                   ...props.style,
                   height: "2pt",
                   width: "100%",
-                  backgroundColor: colors("foregroundShaded"),
+                  backgroundColor: "var(--foregroundShaded",
                 }}
               >
                 {children}
@@ -106,7 +107,7 @@ export default function () {
                   ...props.style,
                   height: "12pt",
                   width: "12pt",
-                  backgroundColor: colors("foreground"),
+                  backgroundColor: "var(--foreground)",
                 }}
               />
             )}
@@ -116,25 +117,3 @@ export default function () {
     </div>
   );
 }
-
-const styles = {
-  contentBlock: {
-    display: "flex",
-    flexDirection: "column",
-    padding: "4pt",
-    color: colors("foreground"),
-    fontSize: "10pt",
-  },
-  contentRow: {
-    marginTop: "8pt",
-  },
-  brushConfigBlock: {
-    width: "200pt",
-    paddingTop: "4pt",
-    paddingBottom: "4pt",
-    display: "flex",
-    flexDirection: "column",
-    height: "100%",
-    justifyContent: "space-between",
-  },
-};
