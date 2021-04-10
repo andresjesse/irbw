@@ -1,0 +1,6 @@
+.labeledCheckbox-container {
+  display: flex;
+  flex-direction: row;
+  margin-top: 4pt;
+  justify-content: space-between;
+}

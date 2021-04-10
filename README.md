@@ -27,3 +27,6 @@ https://andresjesse.github.io/irbw/index.html
   -- brushConfigBlock -> optionsPanelBlock
   -- .brushConfigBlock-contentRow -> optionsPanelRow
   -- renomear também input e select
+
+  -- continuar convertendo os compoenntes
+  -- fazer com o que o container Options tenha justify-content: space-around (para distribuir os itens na vertical)

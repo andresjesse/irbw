@@ -1,8 +1,9 @@
 import React from "react";
-import { Range } from "react-range";
 import { useSelector, useDispatch } from "react-redux";
 
 import { editorUiMainToolbarSetBrushOptions } from "~/src/gamecore/ReduxStore";
+
+import LabeledRange from "~/src/ui/editor/components/LabeledRange";
 
 import lang from "~/src/ui/lang";
 
@@ -28,9 +29,8 @@ export default function () {
         {lang.get("editor_ui_brush_config")}
 
         <div className="brushConfigBlock-contentRow">
-          {lang.get("editor_ui_brush_size")}
-
-          <Range
+          <LabeledRange
+            label={lang.get("editor_ui_brush_size")}
             step={0.1}
             min={0}
             max={100}
@@ -44,36 +44,12 @@ export default function () {
                 })
               );
             }}
-            renderTrack={({ props, children }) => (
-              <div
-                {...props}
-                style={{
-                  ...props.style,
-                  height: "2pt",
-                  width: "100%",
-                  backgroundColor: "var(--foregroundShaded)",
-                }}
-              >
-                {children}
-              </div>
-            )}
-            renderThumb={({ props }) => (
-              <div
-                {...props}
-                style={{
-                  ...props.style,
-                  height: "12pt",
-                  width: "12pt",
-                  backgroundColor: "var(--foreground)",
-                }}
-              />
-            )}
           />
         </div>
-        <div className="brushConfigBlock-contentRow">
-          {lang.get("editor_ui_brush_strength")}
 
-          <Range
+        <div className="brushConfigBlock-contentRow">
+          <LabeledRange
+            label={lang.get("editor_ui_brush_strength")}
             step={0.1}
             min={0}
             max={100}
@@ -87,30 +63,6 @@ export default function () {
                 })
               );
             }}
-            renderTrack={({ props, children }) => (
-              <div
-                {...props}
-                style={{
-                  ...props.style,
-                  height: "2pt",
-                  width: "100%",
-                  backgroundColor: "var(--foregroundShaded",
-                }}
-              >
-                {children}
-              </div>
-            )}
-            renderThumb={({ props }) => (
-              <div
-                {...props}
-                style={{
-                  ...props.style,
-                  height: "12pt",
-                  width: "12pt",
-                  backgroundColor: "var(--foreground)",
-                }}
-              />
-            )}
           />
         </div>
       </div>

@@ -1,6 +1,9 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Range } from "react-range";
+
+import LabeledRange from "~/src/ui/editor/components/LabeledRange";
+import LabeledFloatInput from "~/src/ui/editor/components/LabeledFloatInput";
+import LabeledCheckbox from "~/src/ui/editor/components/LabeledCheckbox";
 
 import lang from "~/src/ui/lang";
 
@@ -24,9 +27,13 @@ export default function () {
   return (
     <div className="toolbar-contentBlock">
       <div className="brushConfigBlock">
-        {lang.get("editor_ui_day_night_cycle_config")}: {timeOfDay.toFixed(0)}
         <div className="brushConfigBlock-contentRow">
-          <Range
+          <LabeledRange
+            label={
+              lang.get("editor_ui_day_night_cycle_config") +
+              ": " +
+              timeOfDay.toFixed(0)
+            }
             step={0.01}
             min={0}
             max={23.99}
@@ -34,33 +41,17 @@ export default function () {
             onChange={(values) =>
               dispatch(smgrLightManagerSetTimeOfDay(values[0]))
             }
-            renderTrack={({ props, children }) => (
-              <div
-                {...props}
-                style={{
-                  ...props.style,
-                  height: "2pt",
-                  width: "100%",
-                  backgroundColor: "var(--foregroundShaded)",
-                }}
-              >
-                {children}
-              </div>
-            )}
-            renderThumb={({ props }) => (
-              <div
-                {...props}
-                style={{
-                  ...props.style,
-                  height: "12pt",
-                  width: "12pt",
-                  backgroundColor: "var(--foreground)",
-                }}
-              />
-            )}
           />
         </div>
-        <div className="brushConfigBlock-contentRow">
+
+        <LabeledCheckbox
+          label={lang.get("editor_ui_day_night_cycle_dynamic")}
+          name="dynamic"
+          checked={dynamic}
+          onChange={(val) => dispatch(smgrLightManagerSetDynamic(val))}
+        />
+
+        {/* <div className="brushConfigBlock-contentRow">
           {lang.get("editor_ui_day_night_cycle_dynamic")}
           <input
             name="dynamic"
@@ -69,27 +60,18 @@ export default function () {
             onChange={(event) =>
               dispatch(smgrLightManagerSetDynamic(event.target.checked))
             }
-            //onChange={(event) => setDynamic(event.target.checked)}
           />
-        </div>
+        </div> */}
+
         {dynamic && (
           <div className="brushConfigBlock-contentRow">
-            {lang.get("editor_ui_day_night_cycle_duration")}
-
-            {/* float input from: https://stackoverflow.com/questions/43687964/only-numbers-input-number-in-react */}
-            <input
-              className="brushconfigblock-input"
-              type="tel"
+            <LabeledFloatInput
+              label={lang.get("editor_ui_day_night_cycle_duration")}
               value={cycleDurationSec}
-              onChange={(e) => {
-                const val = e.target.value;
-                if (e.target.validity.valid)
-                  dispatch(smgrLightManagerSetCycleDurationSec(e.target.value));
-                else if (val === "" || val === "-")
-                  dispatch(smgrLightManagerSetCycleDurationSec(val));
-              }}
-              pattern="^-?[0-9]\d*\.?\d*$"
               disabled={!dynamic}
+              onChange={(val) =>
+                dispatch(smgrLightManagerSetCycleDurationSec(val))
+              }
             />
           </div>
         )}
@@ -97,33 +79,3 @@ export default function () {
     </div>
   );
 }
-
-// const styles = {
-//   contentBlock: {
-//     display: "flex",
-//     flexDirection: "column",
-//     padding: "4pt",
-//     color: colors("foreground"),
-//     fontSize: "10pt",
-//   },
-//   contentRow: {
-//     marginTop: "8pt",
-//     display: "flex",
-//     justifyContent: "space-between",
-//   },
-//   brushConfigBlock: {
-//     width: "200pt",
-//     paddingTop: "4pt",
-//     paddingBottom: "4pt",
-//     display: "flex",
-//     flexDirection: "column",
-//     height: "100%",
-//     justifyContent: "space-between",
-//   },
-//   input: {
-//     background: colors("background"),
-//     color: colors("foreground"),
-//     border: 0,
-//     marginLeft: "4px",
-//   },
-// };

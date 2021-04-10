@@ -1,0 +1,12 @@
+.labeledFloatInput-container {
+  display: flex;
+  flex-direction: row;
+}
+
+.labeledFloatInput-input {
+  color: var(--panelBackground);
+  border-radius: 4pt;
+  border: 0;
+  background: var(--foreground);
+  padding-left: 4pt;
+}
