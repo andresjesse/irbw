@@ -24,3 +24,4 @@ https://andresjesse.github.io/irbw/index.html
 
 - refatorar classes css dos OptionsPanels:
   -- falta settings panel, seguir o exemplo de EnvironmentPanel
+  -- refazer opção de temas com --var alterado via js
