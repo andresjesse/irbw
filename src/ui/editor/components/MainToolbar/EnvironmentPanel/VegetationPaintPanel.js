@@ -1,6 +1,7 @@
 import React from "react";
-import { Range } from "react-range";
 import { useSelector, useDispatch } from "react-redux";
+
+import LabeledRange from "~/src/ui/editor/components/LabeledRange";
 
 import { editorUiMainToolbarSetVegetationPaintOptions } from "~/src/gamecore/ReduxStore";
 
@@ -29,13 +30,12 @@ export default function () {
       {lang.get("editor_ui_vegetation_config")}
 
       <div className="toolbar-contentRow">
-        {lang.get("editor_ui_vegetation_brush_size")}
-
-        <Range
-          step={0.1}
+        <LabeledRange
+          label={lang.get("editor_ui_vegetation_brush_size")}
+          step={0.01}
           min={0}
           max={100}
-          values={brushSize}
+          values={[brushSize]}
           onChange={(values) => {
             setBrushSize(values);
             dispatch(
@@ -46,40 +46,16 @@ export default function () {
               })
             );
           }}
-          renderTrack={({ props, children }) => (
-            <div
-              {...props}
-              style={{
-                ...props.style,
-                height: "2pt",
-                width: "100%",
-                backgroundColor: "var(--foregroundShaded)",
-              }}
-            >
-              {children}
-            </div>
-          )}
-          renderThumb={({ props }) => (
-            <div
-              {...props}
-              style={{
-                ...props.style,
-                height: "12pt",
-                width: "12pt",
-                backgroundColor: "var(--foreground)",
-              }}
-            />
-          )}
         />
       </div>
 
       <div className="toolbar-contentRow">
-        {lang.get("editor_ui_vegetation_density")}
-        <Range
-          step={0.1}
+        <LabeledRange
+          label={lang.get("editor_ui_vegetation_density")}
+          step={0.01}
           min={0}
           max={100}
-          values={density}
+          values={[density]}
           onChange={(values) => {
             setDensity(values);
             dispatch(
@@ -90,30 +66,6 @@ export default function () {
               })
             );
           }}
-          renderTrack={({ props, children }) => (
-            <div
-              {...props}
-              style={{
-                ...props.style,
-                height: "2pt",
-                width: "100%",
-                backgroundColor: "var(--foregroundShaded)",
-              }}
-            >
-              {children}
-            </div>
-          )}
-          renderThumb={({ props }) => (
-            <div
-              {...props}
-              style={{
-                ...props.style,
-                height: "12pt",
-                width: "12pt",
-                backgroundColor: "var(--foreground)",
-              }}
-            />
-          )}
         />
       </div>
 
