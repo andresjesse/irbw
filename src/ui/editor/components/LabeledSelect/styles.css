@@ -3,6 +3,7 @@
   flex-direction: row;
   margin-top: 4pt;
   margin-bottom: 4pt;
+  justify-content: space-between;
 }
 
 .labeledSelect-select {

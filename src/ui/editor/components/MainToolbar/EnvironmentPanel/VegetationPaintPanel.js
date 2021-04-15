@@ -2,6 +2,7 @@ import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 import LabeledRange from "~/src/ui/editor/components/LabeledRange";
+import LabeledSelect from "~/src/ui/editor/components/LabeledSelect";
 
 import { editorUiMainToolbarSetVegetationPaintOptions } from "~/src/gamecore/ReduxStore";
 
@@ -70,31 +71,22 @@ export default function () {
       </div>
 
       <div className="toolbar-contentRow">
-        {lang.get("editor_ui_vegetation_bioma")}
-        <select
-          name="bioma"
+        <LabeledSelect
+          label={lang.get("editor_ui_vegetation_bioma")}
+          options={BiomaFactory.asList()}
           value={bioma}
-          className="brushConfigBlock-select"
-          onChange={(e) => {
-            setBioma(e.currentTarget.value);
+          onChange={(val) => {
+            setBioma(val);
 
             dispatch(
               editorUiMainToolbarSetVegetationPaintOptions({
                 brushSize: brushSize[0],
                 density: density[0],
-                bioma: e.currentTarget.value,
+                bioma: val,
               })
             );
           }}
-        >
-          {BiomaFactory.asList().map((value, index) => {
-            return (
-              <option key={index} value={value}>
-                {value}
-              </option>
-            );
-          })}
-        </select>
+        />
       </div>
     </div>
   );
