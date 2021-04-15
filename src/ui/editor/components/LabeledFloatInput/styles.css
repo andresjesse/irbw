@@ -9,4 +9,5 @@
   border: 0;
   background: var(--foreground);
   padding-left: 4pt;
+  width: 50%;
 }

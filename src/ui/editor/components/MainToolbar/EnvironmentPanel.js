@@ -38,14 +38,14 @@ export default function (props) {
 
   return (
     <div className="toolbar-container">
-      <div className="toolbar-leftContent ">
+      <div className="toolbar-horizontalBlock">
         {/* --------------------------
         
         Terrain Related Tools 
         
         -------------------------- */}
 
-        <div className="toolbar-contentBlock">
+        <div className="toolbar-contentGrid">
           <SvgButton
             name="terrain_edit_level"
             tileX={0}
@@ -95,7 +95,7 @@ export default function (props) {
         
         -------------------------- */}
 
-        <div className="toolbar-contentBlock">
+        <div className="toolbar-contentGrid">
           <SvgButton
             name="vegetation_paint"
             tileX={0}
@@ -115,7 +115,7 @@ export default function (props) {
         
         -------------------------- */}
 
-        <div className="toolbar-contentBlock">
+        <div className="toolbar-contentGrid">
           <SvgButton
             name="day_night_cycle"
             tileX={0}

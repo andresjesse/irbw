@@ -7,8 +7,6 @@ import LabeledRange from "~/src/ui/editor/components/LabeledRange";
 
 import lang from "~/src/ui/lang";
 
-import "./styles.css";
-
 export default function () {
   // configure options redux listener
   const options = useSelector(
@@ -24,47 +22,45 @@ export default function () {
   ]);
 
   return (
-    <div className="toolbar-contentBlock">
-      <div className="brushConfigBlock">
-        {lang.get("editor_ui_brush_config")}
+    <div className="toolbar-verticalBlock">
+      {lang.get("editor_ui_brush_config")}
 
-        <div className="brushConfigBlock-contentRow">
-          <LabeledRange
-            label={lang.get("editor_ui_brush_size")}
-            step={0.1}
-            min={0}
-            max={100}
-            values={brushSize}
-            onChange={(values) => {
-              setBrushSize(values);
-              dispatch(
-                editorUiMainToolbarSetBrushOptions({
-                  brushSize: values[0],
-                  brushStrength: brushStrength[0],
-                })
-              );
-            }}
-          />
-        </div>
+      <div className="toolbar-contentRow">
+        <LabeledRange
+          label={lang.get("editor_ui_brush_size")}
+          step={0.1}
+          min={0}
+          max={100}
+          values={brushSize}
+          onChange={(values) => {
+            setBrushSize(values);
+            dispatch(
+              editorUiMainToolbarSetBrushOptions({
+                brushSize: values[0],
+                brushStrength: brushStrength[0],
+              })
+            );
+          }}
+        />
+      </div>
 
-        <div className="brushConfigBlock-contentRow">
-          <LabeledRange
-            label={lang.get("editor_ui_brush_strength")}
-            step={0.1}
-            min={0}
-            max={100}
-            values={brushStrength}
-            onChange={(values) => {
-              setBrushStrength(values);
-              dispatch(
-                editorUiMainToolbarSetBrushOptions({
-                  brushSize: brushSize[0],
-                  brushStrength: values[0],
-                })
-              );
-            }}
-          />
-        </div>
+      <div className="toolbar-contentRow">
+        <LabeledRange
+          label={lang.get("editor_ui_brush_strength")}
+          step={0.1}
+          min={0}
+          max={100}
+          values={brushStrength}
+          onChange={(values) => {
+            setBrushStrength(values);
+            dispatch(
+              editorUiMainToolbarSetBrushOptions({
+                brushSize: brushSize[0],
+                brushStrength: values[0],
+              })
+            );
+          }}
+        />
       </div>
     </div>
   );

@@ -23,9 +23,9 @@ https://andresjesse.github.io/irbw/index.html
 # Immediate TODO:List
 
 - refatorar classes css dos OptionsPanels:
-  -- usar sempre um container (toolbar-contentBlock);
-  -- brushConfigBlock -> optionsPanelBlock
-  -- .brushConfigBlock-contentRow -> optionsPanelRow
+  -- OK usar sempre um container (toolbar-contentGrid);
+  -- brushConfigBlock -> toolbar-verticalBlock
+  -- .brushConfigBlock-contentRow -> toolbar-contentRow
   -- renomear também input e select
 
   -- continuar convertendo os compoenntes

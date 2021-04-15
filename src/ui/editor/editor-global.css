@@ -67,6 +67,7 @@ canvas {
   color: var(--foreground);
   cursor: pointer;
   transition: 0.5s;
+  min-height: 48px;
 }
 
 .button:hover {

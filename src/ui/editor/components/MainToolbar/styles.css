@@ -40,17 +40,43 @@
   justify-content: space-between;
 }
 
-.toolbar-leftContent {
+.toolbar-horizontalBlock {
   display: flex;
   flex-direction: row;
+  color: var(--foreground);
+  font-size: 10pt;
+  padding: 4pt;
 }
 
-.toolbar-contentBlock {
+.toolbar-verticalBlock {
+  width: 200pt;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  color: var(--foreground);
+  font-size: 10pt;
+  padding: 4pt;
+}
+
+.toolbar-contentGrid {
   height: fit-content;
   display: inline-grid;
   grid-template-rows: repeat(2, auto);
   grid-auto-flow: column;
-  padding: 4pt;
   color: var(--foreground);
   font-size: 10pt;
+}
+
+.toolbar-contentRow {
+  margin-top: 8pt;
+}
+
+/** RENOMEAR **/
+.brushConfigBlock-select {
+  margin-right: 2pt;
+  border: 0;
+  color: var(--foreground);
+  background: var(--panelBackground);
+  font-size: 10pt;
+  cursor: pointer;
 }

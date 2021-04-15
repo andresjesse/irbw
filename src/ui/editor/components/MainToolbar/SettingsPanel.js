@@ -41,14 +41,14 @@ export default function (props) {
   //--------------------------------- Panel render
   return (
     <div className="toolbar-container">
-      <div className="toolbar-leftContent">
+      <div className="toolbar-horizontalBlock">
         {/* --------------------------
         
         Lang
         
         -------------------------- */}
 
-        <div className="toolbar-contentBlock">
+        <div className="toolbar-contentGrid">
           <LabeledSelect
             label={lang.get("editor_ui_language")}
             options={getAvailableLangs()}
@@ -65,7 +65,7 @@ export default function (props) {
         
         -------------------------- */}
 
-        <div className="toolbar-contentBlock">
+        <div className="toolbar-contentGrid">
           <LabeledSelect
             label={"shadowDynamicKernelBlur"}
             options={["true", "false"]}
@@ -84,9 +84,11 @@ export default function (props) {
         <Separator />
       </div>
 
-      <button className="button" onClick={() => saveAndReload()}>
-        {lang.get("editor_ui_save_and_reload")}
-      </button>
+      <div className="toolbar-contentGrid">
+        <button className="button" onClick={() => saveAndReload()}>
+          {lang.get("editor_ui_save_and_reload")}
+        </button>
+      </div>
     </div>
   );
 }
