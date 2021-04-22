@@ -6,6 +6,13 @@ import lang, {
   setLangCode,
 } from "~src/ui/lang";
 
+import {
+  getAvailableThemes,
+  getTheme,
+  setTheme,
+  applyTheme,
+} from "~src/ui/themes";
+
 import { useSelector, useDispatch } from "react-redux";
 
 import Separator from "~/src/ui/editor/components/Separator";
@@ -19,6 +26,7 @@ export default function (props) {
 
   //---------------------------------- Panel State
   const [langValue, setLangValue] = React.useState(getLangCode());
+  const [themeValue, setThemeValue] = React.useState(getTheme());
 
   const [shadowDynamicKernelBlur, setShadowDynamicKernelBlur] = React.useState(
     localDb.get("shadowDynamicKernelBlur")?.toString() || "false"
@@ -31,6 +39,7 @@ export default function (props) {
   //--------------------------------- Save Event
   const saveAndReload = () => {
     setLangCode(langValue);
+    setTheme(themeValue);
 
     localDb.set("shadowDynamicKernelBlur", shadowDynamicKernelBlur == "true");
     localDb.set("shadowMapSize", parseInt(shadowMapSize));
@@ -44,7 +53,7 @@ export default function (props) {
       <div className="toolbar-horizontalBlock">
         {/* --------------------------
         
-        Lang
+        Lang & Theme
         
         -------------------------- */}
 
@@ -54,6 +63,16 @@ export default function (props) {
             options={getAvailableLangs()}
             onChange={setLangValue}
             value={langValue}
+          />
+
+          <LabeledSelect
+            label={lang.get("editor_ui_theme")}
+            options={getAvailableThemes()}
+            onChange={(val) => {
+              setThemeValue(val);
+              applyTheme(val);
+            }}
+            value={themeValue}
           />
         </div>
 

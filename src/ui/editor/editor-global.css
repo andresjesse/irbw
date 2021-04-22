@@ -72,5 +72,4 @@ canvas {
 
 .button:hover {
   background: var(--highlight);
-  color: var(--background);
 }
