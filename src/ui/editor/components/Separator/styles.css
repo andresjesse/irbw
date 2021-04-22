@@ -9,4 +9,6 @@
     rgba(0, 0, 0, 0) 100%
   );
   align-self: center;
+  margin-left: 4pt;
+  margin-right: 4pt;
 }
