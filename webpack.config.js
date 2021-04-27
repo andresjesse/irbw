@@ -1,7 +1,10 @@
 const path = require("path");
 
 module.exports = {
-  entry: "./src/index.js",
+  entry: {
+    editor: "./src/editor.js",
+    website: "./src/website.js",
+  },
   devtool: "inline-source-map",
   devServer: {
     contentBase: "./dist",
@@ -44,7 +47,7 @@ module.exports = {
     ],
   },
   output: {
-    filename: "main.js",
+    filename: "[name].js",
     path: path.resolve(__dirname, "dist"),
   },
 };

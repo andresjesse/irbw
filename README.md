@@ -21,7 +21,3 @@ IrrRPG Builder 2.0 - WebGL
 https://andresjesse.github.io/irbw/index.html
 
 # Immediate TODO:List
-
-- refatorar classes css dos OptionsPanels:
-  -- falta settings panel, seguir o exemplo de EnvironmentPanel
-  -- refazer opção de temas com --var alterado via js
