@@ -198,4 +198,17 @@ export default class Terrain {
 
     return avg / vCount;
   }
+
+  // this method collects all terrain-related user data for api project save
+  collectUserData() {
+    let userData = {
+      segments: {},
+    };
+
+    Object.keys(this.segments).forEach((k) => {
+      userData.segments[k] = k;
+    });
+
+    return userData;
+  }
 }

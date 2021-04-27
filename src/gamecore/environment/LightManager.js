@@ -1,6 +1,10 @@
 import * as BABYLON from "@babylonjs/core";
 
-import store, { smgrLightManagerSetTimeOfDay } from "../ReduxStore";
+import store, {
+  smgrLightManagerSetCycleDurationSec,
+  smgrLightManagerSetDynamic,
+  smgrLightManagerSetTimeOfDay,
+} from "../ReduxStore";
 
 export default class LightManager {
   constructor(scene) {
@@ -224,4 +228,19 @@ export default class LightManager {
   }
 
   //TODO: create a method "freezeTime(true/false) to pause day/night cycle"
+
+  // this method collects all lightManager-related user data for api project save
+  collectUserData() {
+    return store.getState().smgr.lightManager;
+  }
+
+  restoreFromUserData(userData) {
+    store.dispatch(smgrLightManagerSetTimeOfDay(userData.timeOfDay));
+
+    store.dispatch(
+      smgrLightManagerSetCycleDurationSec(userData.cycleDurationSec)
+    );
+
+    store.dispatch(smgrLightManagerSetDynamic(userData.dynamic));
+  }
 }

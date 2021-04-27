@@ -1,5 +1,7 @@
 // testing/fake API
 
+import localDb from "./localDb";
+
 //------------------------------------------------- Auth
 
 export const login = () => {
@@ -28,26 +30,29 @@ export const getProjects = () => {
   );
 };
 
+const defaultProject = {
+  id: 1,
+  name: "Playground Project",
+  editorVersion: 1,
+  scenes: {
+    1: {
+      name: "Playground Scene",
+    },
+  },
+};
+
 export const getProject = (id) => {
   if (id == 1)
     return new Promise((resolve, reject) =>
-      resolve({
-        id: 1,
-        name: "Playground Project",
-        editorVersion: 1,
-        scenes: [
-          {
-            id: 1,
-            name: "Playground Scene",
-          },
-        ],
-      })
+      resolve(localDb.get("playgroundProject") || defaultProject)
     );
 
   throw new Error("projectId=" + id + " does not exist!");
 };
 
 export const saveProject = (project) => {
-  console.log("Save");
+  console.log("api->Save");
   console.log(project);
+
+  localDb.set("playgroundProject", project);
 };

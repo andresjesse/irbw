@@ -101,15 +101,28 @@ export default class EditorSceneManager {
       sceneId,
     };
 
-    // update scene from api data
+    // restore scene from api data
 
-    console.log(project, sceneId);
+    // lightManager
+    this.lightManager.restoreFromUserData(
+      this.userData.project.scenes[this.userData.sceneId].lightManager
+    );
   }
 
   saveUserData() {
-    // update this.userData
+    // 1) update this.userData
 
-    // send updated project to api
+    // lightManager
+    this.userData.project.scenes[
+      this.userData.sceneId
+    ].lightManager = this.lightManager.collectUserData();
+
+    // terrain
+    this.userData.project.scenes[
+      this.userData.sceneId
+    ].terrain = this.terrain.collectUserData();
+
+    // 2) send updated project to api
     saveProject(this.userData.project);
   }
 }

@@ -63,13 +63,7 @@ getProject(projectId)
     //check editor version
     if (project.editorVersion == EDITOR_VERSION) {
       //check scene id
-      let sceneExists = false;
-
-      project.scenes.forEach((scn) => {
-        if (scn.id == sceneId) sceneExists = true;
-      });
-
-      if (sceneExists) {
+      if (project.scenes[sceneId] != undefined) {
         loadEditor(project, sceneId);
       } else {
         throw new Error(
