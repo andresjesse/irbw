@@ -46,3 +46,8 @@ export const getProject = (id) => {
 
   throw new Error("projectId=" + id + " does not exist!");
 };
+
+export const saveProject = (project) => {
+  console.log("Save");
+  console.log(project);
+};

@@ -1,6 +1,7 @@
 import store, { editorUiSetFPS } from "./ReduxStore";
+import eventBus from "./EventBus";
 
-import { FreeCamera, Vector3, HemisphericLight } from "@babylonjs/core";
+import { FreeCamera, Vector3 } from "@babylonjs/core";
 
 import * as BABYLON from "@babylonjs/core";
 
@@ -13,6 +14,8 @@ import EditorApp from "../ui/editor/EditorApp";
 
 import Toolset from "./toolset/Toolset";
 
+import { saveProject } from "~/src/services/api";
+
 export default class EditorSceneManager {
   constructor(scene) {
     this.scene = scene;
@@ -22,10 +25,12 @@ export default class EditorSceneManager {
 
     //----- create children -----
     this.lightManager = new LightManager(this.scene);
-    this.terrain = new Terrain(this.scene); //TODO: rename to TerrainManager (manages segments!!)
+    this.terrain = new Terrain(this.scene);
 
     // Editor Toolset: applies UI tools/actions to Webgl context
     this.toolset = new Toolset(this);
+
+    eventBus.on("saveUserData", () => this.saveUserData());
   }
 
   onStart() {
@@ -51,10 +56,6 @@ export default class EditorSceneManager {
     this.box.position = new BABYLON.Vector3(0, 1, 0);
     this.box.receiveShadows = true;
     this.lightManager.addShadowsTo(this.box);
-    // // Torus
-    // var torus = BABYLON.Mesh.CreateTorus("torus", 4, 2, 30, this.scene, false);
-    // torus.position = new BABYLON.Vector3(4, 3, 0);
-    // this.lightManager.addShadowsTo(torus);
   }
 
   onUpdate() {
@@ -93,12 +94,22 @@ export default class EditorSceneManager {
     this.camera.maxZ = 500;
   }
 
-  setProject(project, sceneId) {
-    this.irbProject = {
+  loadUserData(project, sceneId) {
+    // store this.userData
+    this.userData = {
       project,
       sceneId,
     };
 
+    // update scene from api data
+
     console.log(project, sceneId);
+  }
+
+  saveUserData() {
+    // update this.userData
+
+    // send updated project to api
+    saveProject(this.userData.project);
   }
 }

@@ -1,6 +1,6 @@
 import * as BABYLON from "@babylonjs/core";
 import EditorSceneManager from "./gamecore/EditorSceneManager";
-import { isAuthenticated, getProject } from "~/src/services/api";
+import { getProject } from "~/src/services/api";
 
 const EDITOR_VERSION = 1;
 
@@ -42,8 +42,8 @@ const loadEditor = (project, sceneId) => {
     engine.resize();
   });
 
-  //set project
-  smgr.setProject(project, sceneId);
+  //load and configure scene from project data
+  smgr.loadUserData(project, sceneId);
 };
 
 const urlParams = new URLSearchParams(window.location.search);
