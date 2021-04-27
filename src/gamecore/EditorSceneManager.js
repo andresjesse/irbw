@@ -92,4 +92,13 @@ export default class EditorSceneManager {
 
     this.camera.maxZ = 500;
   }
+
+  setProject(project, sceneId) {
+    this.irbProject = {
+      project,
+      sceneId,
+    };
+
+    console.log(project, sceneId);
+  }
 }
