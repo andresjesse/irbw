@@ -21,3 +21,8 @@ IrrRPG Builder 2.0 - WebGL
 https://andresjesse.github.io/irbw/index.html
 
 # Immediate TODO:List
+
+- continuar implementando save/restore userData.
+  - OK lightManager
+  - terrain:
+    - segments << continuar aqui >>
