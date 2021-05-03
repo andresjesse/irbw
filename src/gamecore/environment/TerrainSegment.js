@@ -69,8 +69,6 @@ export default class TerrainSegment {
 
     // restore segment from userData (if present)
     if (this.userData) {
-      console.log("onstart:" + this.id);
-
       let f32positions = new Float32Array(this.userData.vertexPositions);
 
       // update mesh

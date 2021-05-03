@@ -16,13 +16,11 @@ const VEGETATION_SCALE_VARIATION = 0.8;
  *  - Vegetation specific params:
  *    - bioma selection (prebuilt combinations from available nature packs)
  *    - density
- *    - forest age
  *  - deterministic placement:
  *    - store as an object matrix (one point per terrain vertex):
  *      {
  *        bioma,
  *        density,
- *        //age, -> can be handled in biomas config!
  *        randomSeed: automatically calculated from bioma + density + vertexXZPosition (change one of these and placement will be changed, but still deterministic)
  *        liveInstances: [instantiated meshs] (this param does not need to be saved! can be recreated from deterministic randomSeed!)
  *      }
@@ -33,9 +31,6 @@ export default class VegetationSegment {
     this.scene = scene;
     this.id = id;
     this.parent = parent;
-
-    //this.scene.assetPreloader.preloadContainer("assets/nature/tree1.babylon");
-    //this.scene.assetPreloader.preloadMeshes("assets/nature/tree1.babylon");
 
     this.biomaFactory = new BiomaFactory(this.scene);
 
