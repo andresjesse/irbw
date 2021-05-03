@@ -101,16 +101,26 @@ export default class EditorSceneManager {
       sceneId,
     };
 
-    // restore scene from api data
+    //skip loading if userData is not present (loading a new/empty project)
+    if (!this.userData.project.scenes[this.userData.sceneId].lightManager)
+      return;
+    if (!this.userData.project.scenes[this.userData.sceneId].terrain) return;
 
-    // lightManager
+    console.log("Loading project userData...");
+
+    // restore lightManager
     this.lightManager.restoreFromUserData(
       this.userData.project.scenes[this.userData.sceneId].lightManager
+    );
+
+    // restore terrainSegments, waterSegments, vegetationSegments from api data
+    this.terrain.restoreFromUserData(
+      this.userData.project.scenes[this.userData.sceneId].terrain
     );
   }
 
   saveUserData() {
-    // 1) update this.userData
+    // 1) collect info for this.userData
 
     // lightManager
     this.userData.project.scenes[

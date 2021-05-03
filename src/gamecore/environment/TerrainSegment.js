@@ -67,6 +67,36 @@ export default class TerrainSegment {
 
     this.ground.position = this.position;
 
+    // restore segment from userData (if present)
+    if (this.userData) {
+      console.log("onstart:" + this.id);
+
+      let f32positions = new Float32Array(this.userData.vertexPositions);
+
+      // update mesh
+      this.ground.updateVerticesData(
+        BABYLON.VertexBuffer.PositionKind,
+        f32positions
+      );
+
+      // update water mesh
+      this.waterSegment.updateVerticesData(
+        BABYLON.VertexBuffer.PositionKind,
+        f32positions
+      );
+
+      // recalculate normals
+      let normals = this.ground.getVerticesData(
+        BABYLON.VertexBuffer.NormalKind
+      );
+      BABYLON.VertexData.ComputeNormals(
+        f32positions,
+        this.ground.getIndices(),
+        normals
+      );
+      this.ground.updateVerticesData(BABYLON.VertexBuffer.NormalKind, normals);
+    }
+
     let triPlanarMaterial = new TriPlanarMaterial("triplanar", this.scene);
 
     triPlanarMaterial.diffuseTextureX = Texture2DArrayHelper.createFromTextures(
@@ -305,5 +335,37 @@ export default class TerrainSegment {
         faceNormal: pick.getNormal(),
       };
     }
+  }
+
+  // collect user data for api project save
+  collectUserData() {
+    let userData = {
+      position: { x: this.position.x, y: this.position.y, z: this.position.z },
+    };
+
+    //Float32Array must be converted to basic array to be saved
+    userData["vertexPositions"] = Array.from(
+      this.ground.getVerticesData(BABYLON.VertexBuffer.PositionKind)
+    );
+
+    // waterSegment is automatically generated, does not need to be saved.
+
+    userData["vegetationSegment"] = "TODO!";
+
+    return userData;
+  }
+
+  // restore segment from userData
+  restoreFromUserData(userData) {
+    console.log(userData);
+
+    this.position = new Vector3(
+      userData.position.x,
+      userData.position.y,
+      userData.position.z
+    );
+
+    // store userData for restoring at onStart (restoring depends on assets loading)
+    this.userData = userData;
   }
 }

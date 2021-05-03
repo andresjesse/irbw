@@ -25,6 +25,7 @@ export default class Terrain {
     );
 
     //----- start self -----
+    this.generateEmptySegments(true);
   }
 
   checkForSegmentChange(options) {
@@ -64,8 +65,6 @@ export default class Terrain {
           "TODO: Remove segment (cascade to water, vegetation, entities, etc..)."
         );
       }
-
-      // TODO: trigger para junta das bordas
 
       this.generateEmptySegments(true);
     }
@@ -206,9 +205,24 @@ export default class Terrain {
     };
 
     Object.keys(this.segments).forEach((k) => {
-      userData.segments[k] = k;
+      userData.segments[k] = this.segments[k].collectUserData();
     });
 
     return userData;
+  }
+
+  // restore segments from userData
+  restoreFromUserData(userData) {
+    this.userData = userData;
+
+    Object.keys(userData.segments).forEach((k) => {
+      // create segment if needed
+      if (this.segments[k] == undefined) {
+        this.segments[k] = new TerrainSegment(this.scene, k);
+      }
+
+      // retore segment data
+      this.segments[k].restoreFromUserData(userData.segments[k]);
+    });
   }
 }
