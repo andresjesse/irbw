@@ -95,6 +95,11 @@ export default class TerrainSegment {
         normals
       );
       this.ground.updateVerticesData(BABYLON.VertexBuffer.NormalKind, normals);
+
+      // restore vegetationSegment
+      this.vegetationSegment.restoreFromUserData(
+        this.userData["vegetationSegment"]
+      );
     }
 
     let triPlanarMaterial = new TriPlanarMaterial("triplanar", this.scene);
@@ -350,14 +355,14 @@ export default class TerrainSegment {
 
     // waterSegment is automatically generated, does not need to be saved.
 
-    userData["vegetationSegment"] = "TODO!";
+    userData["vegetationSegment"] = this.vegetationSegment.collectUserData();
 
     return userData;
   }
 
   // restore segment from userData
   restoreFromUserData(userData) {
-    console.log(userData);
+    this.userData = userData;
 
     this.position = new Vector3(
       userData.position.x,
@@ -367,5 +372,7 @@ export default class TerrainSegment {
 
     // store userData for restoring at onStart (restoring depends on assets loading)
     this.userData = userData;
+
+    // vegetationSegment restore depends on terrainSegment restore, so it's called inside this.onStart.
   }
 }

@@ -26,3 +26,4 @@ https://andresjesse.github.io/irbw/index.html
   - OK lightManager
   - terrain:
     - segments << continuar aqui >>
+- limpar comments antigos em VegetationSegment

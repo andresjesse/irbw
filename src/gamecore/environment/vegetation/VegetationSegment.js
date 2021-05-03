@@ -176,6 +176,79 @@ export default class VegetationSegment {
     };
   }
 
+  instantiateFromUserData(matrixCoordinates, bioma, density, randomSeed) {
+    // re-generate x and z (world) positions
+    let x =
+      this.parent.position.x +
+      matrixCoordinates.i -
+      TerrainSegmentConfig.MESH_SIZE / 2;
+    let z =
+      this.parent.position.z +
+      matrixCoordinates.j -
+      TerrainSegmentConfig.MESH_SIZE / 2;
+
+    let rand = mulberry32(randomSeed);
+
+    // randomize vegetation placement params (deterministic position, rotation, scale)
+    let maxPositionOffset = 1;
+    let positionOffset = [
+      rand() * maxPositionOffset - maxPositionOffset / 2,
+      rand() * maxPositionOffset - maxPositionOffset / 2,
+    ];
+    let rotation = rand() * 360 * (Math.PI / 180);
+    let scaleVariation = VEGETATION_SCALE_VARIATION;
+    let scale = 1 + rand() * scaleVariation;
+
+    // raycast and pick the terrain point at (x,z) considering offset
+    let terrainPick = this.parent.pickPointAtPosition(
+      x + positionOffset[0],
+      z + positionOffset[1]
+    );
+
+    // clear vegetation if present
+    if (
+      this.vegetationLayer[matrixCoordinates.i][matrixCoordinates.j] !=
+      undefined
+    ) {
+      this.clearInstances(x, z);
+    }
+
+    // calculate density probabilistically: higher density increases chances of placement
+    let placementeProbability = rand() * 10;
+    if (placementeProbability >= density) return;
+
+    // generate & instantiate new meshes
+    let liveInstances = this.biomaFactory.instantiate(bioma);
+
+    // transform mesh according to previously calculated params
+    liveInstances.forEach((liveInstance) => {
+      // position
+      liveInstance.setPosition(
+        new BABYLON.Vector3(
+          x + positionOffset[0],
+          terrainPick.pickedPoint.y,
+          z + positionOffset[1]
+        )
+      );
+
+      // rotation
+      liveInstance.setRotation(new BABYLON.Vector3(0, rotation, 0));
+
+      // scale
+      liveInstance.setScale(new BABYLON.Vector3(scale, scale, scale));
+
+      // enable shadows
+      liveInstance.enableShadows();
+    });
+
+    this.vegetationLayer[matrixCoordinates.i][matrixCoordinates.j] = {
+      bioma: bioma,
+      density: density,
+      randomSeed: randomSeed,
+      liveInstances: liveInstances,
+    };
+  }
+
   clearInstances(x, z, options) {
     //calculate matrix position based on nearest position
     let matrixCoordinates = this.pointToMatrixCoordinates(x, z);
@@ -268,5 +341,38 @@ export default class VegetationSegment {
       i,
       j,
     };
+  }
+
+  // collect user data for api project save
+  collectUserData() {
+    //collect vegetationLayer essential information (liveInstances are ignored)
+    let instantiatedVeg = {};
+
+    for (let i = 0; i < this.vegetationLayer.length; i++)
+      for (let j = 0; j < this.vegetationLayer.length; j++)
+        if (this.vegetationLayer[i][j]) {
+          instantiatedVeg[i + "_" + j] = {
+            bioma: this.vegetationLayer[i][j].bioma,
+            density: this.vegetationLayer[i][j].density,
+            randomSeed: this.vegetationLayer[i][j].randomSeed,
+          };
+        }
+
+    return instantiatedVeg;
+  }
+
+  // restore user data. this method is called after terrainSegment restoring (inside terrainSegment.onStart)
+  restoreFromUserData(userData) {
+    Object.keys(userData).forEach((k) => {
+      let i = parseInt(k.split("_")[0]);
+      let j = parseInt(k.split("_")[1]);
+
+      this.instantiateFromUserData(
+        { i, j },
+        userData[k].bioma,
+        userData[k].density,
+        userData[k].randomSeed
+      );
+    });
   }
 }
