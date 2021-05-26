@@ -6,6 +6,7 @@ import TerrainNormalizeLevel from "./TerrainNormalizeLevel";
 import TerrainSoftenLevel from "./TerrainSoftenLevel";
 import TerrainSegmentsEdit from "./TerrainSegmentsEdit";
 import VegetationPaint from "./VegetationPaint";
+import NavMeshTool from "./NavMeshTool";
 
 export default class Toolset {
   constructor(smgr) {
@@ -26,6 +27,7 @@ export default class Toolset {
       terrain_soften_level: new TerrainSoftenLevel(this.smgr),
       terrain_segments_edit: new TerrainSegmentsEdit(this.smgr),
       vegetation_paint: new VegetationPaint(this.smgr),
+      nav_mesh_tool: new NavMeshTool(this.smgr),
     };
   }
 

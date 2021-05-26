@@ -5,7 +5,7 @@ import { FreeCamera, Vector3 } from "@babylonjs/core";
 
 import * as BABYLON from "@babylonjs/core";
 
-import UniversalInputManager, { LogicalInputs } from "./UniversalInputManager";
+import UniversalInputManager from "./UniversalInputManager";
 import AssetPreloader from "./AssetPreloader";
 
 import Terrain from "./environment/Terrain";
@@ -56,89 +56,6 @@ export default class EditorSceneManager {
     this.box.position = new BABYLON.Vector3(0, 1, 0);
     this.box.receiveShadows = true;
     this.lightManager.addShadowsTo(this.box);
-
-    //NavMesh Test
-    let navigationPlugin = new BABYLON.RecastJSPlugin();
-
-    //interessante! bem lowpoly
-    // var parameters = {
-    //   cs: 1,
-    //   ch: 0.5,
-    //   walkableSlopeAngle: 35,
-    //   walkableHeight: 1,
-    //   walkableClimb: 1,
-    //   walkableRadius: 1,
-    //   maxEdgeLen: 12,
-    //   maxSimplificationError: 1,
-    //   minRegionArea: 8,
-    //   mergeRegionArea: 20,
-    //   maxVertsPerPoly: 6,
-    //   detailSampleDist: 6,
-    //   detailSampleMaxError: 1,
-    // };
-
-    // +-, gera com mais detalhes, mas tem interrupcoes
-    // var parameters = {
-    //   cs: 0.2,
-    //   ch: 0.2,
-    //   walkableSlopeAngle: 0,
-    //   walkableHeight: 0.0,
-    //   walkableClimb: 0,
-    //   walkableRadius: 1,
-    //   maxEdgeLen: 12,
-    //   maxSimplificationError: 1.3,
-    //   minRegionArea: 8,
-    //   mergeRegionArea: 20,
-    //   maxVertsPerPoly: 6,
-    //   detailSampleDist: 6,
-    //   detailSampleMaxError: 15,
-    //   borderSize: 1,
-    //   tileSize: 20,
-    // };
-
-    // bem legal!! detalhado demais
-    // let parameters = {
-    //   cs: 0.2,
-    //   ch: 0.05,
-    //   walkableSlopeAngle: 5,
-    //   walkableHeight: 10.0,
-    //   walkableClimb: 3,
-    //   walkableRadius: 2,
-    //   maxEdgeLen: 12,
-    //   maxSimplificationError: 0.6,
-    //   minRegionArea: 50,
-    //   mergeRegionArea: 20,
-    //   maxVertsPerPoly: 6,
-    //   detailSampleDist: 6,
-    //   detailSampleMaxError: 1,
-    // };
-
-    let parameters = {
-      cs: 0.2,
-      ch: 0.05,
-      walkableSlopeAngle: 5,
-      walkableHeight: 10.0,
-      walkableClimb: 3,
-      walkableRadius: 2,
-      maxEdgeLen: 12,
-      maxSimplificationError: 4, //simplificacao
-      minRegionArea: 50,
-      mergeRegionArea: 20,
-      maxVertsPerPoly: 6,
-      detailSampleDist: 6,
-      detailSampleMaxError: 0.2, //diminui furos 0,5
-    };
-    navigationPlugin.createNavMesh(
-      [this.terrain.segments["0_0"].ground],
-      parameters
-    );
-
-    let navmeshdebug = navigationPlugin.createDebugNavMesh(this.scene);
-    var matdebug = new BABYLON.StandardMaterial("matdebug", this.scene);
-    matdebug.diffuseColor = new BABYLON.Color3(0.1, 0.2, 1);
-    matdebug.alpha = 0.2;
-    navmeshdebug.material = matdebug;
-    navmeshdebug.position.y += 0.1;
   }
 
   onUpdate() {
@@ -206,14 +123,12 @@ export default class EditorSceneManager {
     // 1) collect info for this.userData
 
     // lightManager
-    this.userData.project.scenes[
-      this.userData.sceneId
-    ].lightManager = this.lightManager.collectUserData();
+    this.userData.project.scenes[this.userData.sceneId].lightManager =
+      this.lightManager.collectUserData();
 
     // terrain
-    this.userData.project.scenes[
-      this.userData.sceneId
-    ].terrain = this.terrain.collectUserData();
+    this.userData.project.scenes[this.userData.sceneId].terrain =
+      this.terrain.collectUserData();
 
     // 2) send updated project to api
     saveProject(this.userData.project);

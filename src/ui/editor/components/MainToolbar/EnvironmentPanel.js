@@ -4,6 +4,8 @@ import BrushOptionsPanel from "./EnvironmentPanel/BrushOptionsPanel";
 import DayNightCyclePanel from "./EnvironmentPanel/DayNightCyclePanel";
 import VegetationPaintPanel from "./EnvironmentPanel/VegetationPaintPanel";
 
+import eventBus from "~/src/gamecore/EventBus";
+
 import { useSelector, useDispatch } from "react-redux";
 import { editorUiMainToolbarSetTool } from "~/src/gamecore/ReduxStore";
 
@@ -138,6 +140,21 @@ export default function (props) {
         </div>
 
         <Separator />
+
+        {/* --------------------------
+        
+        TEMP!!! NavMesh Updater
+        
+        -------------------------- */}
+
+        <button
+          onClick={() => {
+            console.log("NavMesh Update - Test");
+            eventBus.dispatch("updateNavMesh");
+          }}
+        >
+          [[Temp]] Update NavMesh
+        </button>
       </div>
 
       {renderToolPanel()}
