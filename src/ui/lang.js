@@ -5,6 +5,7 @@ const langData = {
   "en-US": {
     editor_ui_project: "Project",
     editor_ui_environment: "Environment",
+    editor_ui_gamelogic: "Game Logic",
     editor_ui_settings: "Settings",
     editor_ui_language: "Language",
     editor_ui_theme: "Theme",
@@ -24,6 +25,7 @@ const langData = {
   "pt-BR": {
     editor_ui_project: "Projeto",
     editor_ui_environment: "Ambiente",
+    editor_ui_gamelogic: "Lógica do Jogo",
     editor_ui_settings: "Configurações",
     editor_ui_language: "Idioma",
     editor_ui_theme: "Tema",

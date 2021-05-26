@@ -4,6 +4,7 @@ import lang from "~/src/ui/lang";
 
 import ProjectPanel from "./ProjectPanel";
 import EnvironmentPanel from "./EnvironmentPanel";
+import GameLogicPanel from "./GameLogicPanel";
 import SettingsPanel from "./SettingsPanel";
 
 import { useSelector, useDispatch } from "react-redux";
@@ -22,6 +23,8 @@ export default function (props) {
         return <ProjectPanel />;
       case "environment":
         return <EnvironmentPanel />;
+      case "gamelogic":
+        return <GameLogicPanel />;
       case "settings":
         return <SettingsPanel />;
       default:
@@ -48,6 +51,13 @@ export default function (props) {
           onClick={() => dispatch(editorUiMainToolbarSetTab("environment"))}
         >
           {lang.get("editor_ui_environment")}
+        </button>
+
+        <button
+          className={getTabClass("gamelogic")}
+          onClick={() => dispatch(editorUiMainToolbarSetTab("gamelogic"))}
+        >
+          {lang.get("editor_ui_gamelogic")}
         </button>
 
         <button
