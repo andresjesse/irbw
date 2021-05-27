@@ -5,6 +5,7 @@ import { editorUiMainToolbarSetTool } from "~/src/gamecore/ReduxStore";
 
 import Separator from "~/src/ui/editor/components/Separator";
 import SvgButton from "~/src/ui/editor/components/SvgButton";
+import CodeEditor from "./GameLogicPanel/CodeEditor";
 
 import "./styles.css";
 
@@ -16,8 +17,8 @@ export default function (props) {
   const renderToolPanel = () => {
     switch (activeTool) {
       case "gamelogic_edit_global":
-        return <div>Global Script Tool Placeholder</div>;
-      case "gamelogic_edit_global":
+        return <CodeEditor />;
+      case "gamelogic_edit_player":
         return <div>Player Script Tool Placeholder</div>;
       case "gamelogic_edit_dynamic_objects":
         return <div>Dynamic Objects Tool Placeholder</div>;

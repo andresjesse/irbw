@@ -12,8 +12,8 @@ const appSlice = createSlice({
       ui: {
         fps: 0,
         mainToolbar: {
-          activeTab: "environment",
-          activeTool: "vegetation_paint",
+          activeTab: "gamelogic",
+          activeTool: "gamelogic_edit_global",
           brushOptions: {
             brushSize: 50,
             brushStrength: 50,

@@ -1,0 +1,27 @@
+.gamelogic-codeeditor-container {
+  width: 100%;
+  position: fixed;
+  top: 160px;
+  bottom: 28px;
+  padding: 4px;
+  margin-top: 4px;
+  margin-bottom: 4px;
+  background-color: var(--panelBackground);
+  -webkit-box-shadow: 0px 0px 8px 5px rgb(0 0 0 / 60%);
+  box-shadow: 0px 0px 8px 5px rgb(0 0 0 / 60%);
+  color: var(--foreground);
+
+  display: flex;
+  flex-direction: row;
+}
+
+.gamelogic-codeeditor-filetree {
+  display: flex;
+  flex-direction: column;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 10pt;
+}
+
+.gamelogic-codeeditor-fileentry {
+  margin: 4px;
+}
