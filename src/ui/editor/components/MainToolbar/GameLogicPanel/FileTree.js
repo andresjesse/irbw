@@ -12,7 +12,7 @@ export default function () {
   const files = [];
 
   for (let i = 0; i < 20; i++)
-    files.push(<FileEntry filename={"Script" + i + ".js"} />);
+    files.push(<FileEntry filename={"Script" + i + ".js"} key={i} />);
 
   return <div className="gamelogic-codeeditor-filetree">{files}</div>;
 }
