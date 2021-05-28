@@ -6,9 +6,20 @@ import ModalDialogInput from "~/src/ui/editor/components/ModalDialogInput";
 import "./styles.css";
 
 const FileEntry = function (props) {
-  return <div className="gamelogic-codeeditor-fileentry">{props.filename}</div>;
+  return (
+    <div
+      className={
+        "gamelogic-codeeditor-fileentry " + (props.active ? "active" : "")
+      }
+    >
+      {props.filename}
+    </div>
+  );
 };
 
+/**
+ * FileTree React component;
+ */
 export default function () {
   const [modalCreateScript, setModalCreateScript] = React.useState(false);
 
@@ -18,8 +29,14 @@ export default function () {
 
   const files = [];
 
-  for (let i = 0; i < 20; i++)
-    files.push(<FileEntry filename={"Script" + i + ".js"} key={i} />);
+  for (let i = 0; i < 40; i++)
+    files.push(
+      <FileEntry
+        filename={"Script" + i + "Testtestesteste.js"}
+        key={i}
+        active={i == 0}
+      />
+    );
 
   return (
     <div className="gamelogic-codeeditor-filetree">
