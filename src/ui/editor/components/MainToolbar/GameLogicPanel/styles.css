@@ -20,6 +20,8 @@
   flex-direction: column;
   font-family: "Courier New", Courier, monospace;
   font-size: 10pt;
+  margin-left: 4pt;
+  margin-right: 4pt;
 }
 
 .gamelogic-codeeditor-fileentry {
@@ -29,4 +31,22 @@
 #codemirror-container {
   width: 100%;
   height: 100%;
+}
+
+.button-createscript {
+  padding: 4pt 4pt;
+  text-align: center;
+  font-weight: bold;
+  border-width: 0;
+  background: var(--panelBackgroundLight);
+  border-bottom-left-radius: 4pt;
+  border-bottom-right-radius: 4pt;
+  color: var(--foreground);
+  cursor: pointer;
+  transition: 0.5s;
+  margin-bottom: 8pt;
+}
+
+.button-createscript:hover {
+  background: var(--highlight);
 }

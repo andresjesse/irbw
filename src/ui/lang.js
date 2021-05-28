@@ -21,6 +21,10 @@ const langData = {
     editor_ui_day_night_cycle: "Time of Day",
     editor_ui_day_night_cycle_dynamic: "Dynamic Mode",
     editor_ui_day_night_cycle_duration: "Cycle Duration (seconds)",
+    editor_ui_modaldialog_cancel: "Cancel",
+    editor_ui_modaldialog_ok: "OK",
+    editor_ui_gamelogic_createscript: "Create Script",
+    editor_ui_gamelogic_createscript_text: "Insert new Script filename:",
   },
   "pt-BR": {
     editor_ui_project: "Projeto",
@@ -41,6 +45,10 @@ const langData = {
     editor_ui_day_night_cycle: "Hora do Dia",
     editor_ui_day_night_cycle_dynamic: "Modo Dinâmico",
     editor_ui_day_night_cycle_duration: "Duração do Ciclo (segundos)",
+    editor_ui_modaldialog_cancel: "Cancelar",
+    editor_ui_modaldialog_ok: "OK",
+    editor_ui_gamelogic_createscript: "Criar Script",
+    editor_ui_gamelogic_createscript_text: "Insira um nome para o novo Script:",
   },
 };
 

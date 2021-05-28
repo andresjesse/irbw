@@ -30,6 +30,8 @@ https://andresjesse.github.io/irbw/index.html
 
 - conferir lista acima,
 
+- continuar implementando CreateScript em FileTree.js
+
 - implementar editor: https://github.com/codemirror/codemirror.next/
   - tratar como Unity:
     - scripts ficam em um repositório do projeto (não vinculados à um objeto específico)

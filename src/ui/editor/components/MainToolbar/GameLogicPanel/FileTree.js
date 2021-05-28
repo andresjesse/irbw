@@ -1,6 +1,7 @@
 import React from "react";
 
 import lang from "~/src/ui/lang";
+import ModalDialogInput from "~/src/ui/editor/components/ModalDialogInput";
 
 import "./styles.css";
 
@@ -9,10 +10,38 @@ const FileEntry = function (props) {
 };
 
 export default function () {
+  const [modalCreateScript, setModalCreateScript] = React.useState(false);
+
+  const createScript = (filename) => {
+    console.log(filename);
+  };
+
   const files = [];
 
   for (let i = 0; i < 20; i++)
     files.push(<FileEntry filename={"Script" + i + ".js"} key={i} />);
 
-  return <div className="gamelogic-codeeditor-filetree">{files}</div>;
+  return (
+    <div className="gamelogic-codeeditor-filetree">
+      {modalCreateScript && (
+        <ModalDialogInput
+          title={lang.get("editor_ui_gamelogic_createscript")}
+          text={lang.get("editor_ui_gamelogic_createscript_text")}
+          onCancel={() => setModalCreateScript(false)}
+          onSubmit={createScript}
+        />
+      )}
+
+      <button
+        className="button-createscript"
+        onClick={() => {
+          setModalCreateScript(true);
+        }}
+      >
+        {lang.get("editor_ui_gamelogic_createscript")}
+      </button>
+
+      {files}
+    </div>
+  );
 }
