@@ -27,7 +27,9 @@ https://andresjesse.github.io/irbw/index.html
   - OK lightManager
   - OK terrain:
     - segments << testar >>
-  - armazenar Scripts no JSON (e carregar a partir dele)
+  - OK armazenar Scripts no JSON (e carregar a partir dele)
+  - atualizar o tema "white" do editor
+  - deixar o Script index 0 selecionado por padrão (para evitar mostrar um editor dummy)
 
 - limpar comments antigos em VegetationSegment
 

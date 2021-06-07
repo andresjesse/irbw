@@ -1,4 +1,4 @@
-import store, { editorUiSetFPS } from "./ReduxStore";
+import store, { editorUiSetFPS, userScriptsSetAll } from "./ReduxStore";
 import eventBus from "./EventBus";
 
 import { FreeCamera, Vector3 } from "@babylonjs/core";
@@ -117,6 +117,9 @@ export default class EditorSceneManager {
     this.terrain.restoreFromUserData(
       this.userData.project.scenes[this.userData.sceneId].terrain
     );
+
+    // restore user scripts (gameLogic)
+    store.dispatch(userScriptsSetAll(this.userData.project.userScripts));
   }
 
   saveUserData() {
@@ -129,6 +132,9 @@ export default class EditorSceneManager {
     // terrain
     this.userData.project.scenes[this.userData.sceneId].terrain =
       this.terrain.collectUserData();
+
+    // user scripts (gameLogic)
+    this.userData.project.userScripts = store.getState().userScripts;
 
     // 2) send updated project to api
     saveProject(this.userData.project);

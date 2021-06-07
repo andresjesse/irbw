@@ -56,10 +56,14 @@ export default function () {
   }, [activeUserScript]);
 
   const updateRedux = () => {
+    let scriptStr = view.current.state.doc.toString();
+
+    if (scriptStr == "" || activeUserScript == "") return;
+
     dispatch(
       userScriptsSet({
         filename: activeUserScript,
-        content: view.current.state.doc.toString(),
+        content: scriptStr,
       })
     );
   };

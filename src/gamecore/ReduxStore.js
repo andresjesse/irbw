@@ -80,6 +80,9 @@ const appSlice = createSlice({
     userScriptsSet: (state, action) => {
       state.userScripts[action.payload.filename] = action.payload.content;
     },
+    userScriptsSetAll: (state, action) => {
+      state.userScripts = action.payload;
+    },
   },
 });
 
@@ -94,6 +97,7 @@ export const {
   smgrLightManagerSetDynamic,
   smgrLightManagerSetCycleDurationSec,
   userScriptsSet,
+  userScriptsSetAll,
 } = appSlice.actions;
 
 const store = configureStore({
