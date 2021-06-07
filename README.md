@@ -23,14 +23,13 @@ https://andresjesse.github.io/irbw/index.html
 # Immediate TODO:List
 
 - continuar implementando save/restore userData.
+
   - OK lightManager
-  - terrain:
-    - segments << continuar aqui >>
+  - OK terrain:
+    - segments << testar >>
+  - armazenar Scripts no JSON (e carregar a partir dele)
+
 - limpar comments antigos em VegetationSegment
-
-- conferir lista acima,
-
-- continuar implementando CreateScript em FileTree.js
 
 - implementar editor: https://github.com/codemirror/codemirror.next/
   - tratar como Unity:
