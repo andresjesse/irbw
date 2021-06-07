@@ -3,6 +3,13 @@ import React from "react";
 import lang from "~/src/ui/lang";
 import ModalDialogInput from "~/src/ui/editor/components/ModalDialogInput";
 
+import store, {
+  editorUiMainToolbarSetGameLogicActiveScript,
+  userScriptsSet,
+} from "~/src/gamecore/ReduxStore";
+
+import { useSelector, useDispatch } from "react-redux";
+
 import "./styles.css";
 
 const FileEntry = function (props) {
@@ -11,6 +18,7 @@ const FileEntry = function (props) {
       className={
         "gamelogic-codeeditor-fileentry " + (props.active ? "active" : "")
       }
+      onClick={props?.onClick}
     >
       {props.filename}
     </div>
@@ -23,20 +31,37 @@ const FileEntry = function (props) {
 export default function () {
   const [modalCreateScript, setModalCreateScript] = React.useState(false);
 
-  const createScript = (filename) => {
-    console.log(filename);
-  };
+  const userScripts = useSelector((state) => state.userScripts);
+  const activeUserScript = useSelector(
+    (state) => state.editor.ui.mainToolbar.gameLogic.activeScript
+  );
+  const dispatch = useDispatch();
 
   const files = [];
-
-  for (let i = 0; i < 40; i++)
+  Object.keys(userScripts).forEach((usk, i) => {
     files.push(
       <FileEntry
-        filename={"Script" + i + "Testtestesteste.js"}
+        filename={usk}
         key={i}
-        active={i == 0}
+        active={activeUserScript == usk}
+        onClick={() => setActiveScript(usk)}
       />
     );
+  });
+
+  const createScript = (_filename) => {
+    let filename = _filename.endsWith(".js") ? _filename : _filename + ".js";
+    dispatch(
+      userScriptsSet({
+        filename,
+        content: "",
+      })
+    );
+  };
+
+  const setActiveScript = (filename) => {
+    dispatch(editorUiMainToolbarSetGameLogicActiveScript(filename));
+  };
 
   return (
     <div className="gamelogic-codeeditor-filetree">

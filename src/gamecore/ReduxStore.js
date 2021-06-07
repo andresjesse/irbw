@@ -23,6 +23,9 @@ const appSlice = createSlice({
             density: 50,
             bioma: "BushDense",
           },
+          gameLogic: {
+            activeScript: "",
+          },
         },
       },
     },
@@ -32,6 +35,10 @@ const appSlice = createSlice({
         dynamic: false,
         cycleDurationSec: 360,
       },
+    },
+    userScripts: {
+      "Player.js":
+        "class Player {\n  constructor(){\n  }\n\n  onStart(){\n  }\n\n  onUpdate(){\n  }\n}",
     },
     irbConfig: {
       shadowDynamicKernelBlur: localDb.get("shadowDynamicKernelBlur") || false,
@@ -56,6 +63,9 @@ const appSlice = createSlice({
     editorUiMainToolbarSetVegetationPaintOptions: (state, action) => {
       state.editor.ui.mainToolbar.vegetationPaintOptions = action.payload;
     },
+    editorUiMainToolbarSetGameLogicActiveScript: (state, action) => {
+      state.editor.ui.mainToolbar.gameLogic.activeScript = action.payload;
+    },
     //smgr
     smgrLightManagerSetTimeOfDay: (state, action) => {
       state.smgr.lightManager.timeOfDay = action.payload;
@@ -66,6 +76,10 @@ const appSlice = createSlice({
     smgrLightManagerSetCycleDurationSec: (state, action) => {
       state.smgr.lightManager.cycleDurationSec = action.payload;
     },
+    //userScripts
+    userScriptsSet: (state, action) => {
+      state.userScripts[action.payload.filename] = action.payload.content;
+    },
   },
 });
 
@@ -75,9 +89,11 @@ export const {
   editorUiMainToolbarSetTool,
   editorUiMainToolbarSetBrushOptions,
   editorUiMainToolbarSetVegetationPaintOptions,
+  editorUiMainToolbarSetGameLogicActiveScript,
   smgrLightManagerSetTimeOfDay,
   smgrLightManagerSetDynamic,
   smgrLightManagerSetCycleDurationSec,
+  userScriptsSet,
 } = appSlice.actions;
 
 const store = configureStore({
