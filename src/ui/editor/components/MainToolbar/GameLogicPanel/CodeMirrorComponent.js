@@ -7,6 +7,7 @@ import { javascript } from "@codemirror/lang-javascript";
 import React from "react";
 
 import lang from "~/src/ui/lang";
+import { getTheme } from "~/src/ui/themes";
 
 import { useSelector, useDispatch } from "react-redux";
 import store, { userScriptsSet } from "~/src/gamecore/ReduxStore";
@@ -26,32 +27,26 @@ export default function () {
 
   const view = React.useRef(null);
 
+  const createState = () => {
+    let extensions = [basicSetup, keymap.of([defaultTabBinding]), javascript()];
+
+    // TODO: replace by an Editor Theme Provider. Hardcoded theme works for dark and white (default on CodeMirror)
+    if (getTheme() == "dark") extensions.push(oneDark);
+
+    return EditorState.create({
+      extensions,
+      doc: store.getState().userScripts[activeUserScript],
+    });
+  };
+
   React.useEffect(() => {
     if (!view.current) {
       view.current = new EditorView({
-        state: EditorState.create({
-          extensions: [
-            basicSetup,
-            keymap.of([defaultTabBinding]),
-            javascript(),
-            oneDark,
-          ],
-          doc: store.getState().userScripts[activeUserScript],
-        }),
+        state: createState(),
         parent: document.getElementById("codemirror-container"),
       });
     } else {
-      view.current.setState(
-        EditorState.create({
-          extensions: [
-            basicSetup,
-            keymap.of([defaultTabBinding]),
-            javascript(),
-            oneDark,
-          ],
-          doc: store.getState().userScripts[activeUserScript],
-        })
-      );
+      view.current.setState(createState());
     }
   }, [activeUserScript]);
 
