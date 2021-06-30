@@ -6,6 +6,7 @@ import { editorUiMainToolbarSetTool } from "~/src/gamecore/ReduxStore";
 import Separator from "~/src/ui/editor/components/Separator";
 import SvgButton from "~/src/ui/editor/components/SvgButton";
 import CodeEditor from "./GameLogicPanel/CodeEditor";
+import DynamicObjectsPanel from "./GameLogicPanel/DynamicObjectsPanel";
 
 import "./styles.css";
 
@@ -21,7 +22,7 @@ export default function (props) {
       case "gamelogic_edit_player":
         return <div>Player Script Tool Placeholder</div>;
       case "gamelogic_edit_dynamic_objects":
-        return <div>Dynamic Objects Tool Placeholder</div>;
+        return <DynamicObjectsPanel />;
       default:
         return <div />;
     }

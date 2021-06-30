@@ -25,6 +25,8 @@ const langData = {
     editor_ui_modaldialog_ok: "OK",
     editor_ui_gamelogic_createscript: "Create Script",
     editor_ui_gamelogic_createscript_text: "Insert new Script filename:",
+    editor_ui_dynamic_objects: "Dynamic Objects",
+    editor_ui_dynamic_objects_template: "Template",
   },
   "pt-BR": {
     editor_ui_project: "Projeto",
@@ -49,6 +51,8 @@ const langData = {
     editor_ui_modaldialog_ok: "OK",
     editor_ui_gamelogic_createscript: "Criar Script",
     editor_ui_gamelogic_createscript_text: "Insira um nome para o novo Script:",
+    editor_ui_dynamic_objects: "Objetos Dinâmicos",
+    editor_ui_dynamic_objects_template: "Modelo",
   },
 };
 

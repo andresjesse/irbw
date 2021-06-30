@@ -10,6 +10,7 @@ import AssetPreloader from "./AssetPreloader";
 
 import Terrain from "./environment/Terrain";
 import LightManager from "./environment/LightManager";
+import DynObjManager from "./gamelogic/DynObjManager";
 import EditorApp from "../ui/editor/EditorApp";
 
 import Toolset from "./toolset/Toolset";
@@ -26,6 +27,7 @@ export default class EditorSceneManager {
     //----- create children -----
     this.lightManager = new LightManager(this.scene);
     this.terrain = new Terrain(this.scene);
+    this.dynObjManager = new DynObjManager(this.scene);
 
     // Editor Toolset: applies UI tools/actions to Webgl context
     this.toolset = new Toolset(this);
@@ -37,6 +39,7 @@ export default class EditorSceneManager {
     //----- start children -----
     this.lightManager?.onStart();
     this.terrain?.onStart();
+    this.dynObjManager?.onStart();
 
     // UI
     EditorApp.initializeReactApp();

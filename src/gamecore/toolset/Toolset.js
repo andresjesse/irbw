@@ -7,6 +7,7 @@ import TerrainSoftenLevel from "./TerrainSoftenLevel";
 import TerrainSegmentsEdit from "./TerrainSegmentsEdit";
 import VegetationPaint from "./VegetationPaint";
 import NavMeshTool from "./NavMeshTool";
+import DynObjTool from "./DynObjTool";
 
 export default class Toolset {
   constructor(smgr) {
@@ -28,6 +29,7 @@ export default class Toolset {
       terrain_segments_edit: new TerrainSegmentsEdit(this.smgr),
       vegetation_paint: new VegetationPaint(this.smgr),
       nav_mesh_tool: new NavMeshTool(this.smgr),
+      gamelogic_edit_dynamic_objects: new DynObjTool(this.smgr),
     };
   }
 

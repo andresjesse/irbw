@@ -23,7 +23,11 @@ class ImgrMouse {
       buttons: [false, false, false],
     };
 
-    //create a list of observers
+    this.observers = {
+      0: [], // observers list for mouse button 0
+      1: [], // observers list for mouse button 1
+      2: [], // observers list for mouse button 2
+    }
 
     this.scene.onPointerObservable.add((pointerInfo) => {
       switch (pointerInfo.type) {
@@ -36,7 +40,9 @@ class ImgrMouse {
           if (pointerInfo.event.button <= 2) {
             this.state.buttons[pointerInfo.event.button] = false;
           }
-          //notify observers for bts
+          
+          this.observers[pointerInfo.event.button].forEach((callback) => callback())
+
           break;
         case BABYLON.PointerEventTypes.POINTERMOVE:
           this.state.x = pointerInfo.event.x;
@@ -170,7 +176,13 @@ export default class UniversalInputManager {
     }
   }
 
-  subscribeForInput(logical) {
-    //reserved for observers
+  subscribeForInput(logical, callback) {
+    switch (logical) {
+      case LogicalInputs.Action1: // mouse l
+        this.imgrMouse.observers[0].push(callback);
+        break;
+      default:
+        throw new Error("Observer not implemented: "+logical)
+    }
   }
 }
