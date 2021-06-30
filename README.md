@@ -22,6 +22,9 @@ https://andresjesse.github.io/irbw/index.html
 
 # Immediate TODO:List
 
+- continuar implementando DynObjManager
+  - criar submenu para: mover, rotacionar, escalonar, selecionar script (da lista de scripts)
+
 - continuar implementando save/restore userData.
 
   - OK lightManager
