@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 import {
   editorUiMainToolbarSetGameLogicSelectedDynObj,
   editorUiMainToolbarSetGameLogicSelectedGizmo,
+  editorUiMainToolbarSetGameLogicActiveScript,
 } from "~/src/gamecore/ReduxStore";
 
 import LabeledSelect from "~/src/ui/editor/components/LabeledSelect";
@@ -29,6 +30,12 @@ export default function () {
     (state) => state.editor.ui.mainToolbar.gameLogic.selectedGizmo
   );
 
+  const activeScript = useSelector(
+    (state) => state.editor.ui.mainToolbar.gameLogic.activeScript
+  );
+
+  const userScripts = useSelector((state) => state.userScripts);
+
   const dispatch = useDispatch();
 
   return (
@@ -43,14 +50,6 @@ export default function () {
             value={dynObjTemplate}
             onChange={(val) => {
               setDynObjTemplate(val);
-
-              // dispatch(
-              //   editorUiMainToolbarSetVegetationPaintOptions({
-              //     brushSize: brushSize[0],
-              //     density: density[0],
-              //     bioma: val,
-              //   })
-              // );
             }}
           />
         </div>
@@ -109,6 +108,21 @@ export default function () {
               // active={activeTool == "gizmo_move_tool"}
               onClick={() => {
                 //dispatch(editorUiMainToolbarSetTool("gizmo_move_tool"));
+              }}
+            />
+          </div>
+
+          <div className="toolbar-contentRow">
+            <LabeledSelect
+              label="Script"
+              options={["", ...Object.keys(userScripts)]}
+              value={activeScript || ""}
+              onChange={(val) => {
+                dispatch(editorUiMainToolbarSetGameLogicActiveScript(val));
+                eventBus.dispatch("setSelectedDynObjScript", {
+                  selectedDynObj,
+                  selectedScript: val,
+                });
               }}
             />
           </div>

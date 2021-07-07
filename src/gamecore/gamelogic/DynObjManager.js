@@ -4,6 +4,7 @@ import eventBus from "~/src/gamecore/EventBus";
 
 import store, {
   editorUiMainToolbarSetGameLogicSelectedDynObj,
+  editorUiMainToolbarSetGameLogicActiveScript,
 } from "~/src/gamecore/ReduxStore";
 
 export default class DynObjManager {
@@ -26,8 +27,18 @@ export default class DynObjManager {
     //disable gizmos when activeTool is not gameLogic
     store.subscribe(() => {
       const activeTool = store.getState().editor.ui.mainToolbar.activeTool;
-      if (activeTool != "gamelogic_edit_dynamic_objects")
+
+      if (activeTool != "gamelogic_edit_dynamic_objects") {
         this.attachGizmoToMesh(null);
+      }
+    });
+
+    eventBus.on("setSelectedDynObjScript", (data) => {
+      this.instantiated.forEach((dynObj) => {
+        if (dynObj.id == data.selectedDynObj) {
+          dynObj.script = data.selectedScript;
+        }
+      });
     });
   }
 
@@ -77,15 +88,22 @@ export default class DynObjManager {
   }
 
   showOptionsMenu(instantiatedId) {
-    console.log("Show Options Menu for: " + instantiatedId);
     store.dispatch(
       editorUiMainToolbarSetGameLogicSelectedDynObj(instantiatedId)
     );
+
+    let script = "";
+    this.instantiated.forEach((dynObj) => {
+      if (dynObj.id == instantiatedId) {
+        script = dynObj.script;
+      }
+    });
+
+    store.dispatch(editorUiMainToolbarSetGameLogicActiveScript(script));
   }
 
   attachGizmoToMesh(mesh) {
     this.gizmoManager.attachToMesh(mesh);
-    this.gizmoManager.positionGizmoEnabled = true;
   }
 
   // api project save

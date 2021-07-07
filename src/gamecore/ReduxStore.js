@@ -26,7 +26,7 @@ const appSlice = createSlice({
           gameLogic: {
             activeScript: "",
             selectedDynObj: null,
-            selectedGizmo: "move",
+            selectedGizmo: null,
           },
         },
       },
