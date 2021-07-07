@@ -123,6 +123,11 @@ export default class EditorSceneManager {
 
     // restore user scripts (gameLogic)
     store.dispatch(userScriptsSetAll(this.userData.project.userScripts));
+
+    // dynamic objects
+    this.dynObjManager.restoreFromUserData(
+      this.userData.project.scenes[this.userData.sceneId].dynamicObjects
+    );
   }
 
   saveUserData() {
@@ -138,6 +143,10 @@ export default class EditorSceneManager {
 
     // user scripts (gameLogic)
     this.userData.project.userScripts = store.getState().userScripts;
+
+    // dynamic objects
+    this.userData.project.scenes[this.userData.sceneId].dynamicObjects =
+      this.dynObjManager.collectUserData();
 
     // 2) send updated project to api
     saveProject(this.userData.project);

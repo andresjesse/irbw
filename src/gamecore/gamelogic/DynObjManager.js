@@ -76,6 +76,7 @@ export default class DynObjManager {
     let templateId = "box";
     let id = "dynamic_object_" + this.seqId + "_" + templateId;
 
+    //TODO: replace by a Factory. important: use also in this.restoreFromUserData()
     const box = BABYLON.MeshBuilder.CreateBox(id, {}, this.scene);
     box.position = pos;
 
@@ -108,19 +109,70 @@ export default class DynObjManager {
 
   // api project save
   collectUserData() {
-    let userData = {
-      segments: {},
-    };
+    let userData = [];
 
-    //TODO: collect
+    this.instantiated.forEach((i) => {
+      userData.push({
+        id: i.id,
+        script: i.script,
+        position: {
+          x: i.mesh.position.x,
+          y: i.mesh.position.y,
+          z: i.mesh.position.z,
+        },
+        rotation: {
+          x: i.mesh.rotation.x,
+          y: i.mesh.rotation.y,
+          z: i.mesh.rotation.z,
+        },
+        scale: {
+          x: i.mesh.scaling.x,
+          y: i.mesh.scaling.y,
+          z: i.mesh.scaling.z,
+        },
+      });
+    });
 
     return userData;
   }
 
   // api project load
   restoreFromUserData(userData) {
-    this.userData = userData;
+    console.log("load");
 
-    //TODO: initialize!
+    let maxSeqId = 1;
+
+    userData.forEach((i) => {
+      let tokens = i.id.split("_");
+
+      let templateId = tokens[tokens.length - 1];
+      let seqId = parseInt(tokens[tokens.length - 2]);
+
+      // TODO: use templateId to feed Factory
+
+      const box = BABYLON.MeshBuilder.CreateBox(i.id, {}, this.scene);
+      box.position = new BABYLON.Vector3(
+        i.position.x,
+        i.position.y,
+        i.position.z
+      );
+      box.rotation = new BABYLON.Vector3(
+        i.rotation.x,
+        i.rotation.y,
+        i.rotation.z
+      );
+      box.scaling = new BABYLON.Vector3(i.scale.x, i.scale.y, i.scale.z);
+
+      this.instantiated.push({
+        id: i.id,
+        script: i.script,
+        mesh: box,
+      });
+
+      // update seqId to match higher value in scene
+      if (seqId > maxSeqId) maxSeqId = seqId;
+    });
+
+    this.seqId = maxSeqId + 1;
   }
 }

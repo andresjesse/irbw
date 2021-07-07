@@ -23,7 +23,12 @@ https://andresjesse.github.io/irbw/index.html
 # Immediate TODO:List
 
 - continuar implementando DynObjManager
-  - criar submenu para: mover, rotacionar, escalonar, selecionar script (da lista de scripts)
+
+  - criar opção para inicializar o script do objeto, talvez um campo de texto: new Box("param teste")
+
+implementar "delete" dyn obj
+
+- implementar update pos.y nos dynamic objects para quando o terreno for alterado.
 
 - continuar implementando save/restore userData.
 
