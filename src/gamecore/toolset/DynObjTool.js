@@ -12,14 +12,12 @@ export default class DynObjTool {
     });
 
     this.smgr.imgr.subscribeForInput(LogicalInputs.Action1, () => {
-
-      if( this.activeTool == "gamelogic_edit_dynamic_objects") {
+      if (this.activeTool == "gamelogic_edit_dynamic_objects") {
         this.smgr.dynObjManager.onClick({
           x: this.smgr.imgr.getInput(LogicalInputs.PointerX),
           y: this.smgr.imgr.getInput(LogicalInputs.PointerY),
         });
       }
-      
     });
   }
 

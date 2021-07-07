@@ -1,5 +1,6 @@
 import * as BABYLON from "@babylonjs/core";
-import { Vector3 } from "@babylonjs/core";
+
+import eventBus from "~/src/gamecore/EventBus";
 
 import store, {
   editorUiMainToolbarSetGameLogicSelectedDynObj,
@@ -12,6 +13,22 @@ export default class DynObjManager {
     //----- create children -----
     this.seqId = 1;
     this.instantiated = [];
+
+    this.gizmoManager = new BABYLON.GizmoManager(scene);
+    this.gizmoManager.usePointerToAttachGizmos = false;
+
+    eventBus.on("setGizmo", (gizmo) => {
+      this.gizmoManager.positionGizmoEnabled = gizmo == "move";
+      this.gizmoManager.scaleGizmoEnabled = gizmo == "scale";
+      this.gizmoManager.rotationGizmoEnabled = gizmo == "rotate";
+    });
+
+    //disable gizmos when activeTool is not gameLogic
+    store.subscribe(() => {
+      const activeTool = store.getState().editor.ui.mainToolbar.activeTool;
+      if (activeTool != "gamelogic_edit_dynamic_objects")
+        this.attachGizmoToMesh(null);
+    });
   }
 
   onStart() {
@@ -28,8 +45,11 @@ export default class DynObjManager {
     // show options menu if an object already exists
     if (pickinfo.hit) {
       this.showOptionsMenu(pickinfo.pickedMesh.id);
+      this.attachGizmoToMesh(pickinfo.pickedMesh);
       return;
     }
+
+    this.attachGizmoToMesh(null);
 
     // no object in position, pick a point in terrain to create a new one
     var pickinfo = this.scene.pick(options.x, options.y, (mesh) =>
@@ -61,6 +81,11 @@ export default class DynObjManager {
     store.dispatch(
       editorUiMainToolbarSetGameLogicSelectedDynObj(instantiatedId)
     );
+  }
+
+  attachGizmoToMesh(mesh) {
+    this.gizmoManager.attachToMesh(mesh);
+    this.gizmoManager.positionGizmoEnabled = true;
   }
 
   // api project save

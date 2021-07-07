@@ -26,6 +26,7 @@ const appSlice = createSlice({
           gameLogic: {
             activeScript: "",
             selectedDynObj: null,
+            selectedGizmo: "move",
           },
         },
       },
@@ -70,6 +71,9 @@ const appSlice = createSlice({
     editorUiMainToolbarSetGameLogicSelectedDynObj: (state, action) => {
       state.editor.ui.mainToolbar.gameLogic.selectedDynObj = action.payload;
     },
+    editorUiMainToolbarSetGameLogicSelectedGizmo: (state, action) => {
+      state.editor.ui.mainToolbar.gameLogic.selectedGizmo = action.payload;
+    },
     //smgr
     smgrLightManagerSetTimeOfDay: (state, action) => {
       state.smgr.lightManager.timeOfDay = action.payload;
@@ -98,6 +102,7 @@ export const {
   editorUiMainToolbarSetVegetationPaintOptions,
   editorUiMainToolbarSetGameLogicActiveScript,
   editorUiMainToolbarSetGameLogicSelectedDynObj,
+  editorUiMainToolbarSetGameLogicSelectedGizmo,
   smgrLightManagerSetTimeOfDay,
   smgrLightManagerSetDynamic,
   smgrLightManagerSetCycleDurationSec,
