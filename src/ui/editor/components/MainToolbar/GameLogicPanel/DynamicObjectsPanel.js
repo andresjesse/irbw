@@ -105,9 +105,8 @@ export default function () {
               tileX={3}
               tileY={5}
               active={false}
-              // active={activeTool == "gizmo_move_tool"}
               onClick={() => {
-                //dispatch(editorUiMainToolbarSetTool("gizmo_move_tool"));
+                eventBus.dispatch("deleteDynamicObject", selectedDynObj);
               }}
             />
           </div>

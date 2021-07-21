@@ -40,6 +40,19 @@ export default class DynObjManager {
         }
       });
     });
+
+    eventBus.on("deleteDynamicObject", (selectedDynObj) => {
+      let removedIndex = null;
+
+      this.instantiated.forEach((dynObj, index) => {
+        if (dynObj.id == selectedDynObj) {
+          dynObj.mesh.dispose();
+          removedIndex = index;
+        }
+      });
+
+      if (removedIndex != null) this.instantiated.splice(removedIndex, 1);
+    });
   }
 
   onStart() {
@@ -87,6 +100,8 @@ export default class DynObjManager {
 
     this.seqId++;
   }
+
+  //delete
 
   showOptionsMenu(instantiatedId) {
     store.dispatch(
