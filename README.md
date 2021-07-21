@@ -22,11 +22,11 @@ https://andresjesse.github.io/irbw/index.html
 
 # Immediate TODO:List
 
+- continuar Reflect constructor em DynamicObjectsPanel.js (atualmente feito com regex)
+
 - continuar implementando DynObjManager
 
   - criar opção para inicializar o script do objeto, talvez um campo de texto: new Box("param teste")
-
-implementar "delete" dyn obj
 
 - implementar update pos.y nos dynamic objects para quando o terreno for alterado.
 

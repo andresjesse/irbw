@@ -13,6 +13,8 @@ import SvgButton from "~/src/ui/editor/components/SvgButton";
 
 import dynObjTemplates from "~/src/services/dynObjTemplates";
 
+import getArgs from "../../../../../helpers/ReflectFunctionArgs";
+
 import lang from "~/src/ui/lang";
 
 import "./styles.css";
@@ -124,6 +126,21 @@ export default function () {
                 });
               }}
             />
+          </div>
+
+          <div className="toolbar-contentRow">
+            <button
+              onClick={() => {
+                let scriptBody = userScripts[activeScript];
+
+                let scriptEvaluated = eval(`(${scriptBody})`);
+
+                console.log(scriptEvaluated);
+                console.log(getArgs(scriptBody));
+              }}
+            >
+              eval
+            </button>
           </div>
         </div>
       )}
