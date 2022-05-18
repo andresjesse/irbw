@@ -12,8 +12,8 @@ const appSlice = createSlice({
       ui: {
         fps: 0,
         mainToolbar: {
-          activeTab: "gamelogic",
-          activeTool: "gamelogic_edit_global",
+          activeTab: "environment",
+          activeTool: "terrain_edit_level",
           brushOptions: {
             brushSize: 50,
             brushStrength: 50,
